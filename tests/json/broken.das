@@ -1,3 +1,4 @@
+options gen2;
 require dastest/testing_boost public
 require daslib/json_boost
 require daslib/stringify
@@ -14,7 +15,7 @@ let broken1 = %stringify~
 	"summary" : null,
 	"draw" : null
 }
-%%
+%%;
 
 let broken2 = %stringify~
 {
@@ -28,7 +29,7 @@ let broken2 = %stringify~
 	"question" : "Could you explain me what's the difference between M1 Garand rifle and M1A1 rifle?",
 	"draw" : null
 }
-%%
+%%;
 
 let broken3 = %stringify~
 {
@@ -38,7 +39,7 @@ let broken3 = %stringify~
 	"draw" : "A very detailed drawing of a horse's head.",
 	"summary" : "User is asking me to draw a picture of my mood.",
 }
-%%
+%%;
 
 let broken4 = %stringify~
     {
@@ -49,30 +50,38 @@ let broken4 = %stringify~
     "mood" : "🤨",
     "code" : null,
     }
-%%
+%%;
 
-let broken5 = %stringify~ {\u004857"code" : "",\u004857"message" : "I'm doing well, thank you for asking. How can I help you?",\u004857"result" : "nothing",\u004857"draw" : ""}\u004858 %%
+let broken5 = %stringify~ {\u004857"code" : "",\u004857"message" : "I'm doing well, thank you for asking. How can I help you?",\u004857"result" : "nothing",\u004857"draw" : ""}\u004858 %%;
 
-def test_broken ( t: T?; text:string )
-    var error : string
-    var j = read_json(text,error)
-    t |> equal(null, j)
-    let fixed = try_fixing_broken_json(text)
-    j = read_json(fixed,error)
-    t |> success(j!=null)
-    unsafe
-        delete j
+def test_broken ( t: T?; text:string ) {
+    var error : string;
+    var j = read_json(text,error);
+    t |> equal(null, j);
+    let fixed = try_fixing_broken_json(text);
+    j = read_json(fixed,error);
+    t |> success(j!=null);
+    unsafe {
+        delete j;
+    }
+}
 
 [test]
-def broken_json ( t: T? )
-    t |> run("string concatination") <| @ ( t : T? )
-        test_broken(t,broken1)
-    t |> run("quotes") <| @ ( t : T? )
-        test_broken(t,broken2)
-    t |> run("extra ,") <| @ ( t : T? )
-        test_broken(t,broken3)
-	t |> run("missing ,") <| @ ( t : T? )
-		test_broken(t,broken4)
-	t |> run("extra \u004857") <| @ ( t : T? )
-		test_broken(t,broken5)
+def broken_json ( t: T? ) {
+    t |> run("string concatination") <| @ ( t : T? ) {
+        test_broken(t,broken1);
+    }
+    t |> run("quotes") <| @ ( t : T? ) {
+        test_broken(t,broken2);
+    }
+    t |> run("extra ,") <| @ ( t : T? ) {
+        test_broken(t,broken3);
+    }
+	t |> run("missing ,") <| @ ( t : T? ) {
+		test_broken(t,broken4);
+    }
+	t |> run("extra \u004857") <| @ ( t : T? ) {
+		test_broken(t,broken5);
+    }
+}
 

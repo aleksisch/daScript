@@ -1,19 +1,25 @@
-def hello(): bool
-    print("hello\n")
-    return false
+options gen2;
+def hello(): bool {
+    print("hello\n");
+    return false;
+}
 
-def printVar(i: int)
-    print("{i}\n")
+def printVar(i: int) {
+    print("{i}\n");
+}
 
-def printVarRef(i: int&)
-    print("{i}\n")
+def printVarRef(i: int&) {
+    print("{i}\n");
+}
 
-def setVar(var i: int&)
-    i = i + 2
+def setVar(var i: int&) {
+    i = i + 2;
+}
 
 [export]
-def main
-    var b = hello()
-    print(b ? "Y" : "N")
-    print("\n")
-    printVar(4)
+def main {
+    var b = hello();
+    print(b ? "Y" : "N");
+    print("\n");
+    printVar(4);
+}

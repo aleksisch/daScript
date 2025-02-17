@@ -1,3 +1,4 @@
+options gen2;
 require dasbind
 
 [extern(stdcall,name="GetCurrentProcessorNumber",library="Kernel32")]
@@ -10,11 +11,12 @@ def ExitProcess ( code : int ) {}
 def SetConsoleTitle(lpConsoleTitle:string) {}
 
 [export]
-def main
-    let proc_n = GetCurrentProcessorNumber()
-    print("current processor {proc_n}\n")
-    SetConsoleTitle("hello, console title\n")
-    ExitProcess(1234)
+def main {
+    let proc_n = GetCurrentProcessorNumber();
+    print("current processor {proc_n}\n");
+    SetConsoleTitle("hello, console title\n");
+    ExitProcess(1234);
+}
 
 
 

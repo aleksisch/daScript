@@ -1,10 +1,11 @@
+options gen2;
 // mainly to test, if it compiles and runs correctly with AOT compilation
 
 struct MyStruct {
     value: int;
 }
 
-var a = 1
+var a = 1;
 
 def my_func(t: type<auto(TT)>; func: lambda<(arg:TT?):void>) {
     invoke(func, null);
