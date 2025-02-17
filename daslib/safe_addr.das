@@ -16,7 +16,7 @@ require daslib/is_local
 def public safe_addr(var x : auto(T)& ==const) : T-& ? # {
     //! returns temporary pointer to the given expression
     unsafe {
-        return reinterpret<T-&?#>(addr(x));
+        return reinterpret<T-&?#>(addr(x))
     }
 }
 
@@ -24,7 +24,7 @@ def public safe_addr(var x : auto(T)& ==const) : T-& ? # {
 def public safe_addr(x : auto(T)& ==const) : T-& ? const # {
     //! returns temporary pointer to the given expressio
     unsafe {
-        return reinterpret<T-&? const #>(addr(x));
+        return reinterpret<T-&? const #>(addr(x))
     }
 }
 
@@ -34,9 +34,9 @@ class SafeAddrMacro : AstFunctionAnnotation {
     //! I.e. if the object can `expire` while in scope, with delete, garbage collection, or on the C++ side.
     def override transform ( var call : smart_ptr<ExprCallFunc>; var errors : das_string ) : ExpressionPtr {
         if (!is_local_or_global_expr(call.arguments[0])) {
-            compiling_program() |> macro_error(call.at,"not a local value");
+            compiling_program() |> macro_error(call.at,"not a local value")
         }
-        return <- default<ExpressionPtr>;
+        return <- default<ExpressionPtr>
     }
 }
 
@@ -44,7 +44,7 @@ class SafeAddrMacro : AstFunctionAnnotation {
 def public temp_ptr(x : auto(T)? implicit ==const) : T ? const # {
     //! returns temporary pointer from a given pointer
     unsafe {
-        return reinterpret<T? const #>(x);
+        return reinterpret<T? const #>(x)
     }
 }
 
@@ -52,20 +52,20 @@ def public temp_ptr(x : auto(T)? implicit ==const) : T ? const # {
 def public temp_ptr(var x : auto(T)? implicit ==const) : T ?# {
     //! returns temporary pointer from a given pointer
     unsafe {
-        return reinterpret<T?#>(x);
+        return reinterpret<T?#>(x)
     }
 }
 
 [tag_function(shared_addr_tag)]
 def public shared_addr ( tab:table<auto(KEY); auto(VAL)>; k:KEY ) {
     //! returns address of the given shared variable. it's safe because shared variables never go out of scope
-    return unsafe(find(tab,k));
+    return unsafe(find(tab,k))
 }
 
 [tag_function(shared_addr_tag)]
 def public shared_addr ( val:auto(VALUE)& ) {
     //! returns address of the given shared variable. it's safe because shared variables never go out of scope
-    return unsafe(addr(val));
+    return unsafe(addr(val))
 }
 
 [tag_function_macro(tag="shared_addr_tag")]
@@ -74,10 +74,10 @@ class SharedAddrMacro : AstFunctionAnnotation {
     //! I.e. only global variables are safe to use with shared_addr.
     def override verifyCall ( var call : smart_ptr<ExprCallFunc>; args,progArgs:AnnotationArgumentList; var errors : das_string ) : bool {
         if (is_shared_expr(call.arguments[0])) {
-            return true;
+            return true
         }
-        compiling_program() |> macro_error(call.at,"{call.name} can only be used with shared global variables");
-        return false;
+        compiling_program() |> macro_error(call.at,"{call.name} can only be used with shared global variables")
+        return false
     }
 }
 

@@ -2,7 +2,7 @@ options gen2;
 [export]
 def main {
 	for (i in range(0, 10)) {
-		print("{i}");
+		print("{i}")
     }
-	print("\n");
+	print("\n")
 }

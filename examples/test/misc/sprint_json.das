@@ -7,31 +7,31 @@ enum AnyThing {
 }
 
 variant Moo {
-    i : int;
-    f : float;
+    i : int
+    f : float
 }
 
 struct Bar {
-    arr_int : array<int>;
+    arr_int : array<int>
 }
 
 struct Foo {
-    v_int : int;
-    bar : Bar;
-    v_float : float;
-    en1 : AnyThing;
-    @enum_as_int en2 : AnyThing;
-    @rename _type : uint64;
-    v_str : string;
-    @unescape v_unescaped_str : string;
-    @embed v_embed : string;
-    tab : table<string;int>;
-    tup : tuple<int;float>;
-    v_var : Moo;
-    ptr : void?;
-    @optional empty_str : string;
-    @optional empty_arr : array<int>;
-    @optional empty_tab : table<string;int>;
+    v_int : int
+    bar : Bar
+    v_float : float
+    en1 : AnyThing
+    @enum_as_int en2 : AnyThing
+    @rename _type : uint64
+    v_str : string
+    @unescape v_unescaped_str : string
+    @embed v_embed : string
+    tab : table<string;int>
+    tup : tuple<int;float>
+    v_var : Moo
+    ptr : void?
+    @optional empty_str : string
+    @optional empty_arr : array<int>
+    @optional empty_tab : table<string;int>
 }
 
 [export]
@@ -52,7 +52,7 @@ def main {
         tup = ( 3,.141592),
         v_var = Moo(uninitialized f=3.141592),
         ptr = null
-    );
-    let t = sprint_json(a,true);
-    print("t = {t}\n");
+    )
+    let t = sprint_json(a,true)
+    print("t = {t}\n")
 }

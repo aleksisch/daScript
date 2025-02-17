@@ -2,24 +2,24 @@ options gen2;
 options aot_prologue=true
 
 def fnBottom {
-    stackwalk();
-    return true;
+    stackwalk()
+    return true
 }
 
 [no_aot]
 def fnMid {
-    fnBottom();
-    return true;
+    fnBottom()
+    return true
 }
 
 def fnTop {
-    fnMid();
-    return true;
+    fnMid()
+    return true
 }
 
 [export]
 def test {
-    fnTop();
-    return true;
+    fnTop()
+    return true
 }
 

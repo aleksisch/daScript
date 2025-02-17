@@ -2,8 +2,8 @@ options gen2;
 require daslib/coroutines
 
 struct Tree {
-    data : int;
-    left, right : Tree?;
+    data : int
+    left, right : Tree?
 }
 
 let tree = new  Tree( data = 5,
@@ -16,35 +16,35 @@ let tree = new  Tree( data = 5,
 [coroutine]
 def each_async(tree : Tree?) : int {
     if (tree.left != null) {
-        co_await <| each_async(tree.left);
+        co_await <| each_async(tree.left)
     }
-    yield tree.data;
+    yield tree.data
     if (tree.right != null) {
-        co_await <| each_async(tree.right);
+        co_await <| each_async(tree.right)
     }
 }
 
 def each_async_generator(tree : Tree?) {
     return <- generator<int>() <| $() {
         if (tree.left != null) {
-            yeild_from <| each_async_generator(tree.left);
+            yeild_from <| each_async_generator(tree.left)
         }
-        yield tree.data;
+        yield tree.data
         if (tree.right != null) {
-            yeild_from <| each_async_generator(tree.right);
+            yeild_from <| each_async_generator(tree.right)
         }
-        return false;
+        return false
     }
 }
 
 [export]
 def main {
     for (t in each_async_generator(tree)) {
-        print("{t}\n");
+        print("{t}\n")
     }
 
     for (t in each_async(tree)) {
-        print("{t}\n");
+        print("{t}\n")
     }
 }
 

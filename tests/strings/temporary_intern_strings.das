@@ -13,24 +13,24 @@ def test_temps_strings ( t:T? ) {
     t |> run("keep intern strings") <| @@(t) {
 
         temp_string("long str {payload}\n") <| $(s) {
-            print(s);
-            t |> equal(s, "long str long str\n");
+            print(s)
+            t |> equal(s, "long str long str\n")
         }
 
         // keep intern strings, because amount of references is unknown
-        t |> equal(string_heap_bytes_allocated(), 0x14ul);
+        t |> equal(string_heap_bytes_allocated(), 0x14ul)
 
         build_temp_string() <| $(sb) {
-            sb |> write("long builder str ");
-            sb |> write(payload);
-            sb |> write("\n");
+            sb |> write("long builder str ")
+            sb |> write(payload)
+            sb |> write("\n")
         }
         lpipe <| $(s) {
-            print(s);
-            t |> equal(s, "long builder str long str\n");
+            print(s)
+            t |> equal(s, "long builder str long str\n")
         }
 
         // keep this intern string too
-        t |> equal(string_heap_bytes_allocated(), 0x30ul);
+        t |> equal(string_heap_bytes_allocated(), 0x30ul)
     }
 }

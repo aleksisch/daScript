@@ -7,45 +7,45 @@ require dastest/testing_boost public
 
 [decs_template]
 struct Particle {
-    live = 13;
+    live = 13
 }
 
 [test]
 def test_create_from_default( t: T?) {
-    restart();
+    restart()
     create_entity <| @ ( eid, cmp ) {
-        apply_decs_template(cmp, Particle());
+        apply_decs_template(cmp, Particle())
     }
-    commit();
+    commit()
     query <| $ ( var p : Particle ) {
-        p.live ++;
+        p.live ++
     }
     query <| $ ( var p : Particle ) {
-        t |> equal(p.live, 14);
+        t |> equal(p.live, 14)
     }
 }
 
 [test]
 def test_default_values( t: T?) {
-    restart();
+    restart()
     create_entity <| @ ( eid, cmp ) {
-        cmp.a := 1;
+        cmp.a := 1
     }
     create_entity <| @ ( eid, cmp ) {
-        cmp.a := 2;
-        cmp.b := 10;
+        cmp.a := 2
+        cmp.b := 10
     }
-    commit();
-    var count = 0;
+    commit()
+    var count = 0
     query <| $ ( a:int; b:int=-1 ) {
         if (b==-1) {
-            t |> equal(a, 1);
+            t |> equal(a, 1)
         }
         elif (b==10) {
-            t |> equal(a, 2);
+            t |> equal(a, 2)
         }
-        count ++;
+        count ++
     }
-    t |> equal(count, 2);
+    t |> equal(count, 2)
 }
 

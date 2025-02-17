@@ -11,43 +11,43 @@ def test_temps_strings ( t:T? ) {
     t |> run("no heap allocations") <| @@(t) {
 
         temp_string("long str {payload}\n") <| $(s) {
-            print(s);
-            t |> equal(s, "long str long str\n");
+            print(s)
+            t |> equal(s, "long str long str\n")
         }
 
         build_temp_string() <| $(sb) {
-            sb |> write("long builder str ");
-            sb |> write(payload);
-            sb |> write("\n");
+            sb |> write("long builder str ")
+            sb |> write(payload)
+            sb |> write("\n")
         }
         lpipe <| $(s) {
-            print(s);
-            t |> equal(s, "long builder str long str\n");
+            print(s)
+            t |> equal(s, "long builder str long str\n")
         }
 
-        t |> equal(string_heap_bytes_allocated(), 0ul);
+        t |> equal(string_heap_bytes_allocated(), 0ul)
 
-        var arr <- [ uint8('h'), uint8('e'), uint8('l'), uint8('l'), uint8('o')];
+        var arr <- [ uint8('h'), uint8('e'), uint8('l'), uint8('l'), uint8('o')]
         temp_string(arr) <| $(s) {
-            print(s);
-            t |> equal(s, "hello");
+            print(s)
+            t |> equal(s, "hello")
         }
 
-        t |> equal(string_heap_bytes_allocated(), 0x0ul);
+        t |> equal(string_heap_bytes_allocated(), 0x0ul)
     }
 
     t |> run("heap allocations") <| @@(t) {
 
-        print("long long str {payload}\n");
-        t |> equal(string_heap_bytes_allocated(), 0x18ul);
+        print("long long str {payload}\n")
+        t |> equal(string_heap_bytes_allocated(), 0x18ul)
 
         var str = build_string() <| $(sb) {
-            sb |> write("long builder str ");
-            sb |> write(payload);
-            sb |> write("\n");
+            sb |> write("long builder str ")
+            sb |> write(payload)
+            sb |> write("\n")
         }
-        print(str);
+        print(str)
 
-        t |> equal(string_heap_bytes_allocated(), 0x34ul);
+        t |> equal(string_heap_bytes_allocated(), 0x34ul)
     }
 }

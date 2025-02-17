@@ -5,6 +5,6 @@ require _operators_parent public    // public is very important here, to make su
 
 class BarOp : FooOp {
     def BarOp() {
-        pass;
+        pass
     }
 }

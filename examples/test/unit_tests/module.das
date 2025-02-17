@@ -9,10 +9,10 @@ require foo_bar
 [export]
 def test {
     if (false) {
-        print("require not_a_require_either");
+        print("require not_a_require_either")
     }
-    assert(foo_bar::getValue()==13);
-    return true;
+    assert(foo_bar::getValue()==13)
+    return true
 }
 
 

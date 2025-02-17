@@ -3,19 +3,19 @@ options gen2;
 
 [export]
 def test:bool {
-    var a = 1;
-    let b:int?;
+    var a = 1
+    let b:int?
     try {
-        a = deref(b);
+        a = deref(b)
     } recover {
-        a = 13;
+        a = 13
     }
-    assert(a==13);
+    assert(a==13)
     try {
-        panic("now panic");
+        panic("now panic")
     } recover {
-        a = 14;
+        a = 14
     }
-    assert(a==14);
-    return true;
+    assert(a==14)
+    return true
 }

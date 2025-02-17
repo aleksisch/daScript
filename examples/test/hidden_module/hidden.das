@@ -6,5 +6,5 @@ options no_unused_function_arguments = false
 module hidden private
 
 def check_the_secret {
-    print("secret!\n");
+    print("secret!\n")
 }

@@ -7,19 +7,19 @@ require daslib/assert_once
 
 [export]
 def test {
-    var t = 0;
-    var count = 0;
-    label 0:;
+    var t = 0
+    var count = 0
+    label 0:
     try {
-        assert_once(t==0);
+        assert_once(t==0)
     } recover {
-        count ++;
+        count ++
     }
-    t ++;
+    t ++
     if (t != 5) {
-        goto 0;
+        goto 0
     }
-    assert(count==1);
-    return true;
+    assert(count==1)
+    return true
 }
 

@@ -15,7 +15,7 @@ require daslib/templates_boost
 [tag_function(asset_once_tag)]
 def public assert_once ( expr:bool; message:string="" ) {
     //! Same as assert, only the check will be not be repeated after the asseretion failed the first time.
-    pass;
+    pass
 }
 
 [tag_function_macro(tag="asset_once_tag")]
@@ -27,20 +27,20 @@ class AssertOnceMacro : AstFunctionAnnotation {
     //!         __assert_once_I = false
     //!         assert(false,message)
     def override transform ( var call : smart_ptr<ExprCallFunc>; var errors : das_string ) : ExpressionPtr {
-        let once_name = make_unique_private_name("__assert_once",call.at);
+        let once_name = make_unique_private_name("__assert_once",call.at)
         if (!compiling_module() |> add_global_private_var(once_name, call.at) <| quote(true)) {
-            errors := "can't add global variable {once_name}";
-            return <- default<ExpressionPtr>;
+            errors := "can't add global variable {once_name}"
+            return <- default<ExpressionPtr>
         }
         // if ..
-        var inscope qb <- qmacro_block() <| $(){
+        var inscope qb <- qmacro_block() <| $() {
             if ($i(once_name) && !$e(call.arguments[0])) {
-                $i(once_name) = false;
-                assert(false, $e(call.arguments[1]));
+                $i(once_name) = false
+                assert(false, $e(call.arguments[1]))
             }
         }
-        qb |> force_at(call.at);
-        return <- qb;
+        qb |> force_at(call.at)
+        return <- qb
     }
 }
 

@@ -16,7 +16,7 @@ require daslib/templates_boost
 [expect_any_bitfield(argT),tag_function(each_bitfield_tag),unused_argument(argT)]
 def public each ( argT ) {
     //! Same as assert, only the check will be not be repeated after the asseretion failed the first time.
-    pass;
+    pass
 }
 
 [tag_function_macro(tag="each_bitfield_tag")]
@@ -28,21 +28,21 @@ class EachBitfieldMacro : AstFunctionAnnotation {
     //!         ...
     //!         return false
     def override transform ( var call : smart_ptr<ExprCallFunc>; var errors : das_string ) : ExpressionPtr {
-        var inscope yields : array<ExpressionPtr>;
+        var inscope yields : array<ExpressionPtr>
         for (name in call.arguments[0]._type.argNames) {
-            yields |> emplace_new <| qmacro_expr(${ yield $v(string(name)); });
+            yields |> emplace_new <| qmacro_expr(${ yield $v(string(name)); })
         }
-        let call_name = "field`names";
-        var inscope qfn <- qmacro_function(call_name) <| $(){
-            return <- generator<string>() <| $(){
-                $b(yields);
-                return false;
+        let call_name = "field`names"
+        var inscope qfn <- qmacro_function(call_name) <| $() {
+            return <- generator<string>() <| $() {
+                $b(yields)
+                return false
             }
         }
-        qfn.flags |= FunctionFlags.generated | FunctionFlags.privateFunction;
-        compiling_module() |> add_function(qfn);
-        let call_expr_name = "_::{call_name}";
-        return <- qmacro($c(call_expr_name)());
+        qfn.flags |= FunctionFlags.generated | FunctionFlags.privateFunction
+        compiling_module() |> add_function(qfn)
+        let call_expr_name = "_::{call_name}"
+        return <- qmacro($c(call_expr_name)())
     }
 }
 

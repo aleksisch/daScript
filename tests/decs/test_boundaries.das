@@ -7,31 +7,31 @@ require dastest/testing_boost public
 
 [test]
 def test_boundaries( t: T?) {
-    restart();
+    restart()
     create_entity <| @ ( eid, cmp ) {
-        cmp |> set("i", 1);
+        cmp |> set("i", 1)
     }
-    commit();
+    commit()
     t |> run("commit inside query") <| @@ ( t:T? ) {
         query <| $ ( i : int ) {
-            var failed = false;
+            var failed = false
             try {
-                commit();
+                commit()
             } recover {
-                failed = true;
+                failed = true
             }
-            t |> success(failed);
+            t |> success(failed)
         }
     }
     t |> run("restart inside query") <| @@ ( t:T? ) {
         query <| $ ( i : int ) {
-            var failed = false;
+            var failed = false
             try {
-                commit();
+                commit()
             } recover {
-                failed = true;
+                failed = true
             }
-            t |> success(failed);
+            t |> success(failed)
         }
     }
 }

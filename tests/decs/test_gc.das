@@ -10,93 +10,93 @@ require daslib/static_let
 
 [test]
 def test_archive_arrays( t: T?) {
-    restart();
+    restart()
     for (i in range(3)) {
         create_entity <| @ ( eid, cmp ) {
-            cmp |> set("values", [for (x in range(i+1)); x]);
-            cmp |> set("i", i);
+            cmp |> set("values", [for (x in range(i+1)); x])
+            cmp |> set("i", i)
         }
     }
-    commit();
+    commit()
     t |> run("before gc") <| @ ( t : T? ) {
-        var tot = 0;
+        var tot = 0
         query <| $ ( values:array<int>; i:int ) {
-            tot ++;
+            tot ++
             for (x,v in range(i+1),values) {
-                t |> equal( x, v);
+                t |> equal( x, v)
             }
         }
-        t |> equal(tot, 3);
+        t |> equal(tot, 3)
     }
-    var data <- mem_archive_save(decsState);
-    restart();
-    data |> mem_archive_load(decsState);
+    var data <- mem_archive_save(decsState)
+    restart()
+    data |> mem_archive_load(decsState)
     t |> run("after gc") <| @ ( t : T? ) {
-        var tot = 0;
+        var tot = 0
         query <| $ ( values:array<int>; i:int ) {
-            tot ++;
+            tot ++
             for (x,v in range(i+1),values) {
-                t |> equal( x, v);
+                t |> equal( x, v)
             }
         }
-        t |> equal(tot, 3);
+        t |> equal(tot, 3)
     }
 }
 
 [test]
 def test_archive_strings( t: T?) {
-    restart();
+    restart()
     for (i in range(3)) {
         create_entity <| @ ( eid, cmp ) {
-            cmp.txt := "hello_{i}";
+            cmp.txt := "hello_{i}"
         }
     }
-    commit();
+    commit()
     t |> run("before string gc") <| @ ( t : T? ) {
-        var i = 0;
+        var i = 0
         query <| $ ( txt:string ) {
-            t |> equal( txt, "hello_{i++}");
+            t |> equal( txt, "hello_{i++}")
         }
-        t |> equal( i, 3);
+        t |> equal( i, 3)
     }
-    var data <- mem_archive_save(decsState);
-    restart();
-    data |> mem_archive_load(decsState);
+    var data <- mem_archive_save(decsState)
+    restart()
+    data |> mem_archive_load(decsState)
     t |> run("after string gc") <| @ ( t : T? ) {
-        var j = 0;
+        var j = 0
         query <| $ ( txt:string ) {
-            t |> equal( txt, "hello_{j++}");
+            t |> equal( txt, "hello_{j++}")
         }
-        t |> equal( j, 3);
+        t |> equal( j, 3)
     }
 }
 
 [test]
 def test_gc_arrays( t: T?) {
-    restart();
+    restart()
     for (i in range(3)) {
         create_entity <| @ ( eid, cmp ) {
-            cmp |> set("values", [for (x in range(i+1)); x]);
-            cmp |> set("i", i);
+            cmp |> set("values", [for (x in range(i+1)); x])
+            cmp |> set("i", i)
         }
     }
-    commit();
+    commit()
     t |> run("before gc") <| @ ( t : T? ) {
         query <| $ ( values:array<int>; i:int ) {
             for (x,v in range(i+1),values) {
-                t |> equal( x, v);
+                t |> equal( x, v)
             }
         }
     }
-    before_gc();
+    before_gc()
     unsafe {
-        heap_collect(true,true);
+        heap_collect(true,true)
     }
-    after_gc();
+    after_gc()
     t |> run("after gc") <| @ ( t : T? ) {
         query <| $ ( values:array<int>; i:int ) {
             for (x,v in range(i+1),values) {
-                t |> equal( x, v);
+                t |> equal( x, v)
             }
         }
     }
@@ -104,162 +104,162 @@ def test_gc_arrays( t: T?) {
 
 [test]
 def test_gc_strings( t: T?) {
-    restart();
+    restart()
     for (i in range(3)) {
         create_entity <| @ ( eid, cmp ) {
-            cmp.txt := "hello_{i}";
+            cmp.txt := "hello_{i}"
         }
     }
-    commit();
+    commit()
     t |> run("before string gc") <| @ ( t : T? ) {
-        var i = 0;
+        var i = 0
         query <| $ ( txt:string ) {
-            t |> equal( txt, "hello_{i++}");
+            t |> equal( txt, "hello_{i++}")
         }
-        t |> equal( i, 3);
+        t |> equal( i, 3)
     }
-    before_gc();
+    before_gc()
     unsafe {
-        heap_collect(true, true);
+        heap_collect(true, true)
     }
-    after_gc();
+    after_gc()
     t |> run("after string gc") <| @ ( t : T? ) {
-        var j = 0;
+        var j = 0
         query <| $ ( txt:string ) {
-            t |> equal( txt, "hello_{j++}");
+            t |> equal( txt, "hello_{j++}")
         }
-        t |> equal( j, 3);
+        t |> equal( j, 3)
     }
 }
 
 var total_foo = 0;
 class FooWithLifetime {
     def FooWithLifetime {
-        total_foo ++;
+        total_foo ++
     }
     def operator delete {
-        total_foo --;
+        total_foo --
     }
 }
 
 [test]
 def test_arrays_lifetime( t: T?) {
-    restart();
+    restart()
     for (i in range(3)) {
         create_entity <| @ ( eid, cmp ) {
-            cmp |> set("pfoo", new FooWithLifetime());
+            cmp |> set("pfoo", new FooWithLifetime())
         }
     }
-    commit();
-    t |> success( total_foo==3);
-    restart();
-    t |> success( total_foo==0);
+    commit()
+    t |> success( total_foo==3)
+    restart()
+    t |> success( total_foo==0)
 }
 
 [test]
 def test_gc_stress( t: T?) {
-    var seed = random_seed(13);
-    restart();
+    var seed = random_seed(13)
+    restart()
     static_let <| $() {
-        var TOTAL_EID = 0;
+        var TOTAL_EID = 0
     }
     for (count in range(20)) {
-        let morei = (random_int(seed) & 31) + 10;
+        let morei = (random_int(seed) & 31) + 10
         for (i in range(morei)) {
             create_entity <| @ ( eid, cmp ) {
-                var values <- [for (x in range(i)); int2(x,x+13)];
-                cmp |> set("values", values);
-                let random_arch = random_int(seed) & 31;
-                cmp |> set("arch_{random_arch}", random_arch);
-                cmp.i := i;
-                TOTAL_EID ++;
+                var values <- [for (x in range(i)); int2(x,x+13)]
+                cmp |> set("values", values)
+                let random_arch = random_int(seed) & 31
+                cmp |> set("arch_{random_arch}", random_arch)
+                cmp.i := i
+                TOTAL_EID ++
             }
         }
-        let morej = (random_int(seed) & 31) + 10;
+        let morej = (random_int(seed) & 31) + 10
         for (j in range(morei)) {
             create_entity <| @ ( eid, cmp ) {
-                cmp.txt := "text_{eid}";
-                let random_arch = random_int(seed) & 63;
-                cmp |> set("arch_{random_arch}", random_arch);
-                TOTAL_EID ++;
+                cmp.txt := "text_{eid}"
+                let random_arch = random_int(seed) & 63
+                cmp |> set("arch_{random_arch}", random_arch)
+                TOTAL_EID ++
             }
         }
-        let delk = (random_int(seed) & 63);
+        let delk = (random_int(seed) & 63)
         query <| $ ( eid:EntityId ) {
-            let chance = random_int(seed) % 100;
+            let chance = random_int(seed) % 100
             if (chance <= 13) {
-                delete_entity(eid);
-                TOTAL_EID --;
+                delete_entity(eid)
+                TOTAL_EID --
             }
         }
         if ((random_int(seed) % 100) < 50) {
-            before_gc();
+            before_gc()
             unsafe {
-                heap_collect(true,true);
+                heap_collect(true,true)
             }
-            after_gc();
+            after_gc()
         }
-        commit();
+        commit()
         query <| $ ( eid:EntityId; text:string ) {
-            t |> equal(text, "text_{eid}");
+            t |> equal(text, "text_{eid}")
         }
         query <| $ ( var values:array<int2>; var i:int ) {
-            let addi = (random_int(seed) & 511) + 10;
+            let addi = (random_int(seed) & 511) + 10
             for (tt in range(addi)) {
-                values |> push(int2(i+tt,i+tt+13));
+                values |> push(int2(i+tt,i+tt+13))
             }
-            i += addi;
+            i += addi
         }
         query <| $ ( var values:array<int2>; var i:int ) {
-            var subi = (random_int(seed) & 63) + 5;
-            subi = min(length(values)-10, subi);
+            var subi = (random_int(seed) & 63) + 5
+            subi = min(length(values)-10, subi)
             for (tt in range(subi)) {
-                values |> pop;
+                values |> pop
             }
-            i -= subi;
+            i -= subi
         }
         query <| $ ( values:array<int2>; i:int ) {
             for (x,v in range(i+1),values) {
                 if (! t |> equal(int2(x,x+13), v )) {
-                    break;
+                    break
                 }
             }
         }
 
-        let r = random_int(seed) % 3;
+        let r = random_int(seed) % 3
         if (r == 0) {
-            pass;
+            pass
         }
         elif (r == 1) {
-            var data <- mem_archive_save(decsState);
-            restart();
-            data |> mem_archive_load(decsState);
+            var data <- mem_archive_save(decsState)
+            restart()
+            data |> mem_archive_load(decsState)
         }
         else {
-            before_gc();
+            before_gc()
             unsafe {
-                heap_collect(true,true);
+                heap_collect(true,true)
             }
-            after_gc();
+            after_gc()
         }
         query <| $ ( values:array<int2>; i:int ) {
             for (x,v in range(i+1),values) {
                 if (! t |> equal(int2(x,x+13), v )) {
-                    break;
+                    break
                 }
             }
         }
-        var te = 0;
+        var te = 0
         query <| $ ( eid: EntityId ) {
-            te ++;
+            te ++
         }
-        t|> equal(te, TOTAL_EID);
-        te = 0;
+        t|> equal(te, TOTAL_EID)
+        te = 0
         find_query <| $ ( eid: EntityId ) {
-            te ++;
-            return false;
+            te ++
+            return false
         }
-        t|> equal(TOTAL_EID, te);
+        t|> equal(TOTAL_EID, te)
     }
 }
 

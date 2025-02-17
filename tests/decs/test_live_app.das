@@ -8,22 +8,22 @@ require daslib/live
 [export]
 def initialize(full_restart:bool) {
     if (full_restart) {
-        restart();
+        restart()
         create_entity <| @ ( eid, cmp ) {
-            cmp |> set("name", "one entity");
+            cmp |> set("name", "one entity")
         }
-        commit();
+        commit()
     }
 }
 
 [export]
 def act ( dt : float ) {
     query <| $ ( name:string ) {
-        assert(name=="one entity");
+        assert(name=="one entity")
     }
 }
 
 [export]
 def shutdown {
-    pass;
+    pass
 }

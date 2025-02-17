@@ -279,21 +279,21 @@ def operator ?[] ( self:%FlatHashMap ==const explicit; key : %KeyType ) : %Value
 [hint(alwaysinline)]
 def public hash0 ( k ) {
     //! this hash function converts and workhorse key to a 64 bit hash
-    let k64 = uint64(k);
-    return k64 <= 2ul ? 0x9e3779b97f4a7c15ul : k64;
+    let k64 = uint64(k)
+    return k64 <= 2ul ? 0x9e3779b97f4a7c15ul : k64
 }
 
 [hint(alwaysinline)]
 def public hash0 ( s : string ) : uint64 {
     //! adler32 extended to 64 bits
-    let MOD_ADLER = 0xFFFFFFFFFFFFFFC5ul;
-    var a = 1ul;
-    var b = 0ul;
+    let MOD_ADLER = 0xFFFFFFFFFFFFFFC5ul
+    var a = 1ul
+    var b = 0ul
     for (c in s) {
-        a = (a + uint64(c)) % MOD_ADLER;
-        b = (b + a) % MOD_ADLER;
+        a = (a + uint64(c)) % MOD_ADLER
+        b = (b + a) % MOD_ADLER
     }
-    return (uint64(b) << 32ul) | uint64(a);
+    return (uint64(b) << 32ul) | uint64(a)
 }
 
 //! CompactHashMap is a hash map that uses 2 hash functions and double lookup.

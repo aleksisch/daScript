@@ -1,24 +1,24 @@
 options gen2;
 struct Foo {
-    a : int;
+    a : int
 }
 
 [sideeffects]
 def buggy(skip:bool) {
-    var a = new Foo;
+    var a = new Foo
     if (skip) {
-        return;
+        return
     }
-    var b = new Foo;
+    var b = new Foo
 } finally {
     unsafe {
-        delete a;
-        delete b;
+        delete a
+        delete b
     }
 }
 
 [export]
 def test {
-    buggy(true);
-    return true;
+    buggy(true)
+    return true
 }

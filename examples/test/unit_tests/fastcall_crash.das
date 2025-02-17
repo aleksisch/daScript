@@ -1,17 +1,17 @@
 options gen2;
 def cast_fn(a: int): int {
-    return a;
+    return a
 }
 
 def fn(b: int) {
-    return;
+    return
 }
 
 def draw() {
-    fn(cast_fn(1));
+    fn(cast_fn(1))
 }
 
 [export]
 def test {
-    return true;
+    return true
 }

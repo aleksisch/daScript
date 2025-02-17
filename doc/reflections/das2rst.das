@@ -56,7 +56,7 @@ require daslib/fuzzer
 require daslib/match
 
 def document_module_math(root:string) {
-    var mod = get_module("math");
+    var mod = get_module("math")
     var groups <- array<DocGroup>(
         group_by_regex("all numerics (uint*, int*, float*, double)", mod, %regex~(min|max)$%%),
         group_by_regex("float* and double", mod, %regex~(sign|abs|acos|asin|atan|atan2|cos|sin|tan|exp|log|exp2|
@@ -73,12 +73,12 @@ dot|normalize|fast_normalize)$%%),
         group_by_regex("Matrix manipulation", mod, %regex~(identity|inverse|rotate|transpose|translation|compose|decompose|look_at|orthonormal_inverse|persp_forward|persp_reverse)$%%),
         group_by_regex("Quaternion operations", mod, %regex~(quat_conjugate|quat_mul|quat_mul_vec|quat_from_unit_arc|quat_from_unit_vec_ang)$%%),
         group_by_regex("Packing and unpacking", mod, %regex~(pack_float_to_byte|unpack_byte_to_float)$%%)
-    );
-    document("Math library",mod,"{root}/math.rst","{root}/detail/math.rst",groups);
+    )
+    document("Math library",mod,"{root}/math.rst","{root}/detail/math.rst",groups)
 }
 
 def document_module_builtin(root:string) {
-    var mod = get_module("$");
+    var mod = get_module("$")
     var groups <- array<DocGroup>(
         hide_group(group_by_regex("Internal builtin functions", mod, %regex~builtin%%)),
         hide_group(group_by_regex("Internal pointer arithmetics", mod, %regex~i_das_%%)),
@@ -112,54 +112,54 @@ to_table_move|empty|subarray|insert|move_to_ref|copy_to_local|move_to_local|get|
         group_by_regex("Initialization and finalization", mod, %regex~(using|clone|finalize)$%%),
         group_by_regex("Algorithms", mod, %regex~(swap|iter_range|count|ucount)$%%),
         group_by_regex("Memset", mod, %regex~(memset.*)$%%),
-        group_by_regex("Malloc", mod, %regex~(malloc|free|malloc_usable_size)$%%));
-    document("Built-in runtime",mod,"{root}/builtin.rst","{root}/detail/builtin.rst",groups);
+        group_by_regex("Malloc", mod, %regex~(malloc|free|malloc_usable_size)$%%))
+    document("Built-in runtime",mod,"{root}/builtin.rst","{root}/detail/builtin.rst",groups)
 }
 
 def document_module_fio(root:string) {
-    var mod = get_module("fio");
+    var mod = get_module("fio")
     var groups <- array<DocGroup>(
         hide_group(group_by_regex("Internal builtin functions", mod, %regex~builtin%%)),
         group_by_regex("File manipulation", mod, %regex~(f|stat$|getchar|remove|rename)%%),
         group_by_regex("Path manipulation", mod, %regex~(base_name|dir_name|get_full_file_name)$%%),
         group_by_regex("Directory manipulation", mod, %regex~(dir|mkdir|chdir|getcwd)$%%),
         group_by_regex("OS specific routines", mod, %regex~(sleep|exit|popen|popen_binary|get_env_variable|sanitize_command_line)$%%)
-    );
-    document("File input output library",mod,"{root}/fio.rst","{root}/detail/fio.rst",groups);
+    )
+    document("File input output library",mod,"{root}/fio.rst","{root}/detail/fio.rst",groups)
 }
 
 def document_module_random(root:string) {
-    var mod = get_module("random");
+    var mod = get_module("random")
     var groups <- array<DocGroup>(
         group_by_regex("Seed and basic generators", mod, %regex~(random_seed|random_seed2D|random_float|random_float4|random_int|random_big_int|random_int4|random_uint)$%%),
         group_by_regex("Random iterators", mod, %regex~(each_random_.*)$%%),
         group_by_regex("Specific distributions", mod, %regex~(random_unit_vector|random_in_unit_disk|random_in_unit_sphere)$%%)
-    );
-    document("Random generator library",mod,"{root}/random.rst","{root}/detail/random.rst",groups);
+    )
+    document("Random generator library",mod,"{root}/random.rst","{root}/detail/random.rst",groups)
 }
 
 def document_module_network(root:string) {
-    var mod = get_module("network");
+    var mod = get_module("network")
     var groups <- array<DocGroup>(
         group_by_regex("Low lever NetworkServer IO", mod, %regex~(make_server|server_init|server_is_open|server_is_connected|server_tick|server_send|server_restore)$%%)
-    );
-    document("Network socket library",mod,"{root}/network.rst","{root}/detail/network.rst",groups);
+    )
+    document("Network socket library",mod,"{root}/network.rst","{root}/detail/network.rst",groups)
 }
 
 def document_module_uriparser(root:string) {
-    var mod = get_module("uriparser");
+    var mod = get_module("uriparser")
     var groups <- array<DocGroup>(
         group_by_regex("Initialization and finalization", mod, %regex~(Uri|using|clone|finalize)$%%),
         group_by_regex("Escape and unescape", mod, %regex~(escape_uri|unescape_uri)$%%),
         group_by_regex("Uri manipulations", mod, %regex~(normalize_uri|unescape_uri|string|uri_for_each_query_kv|remove_base_uri|add_base_uri|strip_uri|normalize)$%%),
         group_by_regex("File name conversions", mod, %regex~(to_unix_file_name|to_windows_file_name|to_file_name|uri_from_file_name|uri_from_windows_file_name|uri_from_unix_file_name|uri_to_unix_file_name|uri_to_windows_file_name|unix_file_name_to_uri|windows_file_name_to_uri|uri_to_file_name|file_name_to_uri)$%%),
         group_by_regex("GUID", mod, %regex~(make_new_guid)$%%)
-    );
-    document("URI manipulation library based on UriParser",mod,"{root}/uriparser.rst","{root}/detail/uriparser.rst",groups);
+    )
+    document("URI manipulation library based on UriParser",mod,"{root}/uriparser.rst","{root}/detail/uriparser.rst",groups)
 }
 
 def document_module_rtti(root:string) {
-    var mod = get_module("rtti");
+    var mod = get_module("rtti")
     var groups <- array<DocGroup>(
         group_by_regex("Initialization and finalization", mod, %regex~(using|LineInfo|CodeOfPolicies|RttiValue_nothing)$%%),
         group_by_regex("Type access", mod, %regex~(get_dim|builtin_is_same_type|is_compatible_cast|get_das_type_name|is_same_type|each_dim|arg_types|arg_names|get_type_size|get_type_align)$%%),
@@ -173,12 +173,12 @@ def document_module_rtti(root:string) {
         group_by_regex("Data walking and printing", mod, %regex~(sprint_data|describe|get_mangled_name)$%%),
         group_by_regex("Function and mangled name hash", mod, %regex~(get_function_by_mangled_name_hash|get_function_mangled_name_hash|get_function_address)$%%),
         group_by_regex("Context and mutex locking", mod, %regex~(lock_this_context|lock_context|lock_mutex)$%%),
-        group_by_regex("Runtime data access", mod, %regex~(get_table_key_index)$%%));
-    document("Runtime type information library",mod,"{root}/rtti.rst","{root}/detail/rtti.rst",groups);
+        group_by_regex("Runtime data access", mod, %regex~(get_table_key_index)$%%))
+    document("Runtime type information library",mod,"{root}/rtti.rst","{root}/detail/rtti.rst",groups)
 }
 
 def document_module_ast(root:string) {
-    var mod = get_module("ast");
+    var mod = get_module("ast")
     var groups <- array<DocGroup>(
         group_by_regex("Call generation", mod, %regex~(make_call)$%%),
         group_by_regex("Visitor pattern", mod, %regex~visit.*%%),
@@ -204,12 +204,12 @@ def document_module_ast(root:string) {
         group_by_regex("Properties", mod, %regex~(is|has|get|can)_.*%%),
         group_by_regex("Infer", mod, %regex~(infer_generic_type|update_alias_map)$%%),
         hide_group(group_by_regex("Internal ast infrastructure", mod, %regex~(builtin_ast_.*)%%))
-    );
-    document("AST manipulation library",mod,"{root}/ast.rst","{root}/detail/ast.rst",groups);
+    )
+    document("AST manipulation library",mod,"{root}/ast.rst","{root}/detail/ast.rst",groups)
 }
 
 def document_module_ast_boost(root:string) {
-    var mod = find_module("ast_boost");
+    var mod = find_module("ast_boost")
     var groups <- array<DocGroup>(
         group_by_regex("Containers", mod, %regex~(emplace_new)%%),
         group_by_regex("Textual descriptions of the objects", mod, %regex~(describe.*|debug_expression)%%),
@@ -220,12 +220,12 @@ def document_module_ast_boost(root:string) {
         group_by_regex("Type generation", mod, %regex~(function_to_type)%%),
         hide_group(group_by_regex("Clonning", mod, %regex~(clone)%%)),
         group_by_regex("Setup", mod, %regex~setup.*$%%)
-    );
-    document("Boost package for the AST",mod,"{root}/ast_boost.rst","{root}/detail/ast_boost.rst",groups);
+    )
+    document("Boost package for the AST",mod,"{root}/ast_boost.rst","{root}/detail/ast_boost.rst",groups)
 }
 
 def document_module_strings(root:string) {
-    var mod = find_module("strings");
+    var mod = find_module("strings")
     var groups <- array<DocGroup>(
         hide_group(group_by_regex("Internal builtin functions", mod, %regex~builtin%%)),
         group_by_regex("Character set", mod, %regex~(set_total|set_element|is_char_in_set)$%%),
@@ -240,74 +240,74 @@ strip|strip_left|strip_right|to_lower|to_lower_in_place|to_upper|to_upper_in_pla
         group_by_regex("String conversion routines", mod, %regex~(double|float|int|uint|int64|uint64|to_double|to_float|to_int|to_uint|to_int64|to_uint64|string|to_char)$%%),
         group_by_regex("String as array", mod, %regex~(modify_data|peek_data)$%%),
         group_by_regex("Low level memory allocation", mod, %regex~(delete_string|reserve_string_buffer)$%%)
-    );
-    document("String manipulation library",mod,"{root}/strings.rst","{root}/detail/strings.rst",groups);
+    )
+    document("String manipulation library",mod,"{root}/strings.rst","{root}/detail/strings.rst",groups)
 }
 
 def document_module_strings_boost(root:string) {
-    var mod = find_module("strings_boost");
+    var mod = find_module("strings_boost")
     var groups <- array<DocGroup>(
         group_by_regex("Split and join", mod, %regex~(split|split_by_chars|join)$%%),
         group_by_regex("Formatting", mod, %regex~(wide)$%%),
         group_by_regex("Queries and comparisons", mod, %regex~(is_character_at|eq)$%%),
         group_by_regex("Replace", mod, %regex~(replace_multiple)$%%),
         group_by_regex("Levenshtein distance", mod, %regex~(levenshtein_distance|levenshtein_distance_fast)$%%),
-        group_by_regex("Character traits", mod, %regex~(is_hex|is_tab_or_space)$%%));
-    document("Boost package for string manipulation library",mod,"{root}/strings_boost.rst","{root}/detail/strings_boost.rst",groups);
+        group_by_regex("Character traits", mod, %regex~(is_hex|is_tab_or_space)$%%))
+    document("Boost package for string manipulation library",mod,"{root}/strings_boost.rst","{root}/detail/strings_boost.rst",groups)
 }
 
 
 def document_module_functional(root:string) {
-    var mod = find_module("functional");
+    var mod = find_module("functional")
     var groups <- array<DocGroup>(
         group_by_regex("Map, reduce", mod, %regex~(filter|map|reduce|any|sum|all|cycle|islice|count|repeat_ref|repeat|not|echo|flatten)$%%),
         group_by_regex("Queries", mod, %regex~(is_equal|is_not_equal)$%%)
-    );
-    document("Functional programming library",mod,"{root}/functional.rst","{root}/detail/functional.rst",groups);
+    )
+    document("Functional programming library",mod,"{root}/functional.rst","{root}/detail/functional.rst",groups)
 }
 
 def document_module_json(root:string) {
-    var mod = find_module("json");
+    var mod = find_module("json")
     var groups <- array<DocGroup>(
         group_by_regex("Value conversion", mod, %regex~(JV|JVNull)$%%),
         group_by_regex("Read and write", mod, %regex~(read_json|write_json)$%%),
         group_by_regex("JSON properties", mod, %regex~(set_no_trailing_zeros|set_no_empty_arrays|set_allow_duplicate_keys)$%%),
         group_by_regex("Broken JSON", mod, %regex~(try_fixing_broken_json)$%%)
-    );
-    document("JSON manipulation library",mod,"{root}/json.rst","{root}/detail/json.rst",groups);
+    )
+    document("JSON manipulation library",mod,"{root}/json.rst","{root}/detail/json.rst",groups)
 }
 
 def document_module_json_boost(root:string) {
-    var mod = find_module("json_boost");
+    var mod = find_module("json_boost")
     var groups <- array<DocGroup>(
         group_by_regex("Value conversion", mod, %regex~(JV|from_JV)$%%),
         group_by_regex("stub1", mod, %regex~(stub1)$%%)
-    );
-    document("Boost package for JSON",mod,"{root}/json_boost.rst","{root}/detail/json_boost.rst",groups);
+    )
+    document("Boost package for JSON",mod,"{root}/json_boost.rst","{root}/detail/json_boost.rst",groups)
 }
 
 def document_module_regex(root:string) {
-    var mod = find_module("regex");
+    var mod = find_module("regex")
     var groups <- array<DocGroup>(
         group_by_regex("Compilation and validation", mod, %regex~(regex_compile|is_valid|regex_debug|debug_set|visit_top_down)$%%),
         group_by_regex("Access", mod, %regex~(regex_group|regex_foreach)$%%),
         group_by_regex("Match", mod, %regex~(regex_match)$%%),
         group_by_regex("Generation", mod, %regex~(re_gen.*)$%%)
-    );
-    document("Regular expression library",mod,"{root}/regex.rst","{root}/detail/regex.rst",groups);
+    )
+    document("Regular expression library",mod,"{root}/regex.rst","{root}/detail/regex.rst",groups)
 }
 
 def document_module_regex_boost(root:string) {
-    var mod = find_module("regex_boost");
+    var mod = find_module("regex_boost")
     var groups <- array<DocGroup>(
         group_by_regex("stub0", mod, %regex~(stub0)$%%),
         group_by_regex("stub1", mod, %regex~(stub1)$%%)
-    );
-    document("Boost package for REGEX",mod,"{root}/regex_boost.rst","{root}/detail/regex_boost.rst",groups);
+    )
+    document("Boost package for REGEX",mod,"{root}/regex_boost.rst","{root}/detail/regex_boost.rst",groups)
 }
 
 def document_module_rst(root:string) {
-    var mod = find_module("rst");
+    var mod = find_module("rst")
     var groups <- array<DocGroup>(
         group_by_regex("Document writers", mod, %regex~document%%),
         group_by_regex("Descriptions", mod, %regex~describe%%),
@@ -316,106 +316,106 @@ def document_module_rst(root:string) {
         group_by_regex("Documentaton queries", mod, %regex~.+_needs%%),
         group_by_regex("Group operations", mod, %regex~.*group%%),
         group_by_regex("Naming helpers", mod, %regex~(topic|module_name|function_name)$%%)
-    );
-    document("Documentation generator",mod,"{root}/rst.rst","{root}/detail/rst.rst",groups);
+    )
+    document("Documentation generator",mod,"{root}/rst.rst","{root}/detail/rst.rst",groups)
 }
 
 def document_module_apply(root:string) {
-    var mod = find_module("apply");
+    var mod = find_module("apply")
     var groups <- array<DocGroup>(
         group_by_regex("stub0", mod, %regex~(stub0)$%%),
         group_by_regex("stub1", mod, %regex~(stub1)$%%)
-    );
-    document("Apply reflection pattern",mod,"{root}/apply.rst","{root}/detail/apply.rst",groups);
+    )
+    document("Apply reflection pattern",mod,"{root}/apply.rst","{root}/detail/apply.rst",groups)
 }
 
 def document_module_jobque(root:string) {
-    var mod = find_module("jobque");
+    var mod = find_module("jobque")
     var groups <- array<DocGroup>(
         group_by_regex("Channel, JobStatus, Lockbox", mod, %regex~(append|notify|join|channel_create|channel_remove|add_ref|release|notify_and_release|lock_box_create|lock_box_remove|job_status_create|job_status_remove)$%%),
         group_by_regex("Queries", mod, %regex~(get_total_hw_jobs|get_total_hw_threads|is_job_que_shutting_down)$%%),
         group_by_regex("Internal invocations", mod, %regex~(new_job_invoke|new_thread_invoke|new_debugger_thread)$%%),
         group_by_regex("Construction", mod, %regex~(with_channel|with_job_status|with_job_que|with_lock_box)$%%),
         group_by_regex("Atomic", mod, %regex~(atomic32_create|atomic32_remove|with_atomic32|atomic64_create|atomic64_remove|with_atomic64|get|set|inc|dec)$%%)
-    );
-    document("Jobs and threads",mod,"{root}/jobque.rst","{root}/detail/jobque.rst",groups);
+    )
+    document("Jobs and threads",mod,"{root}/jobque.rst","{root}/detail/jobque.rst",groups)
 }
 
 def document_module_jobque_boost(root:string) {
-    var mod = find_module("jobque_boost");
+    var mod = find_module("jobque_boost")
     var groups <- array<DocGroup>(
         group_by_regex("Invocations", mod, %regex~(new_job|new_thread)$%%),
         group_by_regex("Iteration", mod, %regex~(for_each|each)$%%),
         group_by_regex("Passing data", mod, %regex~(push|push_clone)$%%),
         group_by_regex("Internal capture details", mod, %regex~(capture_jobque_channel|capture_jobque_job_status|release_capture_jobque_channel|release_capture_jobque_job_status)$%%)
-    );
-    document("Boost package for jobs and threads",mod,"{root}/jobque_boost.rst","{root}/detail/jobque_boost.rst",groups);
+    )
+    document("Boost package for jobs and threads",mod,"{root}/jobque_boost.rst","{root}/detail/jobque_boost.rst",groups)
 }
 
 def document_module_apply_in_context(root:string) {
-    var mod = find_module("apply_in_context");
+    var mod = find_module("apply_in_context")
     var groups <- array<DocGroup>(
         group_by_regex("stub0", mod, %regex~(stub0)$%%),
         group_by_regex("stub1", mod, %regex~(stub1)$%%)
-    );
-    document("Cross-context evaluation helpers",mod,"{root}/apply_in_context.rst","{root}/detail/apply_in_context.rst",groups);
+    )
+    document("Cross-context evaluation helpers",mod,"{root}/apply_in_context.rst","{root}/detail/apply_in_context.rst",groups)
 }
 
 def document_module_algorithm(root:string) {
-    var mod = find_module("algorithm");
+    var mod = find_module("algorithm")
     var groups <- array<DocGroup>(
         group_by_regex("Search", mod, %regex~(lower_bound|binary_search)$%%),
         group_by_regex("Array manipulation", mod, %regex~(unique|sort_unique|reverse|combine)$%%)
-    );
-    document("Miscelanious algorithms",mod,"{root}/algorithm.rst","{root}/detail/algorithm.rst",groups);
+    )
+    document("Miscelanious algorithms",mod,"{root}/algorithm.rst","{root}/detail/algorithm.rst",groups)
 }
 
 def document_module_contracts(root:string) {
-    var mod = find_module("contracts");
+    var mod = find_module("contracts")
     var groups <- array<DocGroup>(
         group_by_regex("Type queries", mod, %regex~(isYetAnotherVectorTemplate)$%%)
-    );
-    document("Miscelanious contract annotations",mod,"{root}/contracts.rst","{root}/detail/contracts.rst",groups);
+    )
+    document("Miscelanious contract annotations",mod,"{root}/contracts.rst","{root}/detail/contracts.rst",groups)
 }
 
 def document_module_defer(root:string) {
-    var mod = find_module("defer");
+    var mod = find_module("defer")
     var groups <- array<DocGroup>(
         group_by_regex("Defer", mod, %regex~(defer)$%%),
         group_by_regex("Stub", mod, %regex~(nada)$%%)
-    );
-    document("defer and defer_delete macros",mod,"{root}/defer.rst","{root}/detail/defer.rst",groups);
+    )
+    document("defer and defer_delete macros",mod,"{root}/defer.rst","{root}/detail/defer.rst",groups)
 }
 
 def document_module_if_not_null(root:string) {
-    var mod = find_module("if_not_null");
+    var mod = find_module("if_not_null")
     var groups <- array<DocGroup>(
         group_by_regex("stub0", mod, %regex~(stub0)$%%),
         group_by_regex("stub1", mod, %regex~(stub1)$%%)
-    );
-    document("if_not_null macro",mod,"{root}/if_not_null.rst","{root}/detail/if_not_null.rst",groups);
+    )
+    document("if_not_null macro",mod,"{root}/if_not_null.rst","{root}/detail/if_not_null.rst",groups)
 }
 
 def document_module_instance_function(root:string) {
-    var mod = find_module("instance_function");
+    var mod = find_module("instance_function")
     var groups <- array<DocGroup>(
         group_by_regex("stub0", mod, %regex~(stub0)$%%),
         group_by_regex("stub1", mod, %regex~(stub1)$%%)
-    );
-    document("instance_function function annotation",mod,"{root}/instance_function.rst","{root}/detail/instance_function.rst",groups);
+    )
+    document("instance_function function annotation",mod,"{root}/instance_function.rst","{root}/detail/instance_function.rst",groups)
 }
 
 def document_module_templates(root:string) {
-    var mod = find_module("templates");
+    var mod = find_module("templates")
     var groups <- array<DocGroup>(
         group_by_regex("stub0", mod, %regex~(stub0)$%%),
         group_by_regex("stub1", mod, %regex~(stub1)$%%)
-    );
-    document("decltype macro and template function annotation",mod,"{root}/templates.rst","{root}/detail/templates.rst",groups);
+    )
+    document("decltype macro and template function annotation",mod,"{root}/templates.rst","{root}/detail/templates.rst",groups)
 }
 
 def document_module_templates_boost(root:string) {
-    var mod = find_module("templates_boost");
+    var mod = find_module("templates_boost")
     var groups <- array<DocGroup>(
         group_by_regex("Template rules", mod, %regex~(kaboomVarField|replaceVariable|renameVariable|replaceType|replaceAnnotationArgument|replaceBlockArgument)$%%),
         group_by_regex("Template application", mod, %regex~(apply_template)$%%),
@@ -423,160 +423,160 @@ def document_module_templates_boost(root:string) {
         group_by_regex("Block helpers", mod, %regex~(unquote_block|move_unquote_block)$%%),
         group_by_regex("Global variable helpers", mod, %regex~(add_global_var|add_global_let|add_global_private_var|add_global_private_let)$%%),
         group_by_regex("Hygenic names", mod, %regex~(make_unique_private_name)$%%)
-    );
-    document("Template application helpers",mod,"{root}/templates_boost.rst","{root}/detail/templates_boost.rst",groups);
+    )
+    document("Template application helpers",mod,"{root}/templates_boost.rst","{root}/detail/templates_boost.rst",groups)
 }
 
 def document_module_is_local(root:string) {
-    var mod = find_module("is_local");
+    var mod = find_module("is_local")
     var groups <- array<DocGroup>(
         group_by_regex("Scope checks", mod, %regex~(is_local_expr|is_local_or_global_expr|is_scope_expr)$%%)
-    );
-    document("is_local_xxx ast helpers",mod,"{root}/is_local.rst","{root}/detail/is_local.rst",groups);
+    )
+    document("is_local_xxx ast helpers",mod,"{root}/is_local.rst","{root}/detail/is_local.rst",groups)
 }
 
 def document_module_safe_addr(root:string) {
-    var mod = find_module("safe_addr");
+    var mod = find_module("safe_addr")
     var groups <- array<DocGroup>(
         group_by_regex("Safe temporary address", mod, %regex~(safe_addr|shared_addr)$%%),
         group_by_regex("Temporary pointers", mod, %regex~(temp_ptr)$%%)
-    );
-    document("safe_addr macro",mod,"{root}/safe_addr.rst","{root}/detail/safe_addr.rst",groups);
+    )
+    document("safe_addr macro",mod,"{root}/safe_addr.rst","{root}/detail/safe_addr.rst",groups)
 }
 
 def document_module_static_let(root:string) {
-    var mod = find_module("static_let");
+    var mod = find_module("static_let")
     var groups <- array<DocGroup>(
         group_by_regex("Static variable declarations", mod, %regex~(static_let|static_let_finalize)$%%),
         group_by_regex("stub1", mod, %regex~(stub1)$%%)
-    );
-    document("static_let macro",mod,"{root}/static_let.rst","{root}/detail/static_let.rst",groups);
+    )
+    document("static_let macro",mod,"{root}/static_let.rst","{root}/detail/static_let.rst",groups)
 }
 
 def document_module_lpipe(root:string) {
-    var mod = find_module("lpipe");
+    var mod = find_module("lpipe")
     var groups <- array<DocGroup>(
         group_by_regex("stub0", mod, %regex~(stub0)$%%),
         group_by_regex("stub1", mod, %regex~(stub1)$%%)
-    );
-    document("lpipe macro",mod,"{root}/lpipe.rst","{root}/detail/lpipe.rst",groups);
+    )
+    document("lpipe macro",mod,"{root}/lpipe.rst","{root}/detail/lpipe.rst",groups)
 }
 
 def document_module_math_bits(root:string) {
-    var mod = find_module("math_bits");
+    var mod = find_module("math_bits")
     var groups <- array<DocGroup>(
         group_by_regex("float in int,uint", mod, %regex~(int_bits_to_float|uint_bits_to_float)$%%),
         group_by_regex("int,uint in float", mod, %regex~(float_bits_to_int|float_bits_to_uint)$%%),
         group_by_regex("int64,uint64 in double", mod, %regex~(int64_bits_to_double|uint64_bits_to_double|double_bits_to_int64|double_bits_to_uint64)$%%),
-        group_by_regex("bit-cast vec4f", mod, %regex~(cast_to.*)$%%));
-    document("Math bit helpers",mod,"{root}/math_bits.rst","{root}/detail/math_bits.rst",groups);
+        group_by_regex("bit-cast vec4f", mod, %regex~(cast_to.*)$%%))
+    document("Math bit helpers",mod,"{root}/math_bits.rst","{root}/detail/math_bits.rst",groups)
 }
 
 def document_module_math_boost(root:string) {
-    var mod = find_module("math_boost");
+    var mod = find_module("math_boost")
     var groups <- array<DocGroup>(
         group_by_regex("Angle conversions", mod, %regex~(degrees|radians)$%%),
         group_by_regex("Intersections", mod, %regex~(is_intersecting)$%%),
         group_by_regex("Matrices", mod, %regex~(look_at_lh|look_at_rh|perspective_lh|perspective_rh|perspective_rh_opengl|ortho_rh|planar_shadow)$%%),
         group_by_regex("Plane", mod, %regex~(plane_dot|plane_normalize|plane_from_point_normal)$%%),
         group_by_regex("Color packig and unpacking", mod, %regex~(RGBA_TO_UCOLOR|UCOLOR_TO_RGBA|UCOLOR_TO_RGB)$%%)
-    );
-    document("Boost package for math",mod,"{root}/math_boost.rst","{root}/detail/math_boost.rst",groups);
+    )
+    document("Boost package for math",mod,"{root}/math_boost.rst","{root}/detail/math_boost.rst",groups)
 }
 
 def document_module_array_boost(root:string) {
-    var mod = find_module("array_boost");
+    var mod = find_module("array_boost")
     var groups <- array<DocGroup>(
         group_by_regex("Temporary arrays", mod, %regex~(temp_array)$%%),
         group_by_regex("Empty check", mod, %regex~(empty)$%%)
-    );
-    document("Boost package for array manipulation",mod,"{root}/array_boost.rst","{root}/detail/array_boost.rst",groups);
+    )
+    document("Boost package for array manipulation",mod,"{root}/array_boost.rst","{root}/detail/array_boost.rst",groups)
 }
 
 def document_module_archive(root:string) {
-    var mod = find_module("archive");
+    var mod = find_module("archive")
     var groups <- array<DocGroup>(
         group_by_regex("Serialization", mod, %regex~(serialize|serialize_raw|read_raw|write_raw)$%%),
         group_by_regex("Memory archive", mod, %regex~(mem_archive_save|mem_archive_load)$%%)
-    );
-    document("General prupose serialization",mod,"{root}/archive.rst","{root}/detail/archive.rst",groups);
+    )
+    document("General prupose serialization",mod,"{root}/archive.rst","{root}/detail/archive.rst",groups)
 }
 
 def document_module_unroll(root:string) {
-    var mod = find_module("unroll");
+    var mod = find_module("unroll")
     var groups <- array<DocGroup>(
         group_by_regex("Unrolling", mod, %regex~(unroll)$%%)
-    );
-    document("Loop unrolling",mod,"{root}/unroll.rst","{root}/detail/unroll.rst",groups);
+    )
+    document("Loop unrolling",mod,"{root}/unroll.rst","{root}/detail/unroll.rst",groups)
 }
 
 def document_module_assert_once(root:string) {
-    var mod = find_module("assert_once");
+    var mod = find_module("assert_once")
     var groups <- array<DocGroup>(
         group_by_regex("Assertion", mod, %regex~(assert_once)$%%)
-    );
-    document("Assert once",mod,"{root}/assert_once.rst","{root}/detail/assert_once.rst",groups);
+    )
+    document("Assert once",mod,"{root}/assert_once.rst","{root}/detail/assert_once.rst",groups)
 }
 
 def document_module_ast_block_to_loop(root:string) {
-    var mod = find_module("ast_block_to_loop");
+    var mod = find_module("ast_block_to_loop")
     var groups <- array<DocGroup>(
         group_by_regex("Block to loop conversion", mod, %regex~(convert_block_to_loop)$%%)
-    );
-    document("DECS, AST block to loop",mod,"{root}/ast_block_to_loop.rst","{root}/detail/ast_block_to_loop.rst",groups);
+    )
+    document("DECS, AST block to loop",mod,"{root}/ast_block_to_loop.rst","{root}/detail/ast_block_to_loop.rst",groups)
 }
 
 def document_module_ast_used(root:string) {
-    var mod = find_module("ast_used");
+    var mod = find_module("ast_used")
     var groups <- array<DocGroup>(
         group_by_regex("Collecting type information", mod, %regex~(collect_used_types)$%%)
-    );
-    document("AST type ussage collection",mod,"{root}/ast_used.rst","{root}/detail/ast_used.rst",groups);
+    )
+    document("AST type ussage collection",mod,"{root}/ast_used.rst","{root}/detail/ast_used.rst",groups)
 }
 
 def document_module_constexpr(root:string) {
-    var mod = find_module("constant_expression");
+    var mod = find_module("constant_expression")
     var groups <- array<DocGroup>(
         group_by_regex("Macro helpers", mod, %regex~(isConstantExpression)$%%)
-    );
-    document("Constant expression checker and substitution",mod,"{root}/constexpr.rst","{root}/detail/constexpr.rst",groups);
+    )
+    document("Constant expression checker and substitution",mod,"{root}/constexpr.rst","{root}/detail/constexpr.rst",groups)
 }
 
 def document_module_uriparser_boost(root:string) {
-    var mod = find_module("uriparser_boost");
+    var mod = find_module("uriparser_boost")
     var groups <- array<DocGroup>(
         group_by_regex("Split and compose", mod, %regex~(uri_split_full_path|uri_compose_query|uri_compose_query_in_order|uri_compose)$%%),
         group_by_regex("Component accessors", mod, %regex~(scheme|user_info|host|port|path|query|fragment)$%%)
-    );
-    document("Boost package for the URI parser",mod,"{root}/uriparser_boost.rst","{root}/detail/uriparser_boost.rst",groups);
+    )
+    document("Boost package for the URI parser",mod,"{root}/uriparser_boost.rst","{root}/detail/uriparser_boost.rst",groups)
 }
 
 def document_module_sort_boost(root:string) {
-    var mod = find_module("sort_boost");
+    var mod = find_module("sort_boost")
     var groups <- array<DocGroup>(
         group_by_regex("stub", mod, %regex~(stub)$%%)
-    );
-    document("Boost package for the builtin sort",mod,"{root}/sort_boost.rst","{root}/detail/sort_boost.rst",groups);
+    )
+    document("Boost package for the builtin sort",mod,"{root}/sort_boost.rst","{root}/detail/sort_boost.rst",groups)
 }
 
 def document_module_enum_trait(root:string) {
-    var mod = find_module("enum_trait");
+    var mod = find_module("enum_trait")
     var groups <- array<DocGroup>(
         group_by_regex("stub", mod, %regex~(stub)$%%)
-    );
-    document("Enumeration traits",mod,"{root}/enum_trait.rst","{root}/detail/enum_trait.rst",groups);
+    )
+    document("Enumeration traits",mod,"{root}/enum_trait.rst","{root}/detail/enum_trait.rst",groups)
 }
 
 def document_module_cpp_bind(root:string) {
-    var mod = find_module("cpp_bind");
+    var mod = find_module("cpp_bind")
     var groups <- array<DocGroup>(
         group_by_regex("Generation of bindings", mod, %regex~(log_cpp_class_adapter)$%%)
-    );
-    document("C++ bindings generator",mod,"{root}/cpp_bind.rst","{root}/detail/cpp_bind.rst",groups);
+    )
+    document("C++ bindings generator",mod,"{root}/cpp_bind.rst","{root}/detail/cpp_bind.rst",groups)
 }
 
 def document_module_decs(root:string) {
-    var mod = find_module("decs");
+    var mod = find_module("decs")
     var groups <- array<DocGroup>(
         group_by_regex("Comparison and access", mod, %regex~(\=\=|\!\=|\.)$%%),
         group_by_regex("Access (get/set/clone)", mod, %regex~(has|get|set|clone|remove)$%%),
@@ -586,154 +586,154 @@ def document_module_decs(root:string) {
         group_by_regex("GC and reset", mod, %regex~(before_gc|after_gc|restart)$%%),
         group_by_regex("Iteration", mod, %regex~(for_each_archetype|for_eid_archetype|for_each_archetype_find|get_ro|decs_array|get_default_ro|get_optional)$%%),
         group_by_regex("Request", mod, %regex~(verify_request|compile_request|lookup_request|EcsRequestPos)$%%)
-    );
-    document("DECS, Daslang entity component system",mod,"{root}/decs.rst","{root}/detail/decs.rst",groups);
+    )
+    document("DECS, Daslang entity component system",mod,"{root}/decs.rst","{root}/detail/decs.rst",groups)
 }
 
 def document_module_decs_boost(root:string) {
-    var mod = find_module("decs_boost");
+    var mod = find_module("decs_boost")
     var groups <- array<DocGroup>(
         group_by_regex("Stub1", mod, %regex~(stub1)$%%),
         group_by_regex("Stub2", mod, %regex~(stub2)$%%)
-    );
-    document("Boost package for DECS",mod,"{root}/decs_boost.rst","{root}/detail/decs_boost.rst",groups);
+    )
+    document("Boost package for DECS",mod,"{root}/decs_boost.rst","{root}/detail/decs_boost.rst",groups)
 }
 
 def document_module_utf8_utils(root:string) {
-    var mod = find_module("utf8_utils");
+    var mod = find_module("utf8_utils")
     var groups <- array<DocGroup>(
         group_by_regex("stub", mod, %regex~(stub)$%%)
-    );
-    document("UTF-8 utilities",mod,"{root}/utf8_utils.rst","{root}/detail/utf8_utils.rst",groups);
+    )
+    document("UTF-8 utilities",mod,"{root}/utf8_utils.rst","{root}/detail/utf8_utils.rst",groups)
 }
 
 def document_module_macro_boost(root:string) {
-    var mod = find_module("macro_boost");
+    var mod = find_module("macro_boost")
     var groups <- array<DocGroup>(
         group_by_regex("Implementation details", mod, %regex~(macro_verify)$%%)
-    );
-    document("Boost package for the miscelanious macro manipulations",mod,"{root}/macro_boost.rst","{root}/detail/macro_boost.rst",groups);
+    )
+    document("Boost package for the miscelanious macro manipulations",mod,"{root}/macro_boost.rst","{root}/detail/macro_boost.rst",groups)
 }
 
 def document_module_coroutines(root:string) {
-    var mod = find_module("coroutines");
+    var mod = find_module("coroutines")
     var groups <- array<DocGroup>(
         group_by_regex("Top level coroutine evaluation", mod, %regex~(cr_run|cr_run_all)$%%)
-    );
-    document("Coroutines and additional generator support",mod,"{root}/coroutines.rst","{root}/detail/coroutines.rst",groups);
+    )
+    document("Coroutines and additional generator support",mod,"{root}/coroutines.rst","{root}/detail/coroutines.rst",groups)
 }
 
 def document_module_interfaces(root:string) {
-    var mod = find_module("interfaces");
+    var mod = find_module("interfaces")
     var groups <- array<DocGroup>(
         group_by_regex("Top level coroutine evaluation", mod, %regex~(cr_run|cr_run_all)$%%)
-    );
-    document("Interfaces",mod,"{root}/interfaces.rst","{root}/detail/interfaces.rst",groups);
+    )
+    document("Interfaces",mod,"{root}/interfaces.rst","{root}/detail/interfaces.rst",groups)
 }
 
 def document_module_export_constructor(root:string) {
-    var mod = find_module("export_constructor");
+    var mod = find_module("export_constructor")
     var groups <- array<DocGroup>(
         group_by_regex("Top level coroutine evaluation", mod, %regex~(cr_run|cr_run_all)$%%)
-    );
-    document("Export constructor",mod,"{root}/export_constructor.rst","{root}/detail/export_constructor.rst",groups);
+    )
+    document("Export constructor",mod,"{root}/export_constructor.rst","{root}/detail/export_constructor.rst",groups)
 }
 
 def document_module_faker(root:string) {
-    var mod = find_module("faker");
+    var mod = find_module("faker")
     var groups <- array<DocGroup>(
         group_by_regex("Constructor", mod, %regex~(Faker)$%%),
         group_by_regex("Random values", mod, %regex~random_.*$%%),
         group_by_regex("Random strings", mod, %regex~(any_.*|long_string|number|positive_int)$%%),
         group_by_regex("Date and time", mod, %regex~(month|day|date|is_leap_year|week_day)%%)
-    );
-    document("Faker",mod,"{root}/faker.rst","{root}/detail/faker.rst",groups);
+    )
+    document("Faker",mod,"{root}/faker.rst","{root}/detail/faker.rst",groups)
 }
 
 def document_module_fuzzer(root:string) {
-    var mod = find_module("fuzzer");
+    var mod = find_module("fuzzer")
     var groups <- array<DocGroup>(
         group_by_regex("Fuzzer tests", mod, %regex~fuzz.*$%%)
-    );
-    document("Fuzzer",mod,"{root}/fuzzer.rst","{root}/detail/fuzzer.rst",groups);
+    )
+    document("Fuzzer",mod,"{root}/fuzzer.rst","{root}/detail/fuzzer.rst",groups)
 }
 
 def document_module_match(root:string) {
-    var mod = find_module("match");
+    var mod = find_module("match")
     var groups <- array<DocGroup>(
         hide_group(group_by_regex("Implementation details", mod, %regex~(match_type|match_expr)$%%))
-    );
-    document("Pattern matching",mod,"{root}/match.rst","{root}/detail/match.rst",groups);
+    )
+    document("Pattern matching",mod,"{root}/match.rst","{root}/detail/match.rst",groups)
 }
 
 
 [export]
 def main {
-    let root = get_das_root()+"/doc/source/stdlib";  // todo: modify to output /temp so that we can merge changes
-    topic_root = "{root}/detail";
+    let root = get_das_root()+"/doc/source/stdlib"  // todo: modify to output /temp so that we can merge changes
+    topic_root = "{root}/detail"
     // document embedded modules
-    document_module_builtin(root);
-    document_module_math(root);
-    document_module_fio(root);
-    document_module_network(root);
-    document_module_uriparser(root);
-    document_module_rtti(root);
-    document_module_ast(root);
-    document_module_strings(root);
-    document_module_jobque(root);
+    document_module_builtin(root)
+    document_module_math(root)
+    document_module_fio(root)
+    document_module_network(root)
+    document_module_uriparser(root)
+    document_module_rtti(root)
+    document_module_ast(root)
+    document_module_strings(root)
+    document_module_jobque(root)
 
-    document_module_algorithm(root);
-    document_module_apply_in_context(root);
-    document_module_apply(root);
-    document_module_archive(root);
-    document_module_array_boost(root);
-    document_module_assert_once(root);
-    document_module_ast_block_to_loop(root);
-    document_module_ast_boost(root);
-    document_module_ast_used(root);
-    document_module_constexpr(root);
-    document_module_contracts(root);
-    document_module_coroutines(root);
-    document_module_cpp_bind(root);
+    document_module_algorithm(root)
+    document_module_apply_in_context(root)
+    document_module_apply(root)
+    document_module_archive(root)
+    document_module_array_boost(root)
+    document_module_assert_once(root)
+    document_module_ast_block_to_loop(root)
+    document_module_ast_boost(root)
+    document_module_ast_used(root)
+    document_module_constexpr(root)
+    document_module_contracts(root)
+    document_module_coroutines(root)
+    document_module_cpp_bind(root)
     // document_module_cpp_gen(root)                // NOTE - do not document. its obsolete. use cbind_boost instead
     // document_module_dap(root)                    // todo: ask to document
     // document_module_das_source_formatter(root)   // todo: ask to document
     // document_module_debug(root)                  // todo: document???
-    document_module_decs_boost(root);                 // DECS
+    document_module_decs_boost(root)                 // DECS
     // document_module_decs_state(root)                 // DECS
-    document_module_decs(root);                       // DECS
-    document_module_defer(root);
-    document_module_enum_trait(root);
-    document_module_export_constructor(root);
-    document_module_faker(root);
-    document_module_functional(root);
-    document_module_fuzzer(root);
-    document_module_if_not_null(root);
-    document_module_instance_function(root);
-    document_module_interfaces(root);
-    document_module_is_local(root);
-    document_module_jobque_boost(root);
-    document_module_json_boost(root);
-    document_module_json(root);
+    document_module_decs(root)                       // DECS
+    document_module_defer(root)
+    document_module_enum_trait(root)
+    document_module_export_constructor(root)
+    document_module_faker(root)
+    document_module_functional(root)
+    document_module_fuzzer(root)
+    document_module_if_not_null(root)
+    document_module_instance_function(root)
+    document_module_interfaces(root)
+    document_module_is_local(root)
+    document_module_jobque_boost(root)
+    document_module_json_boost(root)
+    document_module_json(root)
     // document_module_lint_everything(root)        // todo: document?
     // document_module_lint(root)                   // todo: document?
     // document_module_live(root)
-    document_module_lpipe(root);
-    document_module_macro_boost(root);
-    document_module_math_bits(root);
-    document_module_math_boost(root);
-    document_module_random(root);
-    document_module_regex_boost(root);
-    document_module_regex(root);
-    document_module_rst(root);
-    document_module_safe_addr(root);
-    document_module_sort_boost(root);
-    document_module_static_let(root);
-    document_module_strings_boost(root);
-    document_module_templates_boost(root);
-    document_module_templates(root);
-    document_module_unroll(root);
-    document_module_uriparser_boost(root);
-    document_module_utf8_utils(root);
-    document_module_match(root);
+    document_module_lpipe(root)
+    document_module_macro_boost(root)
+    document_module_math_bits(root)
+    document_module_math_boost(root)
+    document_module_random(root)
+    document_module_regex_boost(root)
+    document_module_regex(root)
+    document_module_rst(root)
+    document_module_safe_addr(root)
+    document_module_sort_boost(root)
+    document_module_static_let(root)
+    document_module_strings_boost(root)
+    document_module_templates_boost(root)
+    document_module_templates(root)
+    document_module_unroll(root)
+    document_module_uriparser_boost(root)
+    document_module_utf8_utils(root)
+    document_module_match(root)
 }

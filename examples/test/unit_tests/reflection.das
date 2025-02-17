@@ -41,164 +41,164 @@ def main
 }
 
 def describeType(info) {
-    var res : string;
+    var res : string
     if (info.basicType==Type.tHandle) {
-        res = string(info.annotation.name);
+        res = string(info.annotation.name)
     }
     elif (info.basicType==Type.tStructure) {
-        res = info.structType?.name ?? "structure";
+        res = info.structType?.name ?? "structure"
     }
     elif (info.basicType==Type.tEnumeration || info.basicType==Type.tEnumeration8 || info.basicType==Type.tEnumeration16 || info.basicType==Type.tEnumeration64) {
-        res = info.enumType?.name ?? "enumeration";
+        res = info.enumType?.name ?? "enumeration"
     }
     elif (info.basicType==Type.tPointer) {
-        res = info.firstType!=null ? "{describeType(*(info.firstType))}?" : "void?";
+        res = info.firstType!=null ? "{describeType(*(info.firstType))}?" : "void?"
     }
     elif (info.basicType==Type.tArray) {
-        res = info.firstType!=null ? "array<{describeType(*(info.firstType))}>" : "array";
+        res = info.firstType!=null ? "array<{describeType(*(info.firstType))}>" : "array"
     }
     elif (info.basicType==Type.tTable) {
         if (info.firstType!=null && info.secondType!=null) {
-            res = "table<{describeType(deref(info.firstType))};{describeType(deref(info.secondType))}>";
+            res = "table<{describeType(deref(info.firstType))};{describeType(deref(info.secondType))}>"
         }
         else {
-            res = "table";
+            res = "table"
         }
     }
     elif (info.basicType==Type.tTuple) {
         if (info.argTypes!=null) {
-            res = "tuple<" + join([for (argtype in arg_types(info)); describeType(argtype)],";") + ">";
+            res = "tuple<" + join([for (argtype in arg_types(info)); describeType(argtype)],";") + ">"
         }
         else {
-            res += "tuple";
+            res += "tuple"
         }
     }
     elif (info.basicType==Type.tVariant) {
         if (info.argTypes!=null && info.argNames!=null) {
-            res = "variant<" +  join([for (argname,argtype in arg_names(info),arg_types(info)); "{argname}:{describeType(argtype)}"],";") + ">";
+            res = "variant<" +  join([for (argname,argtype in arg_names(info),arg_types(info)); "{argname}:{describeType(argtype)}"],";") + ">"
         }
         else {
-            res += "variant";
+            res += "variant"
         }
     }
     elif (info.basicType==Type.tFunction || info.basicType==Type.tLambda || info.basicType==Type.tBlock) {
-        res = "{get_das_type_name(info.basicType)}<";
+        res = "{get_das_type_name(info.basicType)}<"
         if (info.argTypes!=null) {
-            res += "(" + join([for (argtype in arg_types(info)); describeType(argtype)],";") + ")";
+            res += "(" + join([for (argtype in arg_types(info)); describeType(argtype)],";") + ")"
         }
         if (info.firstType!=null) {
             if (info.argTypes!=null) {
-                res += ":";
+                res += ":"
             }
-            res += "{describeType(*(info.firstType))}";
+            res += "{describeType(*(info.firstType))}"
         }
-        res += ">";
+        res += ">"
     }
     else {
-        res = get_das_type_name(info.basicType);
+        res = get_das_type_name(info.basicType)
     }
-    res += join([for (d in each_dim(info)); d!=-1 ? "[{d}]" : "[]"],"");
+    res += join([for (d in each_dim(info)); d!=-1 ? "[{d}]" : "[]"],"")
     if (info.isConst) {
-        res += " const";
+        res += " const"
     }
     if (info.isRef) {
-        res += " &";
+        res += " &"
     }
     if (info.isTemp) {
-        res += "#";
+        res += "#"
     }
     if (info.isImplicit) {
-        res += " implicit";
+        res += " implicit"
     }
-    return res;
+    return res
 }
 
 def describeFunction(finfo) {
-    print("def {finfo.name} ");
+    print("def {finfo.name} ")
     if (finfo.count != 0u) {
-        let argT = join([for (arg in finfo); "{arg.name}:{describeType(arg)}"],"; ");
-        print("( {argT} ) ");
+        let argT = join([for (arg in finfo); "{arg.name}:{describeType(arg)}"],"; ")
+        print("( {argT} ) ")
     }
     if (finfo.result != null) {
-        print ( ": {describeType(*(finfo.result))}");
+        print ( ": {describeType(*(finfo.result))}")
     }
-    print("\n");
+    print("\n")
 }
 
 def describeValue(value) {
     if (value is nothing) {
-        return "";
+        return ""
     }
     elif (value is tString) {
-        return "=\"{value}\"";
+        return "=\"{value}\""
     }
     else {
-        return "={value}";
+        return "={value}"
     }
 }
 
 def describeVariable(glob;extra="") {
-    print("{extra}{glob.name} : {describeType(glob)}{describeValue(get_variable_value(glob))}\n");
+    print("{extra}{glob.name} : {describeType(glob)}{describeValue(get_variable_value(glob))}\n")
 }
 
 def describeStructure(sinfo) {
-    var anyAnn = false;
+    var anyAnn = false
     structure_for_each_annotation(sinfo) <| $(ann; annArgs) {
-        let argT = join([for (arg in annArgs); "{arg.name}{describeValue(get_annotation_argument_value(arg))}"],",");
-        print("[{ann.name}({argT})]\n");
+        let argT = join([for (arg in annArgs); "{arg.name}{describeValue(get_annotation_argument_value(arg))}"],",")
+        print("[{ann.name}({argT})]\n")
     }
-    print("struct {sinfo.name}\n");
+    print("struct {sinfo.name}\n")
     for (sfield in sinfo) {
-        describeVariable(sfield,"\t");
+        describeVariable(sfield,"\t")
     }
 }
 
 def describeEnumeration(einfo) {
-    print("enum {einfo.name}\n");
+    print("enum {einfo.name}\n")
     for (eitem in einfo) {
-        print("\t{eitem.name} = {eitem.value}\n");
+        print("\t{eitem.name} = {eitem.value}\n")
     }
 }
 
 def describeAnnotation(ann) {
     if (ann.isBasicStructureAnnotation) {
         unsafe {
-            let sann & = reinterpret<BasicStructureAnnotation&>(ann);
-            print("struct {sann.name} // {sann.fieldCount} {sann.cppName}\n");
+            let sann & = reinterpret<BasicStructureAnnotation&>(ann)
+            print("struct {sann.name} // {sann.fieldCount} {sann.cppName}\n")
             basic_struct_for_each_field(sann) <| $ ( name,cppName,xtype,offset) {
-                print("\t{name}:{describeType(xtype)} // {cppName} at {offset}\n");
+                print("\t{name}:{describeType(xtype)} // {cppName} at {offset}\n")
             }
         }
     }
     elif (ann.isTypeAnnotation) {
         unsafe {
-            let tann & = reinterpret<TypeAnnotation&>(ann);
-            print("{tann.name} // {tann.cppName}\n");
+            let tann & = reinterpret<TypeAnnotation&>(ann)
+            print("{tann.name} // {tann.cppName}\n")
         }
     }
     else {
-        print("{ann.name}\n");
+        print("{ann.name}\n")
     }
 }
 
 def describeModule(mod) {
     module_for_each_enumeration(mod) <| $ ( einfo ) {
-        describeEnumeration(einfo);
+        describeEnumeration(einfo)
     }
     module_for_each_structure(mod) <| $ ( sinfo ) {
-        describeStructure(sinfo);
+        describeStructure(sinfo)
     }
     module_for_each_annotation(mod) <| $ ( ann ) {
-        describeAnnotation(ann);
+        describeAnnotation(ann)
     }
     module_for_each_function(mod) <| $ ( finfo ) {
-        describeFunction(finfo);
+        describeFunction(finfo)
     }
     module_for_each_generic(mod) <| $ ( finfo ) {
-        describeFunction(finfo);
+        describeFunction(finfo)
     }
     module_for_each_global(mod) <| $ ( glob ) {
-        describeVariable(glob);
+        describeVariable(glob)
     }
 }
 
@@ -206,36 +206,36 @@ def describeModule(mod) {
 def main {
     // global modules
     program_for_each_registered_module() <| $ ( mod ) {
-        describeModule(mod);
+        describeModule(mod)
     }
-    describeModule(get_module("$"));
+    describeModule(get_module("$"))
     // sample program
     compile("sample",sample, CodeOfPolicies()) <| $ ( ok; prog; errors ) {
         if (ok) {
-            print("compiled\n");
-            let thisMod = get_this_module(prog);
+            print("compiled\n")
+            let thisMod = get_this_module(prog)
             program_for_each_module(prog) <| $ ( mod ) {
                 if (mod==thisMod) {
-                    describeModule(mod);
+                    describeModule(mod)
                 }
             }
         }
         else {
-            print("failed to compile:\n{errors}\n");
-            assert(false);
+            print("failed to compile:\n{errors}\n")
+            assert(false)
         }
     }
     // current context
     context_for_each_function() <| $ ( finfo ) {
-        describeFunction(finfo);
+        describeFunction(finfo)
     }
     context_for_each_variable() <| $ ( vinfo ) {
-        describeVariable(vinfo);
+        describeVariable(vinfo)
     }
-    return true;
+    return true
 }
 
 [export]
 def test {
-    return true;
+    return true
 }

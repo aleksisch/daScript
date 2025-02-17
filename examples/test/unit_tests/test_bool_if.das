@@ -3,10 +3,10 @@ options gen2;
 
 [export]
 def test {
-    let a = false;
+    let a = false
     if (a) {
-        assert(false, "can't get here");
+        assert(false, "can't get here")
     }
-    return true;
+    return true
 }
 

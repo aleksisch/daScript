@@ -7,7 +7,7 @@ options log
 def main {
     unroll <| $() {
         for (i in range(5)) {
-            print("i = {i}\n");
+            print("i = {i}\n")
         }
     }
 }

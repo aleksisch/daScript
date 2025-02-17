@@ -1,4 +1,4 @@
-options gen2;
+options gen2
 options indenting = 4
 options no_unused_block_arguments = false
 options no_unused_function_arguments = false
@@ -39,195 +39,195 @@ enum TokenType {
 
 [safe_when_uninitialized]
 struct TokenTemplate {
-    firstChar: int = 0;
-    str: string = "";
-    codes: array<uint8>;
-    length: int = 0;
+    firstChar: int = 0
+    str: string = ""
+    codes: array<uint8>
+    length: int = 0
 }
 
 
 struct Token {
-    str: string;
-    spaces: int = 0;
-    newLines: int = 0;
-    lineInSource: int = 1;
-    column: int = 1;
-    tokenType: TokenType = TokenType.UNKNOWN;
-    isInFunctionParam: bool = false;
-    isInType: bool = false;
-    dontFormat: bool = false;
-    dontAddSpacesAround: bool = false;
+    str: string
+    spaces: int = 0
+    newLines: int = 0
+    lineInSource: int = 1
+    column: int = 1
+    tokenType: TokenType = TokenType.UNKNOWN
+    isInFunctionParam: bool = false
+    isInType: bool = false
+    dontFormat: bool = false
+    dontAddSpacesAround: bool = false
 }
 
 
 struct FormatterToken {
-    tokenIndex: int;
-    command: string;
+    tokenIndex: int
+    command: string
 }
 
 [safe_when_uninitialized]
 struct FormatterCtx {
-    tokenTemplates: array<TokenTemplate>;
-    tokens: array<Token>;
-    formatterTokens: array<FormatterToken>;
-    pos: int;             // current char pos
-    c: int;               // current char
-    data: array<uint8>;   // file data as array of uints
-    eof: bool;
-    haveUtf8Bom: bool;
-    newLineCounter: int;  // new lines before current token
-    spaceCounter: int;    // space characters before current token
-    srcLine: int;         // current line in source
-    curColumn: int;       // current column in source
-    curLineIndex: int;    // index of the beginning of new line in data[]
-    debugMode: bool = false;
-    indenting: int = 0;   // convert tab to N spaces
-    insideOptions: bool = false;
-    crCount: int = 0;     // CR \r
-    lfCount: int = 0;     // LF \n
+    tokenTemplates: array<TokenTemplate>
+    tokens: array<Token>
+    formatterTokens: array<FormatterToken>
+    pos: int             // current char pos
+    c: int               // current char
+    data: array<uint8>   // file data as array of uints
+    eof: bool
+    haveUtf8Bom: bool
+    newLineCounter: int  // new lines before current token
+    spaceCounter: int    // space characters before current token
+    srcLine: int         // current line in source
+    curColumn: int       // current column in source
+    curLineIndex: int    // index of the beginning of new line in data[]
+    debugMode: bool = false
+    indenting: int = 0   // convert tab to N spaces
+    insideOptions: bool = false
+    crCount: int = 0     // CR \r
+    lfCount: int = 0     // LF \n
 }
 
 def initialize_token_templates(var ctx: FormatterCtx) {
     if (length(ctx.tokenTemplates) > 0) {
-        return;
+        return
     }
-    ctx.tokenTemplates |> resize(length(sorted_tokens_source));
+    ctx.tokenTemplates |> resize(length(sorted_tokens_source))
     for (s, tt in sorted_tokens_source, ctx.tokenTemplates) {
-        tt.str = s;
-        tt.codes <- [for (c in s); uint8(c)];
-        tt.firstChar = int(tt.codes[0]);
-        tt.length = length(s);
+        tt.str = s
+        tt.codes <- [for (c in s); uint8(c)]
+        tt.firstChar = int(tt.codes[0])
+        tt.length = length(s)
     }
 }
 
 
 def isUtf8Bom(var text: array<uint8>&): bool {
     return (length(text) >= 3 &&
-        uint(text[0]) == 0xEF && uint(text[1]) == 0xBB && uint(text[2]) == 0xBF);
+        uint(text[0]) == 0xEF && uint(text[1]) == 0xBB && uint(text[2]) == 0xBF)
 }
 
 
 def eq(ctx: FormatterCtx; index: int; s: string const implicit) {
-    return (index < 0 || index >= length(ctx.tokens)) ? false : ctx.tokens[index].str == s;
+    return (index < 0 || index >= length(ctx.tokens)) ? false : ctx.tokens[index].str == s
 }
 
 
 def eq(ctx: FormatterCtx; index: int; s0, s1: string const implicit) {
     return (index < 0 || index >= length(ctx.tokens)) ? false : (ctx.tokens[index].str == s0 ||
-        ctx.tokens[index].str == s1);
+        ctx.tokens[index].str == s1)
 }
 
 
 def eq(ctx: FormatterCtx; index: int; s0, s1, s2: string const implicit) {
     return (index < 0 || index >= length(ctx.tokens)) ? false : (ctx.tokens[index].str == s0 ||
-        ctx.tokens[index].str == s1 || ctx.tokens[index].str == s2);
+        ctx.tokens[index].str == s1 || ctx.tokens[index].str == s2)
 }
 
 
 def eq(ctx: FormatterCtx; index: int; s0, s1, s2, s3: string const implicit) {
     return (index < 0 || index >= length(ctx.tokens)) ? false : (ctx.tokens[index].str == s0 ||
-        ctx.tokens[index].str == s1 || ctx.tokens[index].str == s2 || ctx.tokens[index].str == s3);
+        ctx.tokens[index].str == s1 || ctx.tokens[index].str == s2 || ctx.tokens[index].str == s3)
 }
 
 
 def new_line_before(ctx: FormatterCtx; index: int) {
-    return (index <= 1 || index >= length(ctx.tokens)) ? true : ctx.tokens[index].newLines > 0;
+    return (index <= 1 || index >= length(ctx.tokens)) ? true : ctx.tokens[index].newLines > 0
 }
 
 
 def next_char(var ctx: FormatterCtx) {
-    ctx.c = int(ctx.data[ctx.pos]);
+    ctx.c = int(ctx.data[ctx.pos])
     if (ctx.c == 0) {
-        ctx.eof = true;
-        return;
+        ctx.eof = true
+        return
     }
 
     if (ctx.c == '\r' && int(ctx.data[ctx.pos + 1]) == '\n') {
-        ctx.crCount++;
-        ctx.pos++;
-        ctx.c = int(ctx.data[ctx.pos]);
+        ctx.crCount++
+        ctx.pos++
+        ctx.c = int(ctx.data[ctx.pos])
     }
 
     if (ctx.c == ' ') {
-        ctx.spaceCounter++;
+        ctx.spaceCounter++
     }
 
     if (ctx.c == '\t') {
-        let indent = ctx.indenting != 0 ? ctx.indenting : 4;
-        ctx.spaceCounter += indent;
-        ctx.curColumn += indent - 1;
+        let indent = ctx.indenting != 0 ? ctx.indenting : 4
+        ctx.spaceCounter += indent
+        ctx.curColumn += indent - 1
     }
 
     if (ctx.c == '\n') {
-        ctx.lfCount++;
-        ctx.pos++;
-        ctx.c = int(ctx.data[ctx.pos]);
-        ctx.curLineIndex = ctx.pos;
-        ctx.spaceCounter = 0;
-        ctx.newLineCounter++;
-        ctx.srcLine++;
-        ctx.curColumn = 0;
-        return;
+        ctx.lfCount++
+        ctx.pos++
+        ctx.c = int(ctx.data[ctx.pos])
+        ctx.curLineIndex = ctx.pos
+        ctx.spaceCounter = 0
+        ctx.newLineCounter++
+        ctx.srcLine++
+        ctx.curColumn = 0
+        return
     }
     else {
-        ctx.pos++;
-        ctx.c = int(ctx.data[ctx.pos]);
-        ctx.curColumn++;
-        return;
+        ctx.pos++
+        ctx.c = int(ctx.data[ctx.pos])
+        ctx.curColumn++
+        return
     }
 }
 
 
 def skip_spaces(var ctx: FormatterCtx) {
     while (ctx.c == ' ' || ctx.c == '\t' || ctx.c == '\r' || ctx.c == '\n') {
-        ctx |> next_char();
+        ctx |> next_char()
     }
 }
 
 
 def on_token_added(var ctx: FormatterCtx) {
-    assume t = ctx.tokens[length(ctx.tokens) - 1];
+    assume t = ctx.tokens[length(ctx.tokens) - 1]
     if (ctx.indenting == 0 && ctx.newLineCounter > 0 && ctx.spaceCounter > 0 && t.tokenType != TokenType.COMMENT) {
-        ctx.indenting = ctx.spaceCounter;
+        ctx.indenting = ctx.spaceCounter
     }
     if (ctx |> new_line_before(length(ctx.tokens) - 1)) {
-        ctx.insideOptions = false;
+        ctx.insideOptions = false
         if (t.str == "options") {
-            ctx.insideOptions = true;
+            ctx.insideOptions = true
         }
     }
     if (ctx.insideOptions && t.tokenType == TokenType.NUMBER && length(ctx.tokens) >= 3 &&
             ctx.tokens[length(ctx.tokens) - 3].str == "indenting" && length(t.str) == 1) {
-        ctx.indenting = clamp(to_int(t.str), 1, 8);
+        ctx.indenting = clamp(to_int(t.str), 1, 8)
     }
 }
 
 
 def push_token(var ctx: FormatterCtx; from_char_idx, to_char_idx, space_count, new_lines, src_line, column: int; token_type: TokenType) {
-    var buf <- [ for (i in range(from_char_idx, to_char_idx)); uint8(ctx.data[i]) ];
+    var buf <- [ for (i in range(from_char_idx, to_char_idx)); uint8(ctx.data[i]) ]
     ctx.tokens |> push( Token(
         str = string(buf), spaces = space_count, newLines = new_lines,
         lineInSource = src_line, column = column, tokenType = token_type
         ));
 
-    ctx |> on_token_added();
+    ctx |> on_token_added()
 
-    ctx.spaceCounter = 0;
-    ctx.newLineCounter = 0;
+    ctx.spaceCounter = 0
+    ctx.newLineCounter = 0
 } finally {
-    delete buf;
+    delete buf
 }
 
 
 def parse_token(var ctx: FormatterCtx) {
-    ctx |> skip_spaces();
+    ctx |> skip_spaces()
     if (ctx.eof) {
-        ctx.tokens |> push(ctx.tokens[0]);
-        return;
+        ctx.tokens |> push(ctx.tokens[0])
+        return
     }
 
-    let from = ctx.pos;
-    let fromColumn = ctx.curColumn;
+    let from = ctx.pos
+    let fromColumn = ctx.curColumn
 
     // keywords and identifiers
     if (is_alpha(ctx.c) || ctx.c == '_' || ctx.c == '`') {
@@ -249,7 +249,7 @@ def parse_token(var ctx: FormatterCtx) {
     }
 
     // characters and strings
-    if (ctx.c == '"' || ctx.c == int(0x27))  {// TODO: fix ' symbol
+    if (ctx.c == '"' || ctx.c == int(0x27)) {// TODO: fix ' symbol
         let savedLine = ctx.newLineCounter;
         let savedSpace = ctx.spaceCounter;
         let openChar = ctx.c;
@@ -269,11 +269,11 @@ def parse_token(var ctx: FormatterCtx) {
         }
 
         if (ctx.c == openChar) {
-            ctx |> next_char();
+            ctx |> next_char()
         }
 
-        ctx |> push_token(from, ctx.pos, savedSpace, savedLine, ctx.srcLine, fromColumn, TokenType.STRING);
-        return;
+        ctx |> push_token(from, ctx.pos, savedSpace, savedLine, ctx.srcLine, fromColumn, TokenType.STRING)
+        return
     }
 
     // single line comment
@@ -296,15 +296,15 @@ def parse_token(var ctx: FormatterCtx) {
 
         while (!ctx.eof) {
             if (ctx.c == '*' && int(ctx.data[ctx.pos + 1]) == '/') {
-                break;
+                break
             }
-            ctx |> next_char();
+            ctx |> next_char()
         }
 
-        ctx |> next_char();
-        ctx |> next_char();
-        ctx |> push_token(from, ctx.pos, savedSpace, savedLine, ctx.srcLine, fromColumn, TokenType.COMMENT);
-        return;
+        ctx |> next_char()
+        ctx |> next_char()
+        ctx |> push_token(from, ctx.pos, savedSpace, savedLine, ctx.srcLine, fromColumn, TokenType.COMMENT)
+        return
     }
 
     // symbolic tokens
@@ -335,67 +335,67 @@ def parse_token(var ctx: FormatterCtx) {
 
 
 def parse_all_tokens(var ctx: FormatterCtx) {
-    ctx |> initialize_token_templates();
-    let emptyToken <- Token();
-    ctx.tokens |> clear();
-    ctx.tokens |> push(emptyToken);
-    ctx.pos = 0;
-    ctx.eof = false;
-    ctx.haveUtf8Bom = false;
-    ctx.newLineCounter = 0;
-    ctx.spaceCounter = 0;
-    ctx.srcLine = 1;
-    ctx.curColumn = 0;
-    ctx.indenting = 0;
-    ctx.insideOptions = false;
-    ctx.crCount = 0;
-    ctx.lfCount = 0;
+    ctx |> initialize_token_templates()
+    let emptyToken <- Token()
+    ctx.tokens |> clear()
+    ctx.tokens |> push(emptyToken)
+    ctx.pos = 0
+    ctx.eof = false
+    ctx.haveUtf8Bom = false
+    ctx.newLineCounter = 0
+    ctx.spaceCounter = 0
+    ctx.srcLine = 1
+    ctx.curColumn = 0
+    ctx.indenting = 0
+    ctx.insideOptions = false
+    ctx.crCount = 0
+    ctx.lfCount = 0
 
     if (isUtf8Bom(ctx.data)) {
-        ctx.pos += 3;
-        ctx.haveUtf8Bom = true;
+        ctx.pos += 3
+        ctx.haveUtf8Bom = true
     }
 
-    ctx.c = int(ctx.data[ctx.pos]);
+    ctx.c = int(ctx.data[ctx.pos])
 
-    ctx.curLineIndex = ctx.pos;
+    ctx.curLineIndex = ctx.pos
     while (!ctx.eof) {
-        ctx |> parse_token();
+        ctx |> parse_token()
     }
 
     for (_ in range(8)) {
-        ctx.tokens |> push(emptyToken);
+        ctx.tokens |> push(emptyToken)
     }
 }
 
 
 [safe_when_uninitialized]
 struct ParenCounter {
-    angle: int = 0;
-    paren: int = 0;
-    square: int = 0;
-    curly: int = 0;
+    angle: int = 0
+    paren: int = 0
+    square: int = 0
+    curly: int = 0
 }
 
 
 def update_paren(var ctx: FormatterCtx; index: int; var paren_counter: ParenCounter&) {
     if (ctx |> eq(index, "<")) {
-        paren_counter.angle++;
+        paren_counter.angle++
     }
     if (ctx |> eq(index, ">")) {
-        paren_counter.angle--;
+        paren_counter.angle--
     }
     if (ctx |> eq(index, ">>")) {
-        paren_counter.angle -= 2;
+        paren_counter.angle -= 2
     }
     if (ctx |> eq(index, ">>>")) {
-        paren_counter.angle -= 3;
+        paren_counter.angle -= 3
     }
     if (ctx |> eq(index, "(")) {
         paren_counter.paren++;
     }
     if (ctx |> eq(index, ")")) {
-        paren_counter.paren--;
+        paren_counter.paren--
     }
     if (ctx |> eq(index, "[")) {
         paren_counter.square++;
@@ -416,54 +416,54 @@ def update_paren(var ctx: FormatterCtx; index: int; var paren_counter: ParenCoun
 
 
 def find_pair_paren(var ctx: FormatterCtx; from_index: int): int {
-    var pc: ParenCounter;
+    var pc: ParenCounter
     for (j in range(from_index + 1, length(ctx.tokens))) {
-        ctx |> update_paren(j, pc);
+        ctx |> update_paren(j, pc)
         if (pc.paren < 0) {
-            return j;
+            return j
         }
     }
-    return from_index;
+    return from_index
 }
 
 
 def find_pair_square(var ctx: FormatterCtx; from_index: int): int {
-    var pc: ParenCounter;
+    var pc: ParenCounter
     for (j in range(from_index + 1, length(ctx.tokens))) {
-        ctx |> update_paren(j, pc);
+        ctx |> update_paren(j, pc)
         if (pc.square < 0) {
-            return j;
+            return j
         }
     }
-    return from_index;
+    return from_index
 }
 
 
 def find_pair_angle(var ctx: FormatterCtx; from_index: int): int {
-    var pc: ParenCounter;
+    var pc: ParenCounter
     for (j in range(from_index + 1, length(ctx.tokens))) {
-        ctx |> update_paren(j, pc);
+        ctx |> update_paren(j, pc)
         if (pc.angle < 0) {
-            return j;
+            return j
         }
     }
-    return from_index;
+    return from_index
 }
 
 
-def mark_range_as_type(var ctx: FormatterCtx; from, to: int)  {// [from..to)
+def mark_range_as_type(var ctx: FormatterCtx; from, to: int) {// [from..to)
     for (i in range(from, to)) {
         if (ctx.tokens[i].tokenType != TokenType.COMMENT) {
-            ctx.tokens[i].isInType = true;
+            ctx.tokens[i].isInType = true
         }
     }
 }
 
 
 def mark_tokens_as_type(var ctx: FormatterCtx; i: int) {
-    var pos = i;
+    var pos = i
     if (ctx |> eq(pos, "auto")) {
-        pos++;
+        pos++
         if (ctx |> eq(pos, "(")) {
             pos = ctx |> find_pair_paren(pos);
             pos++;
@@ -491,82 +491,82 @@ def mark_tokens_as_type(var ctx: FormatterCtx; i: int) {
     }
 
     if (ctx |> new_line_before(pos)) {
-        mark_range_as_type(ctx, i, pos);
-        return;
+        mark_range_as_type(ctx, i, pos)
+        return
     }
 
     if (ctx |> eq(pos, "[") && ctx |> eq(pos + 1, "]")) {
-        pos += 2;
+        pos += 2
     }
 
     for (j in range(pos, length(ctx.tokens))) {
         if (ctx |> eq(j, "-", "==") && ctx |> eq(j + 1, "const", "&", "#", "?")) {
-            pos = j + 2;
+            pos = j + 2
         }
         elif (ctx |> eq(j, "const", "&", "#", "?") || ctx |> eq(j, "implicit")) {
-            pos = j + 1;
+            pos = j + 1
         }
         else {
-            break;
+            break
         }
     }
 
-    mark_range_as_type(ctx, i, pos);
+    mark_range_as_type(ctx, i, pos)
 
     if (ctx |> eq(pos, "|")) {
-        ctx.tokens[pos].spaces = 1;
-        pos++;
-        mark_tokens_as_type(ctx, pos);
+        ctx.tokens[pos].spaces = 1
+        pos++
+        mark_tokens_as_type(ctx, pos)
     }
 }
 
 
 
 def mark_tokens_as_type_inside_angle(var ctx: FormatterCtx; i: int) {
-    var pc: ParenCounter;
+    var pc: ParenCounter
     for (j in range(i, length(ctx.tokens))) {
-        ctx |> update_paren(j, pc);
+        ctx |> update_paren(j, pc)
         if (ctx.tokens[j].tokenType != TokenType.COMMENT) {
-            ctx.tokens[j].isInType = true;
+            ctx.tokens[j].isInType = true
         }
         if (pc.angle <= 0) {
-            break;
+            break
         }
     }
 }
 
 
 def search_token_in_line(var ctx: FormatterCtx; from_index: int; str: string const): int {
-    var pc: ParenCounter;
+    var pc: ParenCounter
     for (j in range(from_index, length(ctx.tokens))) {
-        ctx |> update_paren(j, pc);
+        ctx |> update_paren(j, pc)
         if (j > from_index && ctx |> new_line_before(j) &&
                 (pc.paren <= 0 || pc.square <= 0 || pc.curly <= 0) && !eq(ctx, j - 1, ",")) {
-            break;
+            break
         }
         if (pc.paren < 0 || pc.square < 0 || pc.curly < 0) {
-            break;
+            break
         }
         if (ctx |> eq(j, ";") && pc.paren == 0 && pc.square == 0 && pc.curly == 0) {
-            break;
+            break
         }
         if (ctx |> eq(j, str)) {
-            return j;
+            return j
         }
     }
-    return 0;
+    return 0
 }
 
 
 def process_formatter_tokens(var ctx: FormatterCtx) {
-    let formatterTokenPrefix = "//fmt:";
-    let formatterTokenPrefixSize = formatterTokenPrefix |> length();
+    let formatterTokenPrefix = "//fmt:"
+    let formatterTokenPrefixSize = formatterTokenPrefix |> length()
     for (i in range(0, length(ctx.tokens))) {
-        let token = ctx.tokens[i];
-        let str = token.str;
-        let strSize = str |> length();
+        let token = ctx.tokens[i]
+        let str = token.str
+        let strSize = str |> length()
         if (str |> starts_with(formatterTokenPrefix)) {
-            let command = str |> chop(formatterTokenPrefixSize, strSize - formatterTokenPrefixSize);
+            let command = str |> chop(formatterTokenPrefixSize, strSize - formatterTokenPrefixSize)
             ctx.formatterTokens |> push( FormatterToken(
                 tokenIndex = i,
                 command = command
@@ -578,10 +578,10 @@ def process_formatter_tokens(var ctx: FormatterCtx) {
 def have_formatter_token(ctx: FormatterCtx; command: string) {
     for (formatterToken in ctx.formatterTokens) {
         if (formatterToken.command == command) {
-            return true;
+            return true
         }
     }
-    return false;
+    return false
 }
 
 
@@ -674,25 +674,25 @@ def mark_token_context(var ctx: FormatterCtx) {
 
             if ((ctx |> eq(i, "typedef") || ctx |> eq(i, "var") || ctx |> eq(i, "let")) && (ctx |> eq(i + 1, "private") || ctx |> eq(i + 1, "public")) &&
                 ctx |> new_line_before(i + 2)) {
-                skip = 2;
+                skip = 2
             }
 
             if (skip == 0) {
-                continue;
+                continue
             }
 
-            let ident = ctx.tokens[i].spaces;
+            let ident = ctx.tokens[i].spaces
             for (j in range(i + skip, length(ctx.tokens) - 3)) {
                 if (ctx |> new_line_before(j)) {
                     if (ctx |> eq(j, "def")) {
-                        break;
+                        break
                     }
                     if (ctx.tokens[j].spaces <= ident) {
-                        break;
+                        break
                     }
-                    let colonPos = ctx |> search_token_in_line(j, ctx |> eq(i, "typedef") ? "=" : ":");
+                    let colonPos = ctx |> search_token_in_line(j, ctx |> eq(i, "typedef") ? "=" : ":")
                     if (colonPos > 0) {
-                        ctx |> mark_tokens_as_type(colonPos + 1);
+                        ctx |> mark_tokens_as_type(colonPos + 1)
                     }
                 }
             }
@@ -725,25 +725,25 @@ def mark_token_context(var ctx: FormatterCtx) {
         }
 
         if (pos == -1) {
-            continue;
+            continue
         }
 
         while (ctx |> eq(pos, "private", "public", "const", "implicit") || ctx |> eq(pos, "abstract", "override")) {
-            pos++;
+            pos++
         }
 
         if (ctx |> eq(pos, "operator")) {
             pos = ctx |> search_token_in_line(pos, "(") - 1;
         }
 
-        if (ctx |> eq(pos + 1, "["))  {// skip [...]
+        if (ctx |> eq(pos + 1, "[")) {// skip [...]
             pos = ctx |> find_pair_square(pos + 1);
         }
 
-        if (ctx |> eq(pos + 1, ":"))  {// def [const | private | public] name:
-            ctx |> mark_tokens_as_type(i + 2);
+        if (ctx |> eq(pos + 1, ":")) {// def [const | private | public] name:
+            ctx |> mark_tokens_as_type(i + 2)
         }
-        elif (ctx |> eq(pos + 1, "("))  {// def [const | private | public] name(
+        elif (ctx |> eq(pos + 1, "(")) {// def [const | private | public] name(
             let beginParams = pos + 1;
             ctx.tokens[beginParams].dontAddSpacesAround = true;
             let endParams = ctx |> find_pair_paren(pos + 1);
@@ -778,10 +778,10 @@ def mark_token_context(var ctx: FormatterCtx) {
         }
     }
 
-    let macroEscapes <- { /*ident*/"i", /*value*/"v", /*expr*/"e", /*call*/"c", /*type*/"t", /*field*/"f", /*block*/"b", /*array*/"a" };
+    let macroEscapes <- { /*ident*/"i", /*value*/"v", /*expr*/"e", /*call*/"c", /*type*/"t", /*field*/"f", /*block*/"b", /*array*/"a" }
     for (i in range(1, length(ctx.tokens))) {
         if (!new_line_before(ctx, i) && ctx |> eq(i - 1, "$") && key_exists(macroEscapes, ctx.tokens[i].str)) {
-            ctx.tokens[i - 1].dontAddSpacesAround = true;
+            ctx.tokens[i - 1].dontAddSpacesAround = true
         }
     }
 }
@@ -798,10 +798,10 @@ def fmt_function_arguments(var ctx: FormatterCtx) {
         }
 
         if (ctx.tokens[i].isInFunctionParam) {
-            var firstBracketColumn = -1;
+            var firstBracketColumn = -1
             while (i < n && ctx.tokens[i].isInFunctionParam) {
                 if (ctx.tokens[i].newLines > 0) {
-                    lastNewLineToken = i;
+                    lastNewLineToken = i
                 }
 
                 if (firstBracketColumn == -1) {
@@ -817,15 +817,15 @@ def fmt_function_arguments(var ctx: FormatterCtx) {
                 }
 
                 elif (ctx.tokens[i].newLines > 0) {
-                    lastNewLineToken = i;
-                    ctx.tokens[i].spaces = firstBracketColumn + (ctx.tokens[i].isInType ? 2 : 0);
-                    ctx.tokens[i].column = firstBracketColumn + (ctx.tokens[i].isInType ? 2 : 0);
+                    lastNewLineToken = i
+                    ctx.tokens[i].spaces = firstBracketColumn + (ctx.tokens[i].isInType ? 2 : 0)
+                    ctx.tokens[i].column = firstBracketColumn + (ctx.tokens[i].isInType ? 2 : 0)
                 }
 
-                i++;
+                i++
             }
         }
-        i++;
+        i++
     }
 }
 
@@ -841,112 +841,112 @@ def fmt_remove_space_before_args(var ctx: FormatterCtx) {
 
 def debug_print_tokens(ctx: FormatterCtx) {
     for (t in ctx.tokens) {
-        to_log(LOG_DEBUG, "{t.isInFunctionParam ? ">" : " "}{t.isInType ? "*" : " "} '{t.str}'\n");
+        to_log(LOG_DEBUG, "{t.isInFunctionParam ? ">" : " "}{t.isInType ? "*" : " "} '{t.str}'\n")
     }
 }
 
 
 def generate_source(ctx: FormatterCtx): string {
-    var res: array<uint8>;
-    res |> reserve(1000 + length(ctx.tokens) * 8);
+    var res: array<uint8>
+    res |> reserve(1000 + length(ctx.tokens) * 8)
     if (ctx.haveUtf8Bom) {
-        res |> push(uint8(0xEF));
-        res |> push(uint8(0xBB));
-        res |> push(uint8(0xBF));
+        res |> push(uint8(0xEF))
+        res |> push(uint8(0xBB))
+        res |> push(uint8(0xBF))
     }
 
-    let useCrLf: bool = ctx.crCount * 2 > ctx.lfCount;
-    var column: int = 0;
+    let useCrLf: bool = ctx.crCount * 2 > ctx.lfCount
+    var column: int = 0
 
     for (t in ctx.tokens) {
         for (_ in range(t.newLines)) {
             if (useCrLf) {
-                res |> push(uint8('\r'));
+                res |> push(uint8('\r'))
             }
-            res |> push(uint8('\n'));
-            column = 0;
+            res |> push(uint8('\n'))
+            column = 0
         }
 
-        var spaces = t.spaces;
+        var spaces = t.spaces
         if (t.tokenType == TokenType.COMMENT && t.str |> starts_with("//")) {
-            spaces = max(t.column - column, 0);
+            spaces = max(t.column - column, 0)
         }
 
         for (_ in range(spaces)) {
-            res |> push(uint8(' '));
-            column++;
+            res |> push(uint8(' '))
+            column++
         }
 
         for (c in t.str) {
-            res |> push(uint8(c));
-            column++;
+            res |> push(uint8(c))
+            column++
         }
     }
 
-    return string(res);
+    return string(res)
 } finally {
-    delete res;
+    delete res
 }
 
 
 def need_spaces_around(ctx: FormatterCtx; index: int): bool {
-    assume t = ctx.tokens[index];
+    assume t = ctx.tokens[index]
     if (t.tokenType != TokenType.UNKNOWN || t.dontFormat || t.dontAddSpacesAround) {
-        return false;
+        return false
     }
     if (dont_need_space_around |> find_index(t.str) >= 0) {
-        return false;
+        return false
     }
     if (t.isInType && (t.str == ":" || t.str == "<" || t.str == ">" || t.str == ">>" || t.str == ">>>" || empty(t.str))) {
-        return false;
+        return false
     }
     if (index < length(ctx.tokens) - 1) {
-        assume next = ctx.tokens[index + 1];
+        assume next = ctx.tokens[index + 1]
         if (t.str == "@" && next.tokenType == TokenType.KEYWORD_OR_IDENTIFIER) {
-            return false;
+            return false
         }
     }
-    return true;
+    return true
 }
 
 
 def need_space_only_before(ctx: FormatterCtx; index: int): bool {
-    assume t = ctx.tokens[index];
+    assume t = ctx.tokens[index]
     if (!t.isInType) {
-        return false;
+        return false
     }
     if (t.tokenType != TokenType.UNKNOWN || t.dontFormat || t.dontAddSpacesAround) {
-        return false;
+        return false
     }
     if (dont_need_space_around |> find_index(t.str) >= 0) {
-        return false;
+        return false
     }
     if (t.str == ">" || t.str == ">>" || t.str == ">>>" || t.str == "<" || empty(t.str)) {
-        return false;
+        return false
     }
     if (index < length(ctx.tokens) - 1) {
-        assume next = ctx.tokens[index + 1];
+        assume next = ctx.tokens[index + 1]
         if (next.str == ">" || next.str == ">>" || next.str == ">>>" || next.str == ";") {
-            return true;
+            return true
         }
     }
-    return false;
+    return false
 }
 
 
 def add_space_before(var ctx: FormatterCtx; i) {
     if ((ctx.tokens[i].dontFormat || ctx.tokens[i - 1].dontFormat) || ctx |> new_line_before(i)) {
-        return;
+        return
     }
-    ctx.tokens[i].spaces = 1;
+    ctx.tokens[i].spaces = 1
 }
 
 
 def remove_space_before(var ctx: FormatterCtx; i) {
     if ((ctx.tokens[i].dontFormat || ctx.tokens[i - 1].dontFormat) || ctx |> new_line_before(i)) {
-        return;
+        return
     }
-    ctx.tokens[i].spaces = 0;
+    ctx.tokens[i].spaces = 0
 }
 
 
@@ -956,43 +956,43 @@ let tokens_before_unary <- fixed_array( "(", "[", "?[", "\{", "auto", "int", "fl
 
 def is_unary(ctx: FormatterCtx; index: int): bool {
     if (ctx |> eq(index, "!") || ctx |> eq(index, "~")) {
-        return true;
+        return true
     }
 
     if (ctx |> eq(index, "*") && index > 0 && ctx.tokens[index - 1].isInType) {
-        return true;
+        return true
     }
 
     if (ctx |> eq(index, "+") || ctx |> eq(index, "-") || ctx |> eq(index, "*")) {
-        var i = index;
+        var i = index
         while (i - 1 >= 0 && ctx.tokens[i - 1].tokenType == TokenType.COMMENT && !ctx |> new_line_before(i)) {
-            i--;
+            i--
         }
         if ((tokens_before_unary |> find_index(ctx.tokens[i - 1].str) >= 0) || ctx |> new_line_before(i)) {
-            return true;
+            return true
         }
-        return ctx |> need_spaces_around(i - 1);
+        return ctx |> need_spaces_around(i - 1)
     }
-    return false;
+    return false
 }
 
 
 def remove_spaces_around(var ctx: FormatterCtx; index: int) {
     if (!ctx |> new_line_before(index)) {
-        ctx |> remove_space_before(index);
+        ctx |> remove_space_before(index)
     }
     if (!ctx |> new_line_before(index + 1) && ctx.tokens[index + 1].tokenType != TokenType.COMMENT) {
-        ctx |> remove_space_before(index + 1);
+        ctx |> remove_space_before(index + 1)
     }
 }
 
 
 def make_spaces_around(var ctx: FormatterCtx; index: int) {
     if (!new_line_before(ctx, index) && ctx.tokens[index].spaces == 0) {
-        ctx |> add_space_before(index);
+        ctx |> add_space_before(index)
     }
     if (!new_line_before(ctx, index + 1) && ctx.tokens[index + 1].spaces == 0) {
-        ctx |> add_space_before(index + 1);
+        ctx |> add_space_before(index + 1)
     }
 }
 
@@ -1000,7 +1000,7 @@ def make_spaces_around(var ctx: FormatterCtx; index: int) {
 def fmt_space_after_comma(var ctx: FormatterCtx) {
     for (i in range(1, length(ctx.tokens))) {
         if (!new_line_before(ctx, i) && ctx |> eq(i - 1, ",") && ctx.tokens[i].spaces == 0) {
-            ctx |> add_space_before(i);
+            ctx |> add_space_before(i)
         }
     }
 }
@@ -1009,7 +1009,7 @@ def fmt_space_after_comma(var ctx: FormatterCtx) {
 def fmt_space_after_semicolon(var ctx: FormatterCtx) {
     for (i in range(1, length(ctx.tokens))) {
         if (!ctx |> eq(i, "") && !new_line_before(ctx, i) && ctx |> eq(i - 1, ";") && ctx.tokens[i].spaces == 0) {
-            ctx |> add_space_before(i);
+            ctx |> add_space_before(i)
         }
     }
 }
@@ -1018,7 +1018,7 @@ def fmt_space_after_semicolon(var ctx: FormatterCtx) {
 def fmt_remove_space_before_comma(var ctx: FormatterCtx) {
     for (i in range(1, length(ctx.tokens))) {
         if (!new_line_before(ctx, i) && ctx |> eq(i, ",")) {
-            ctx |> remove_space_before(i);
+            ctx |> remove_space_before(i)
         }
     }
 }
@@ -1027,7 +1027,7 @@ def fmt_remove_space_before_comma(var ctx: FormatterCtx) {
 def fmt_remove_space_before_semicolon(var ctx: FormatterCtx) {
     for (i in range(1, length(ctx.tokens))) {
         if (!new_line_before(ctx, i) && ctx |> eq(i, ";")) {
-            ctx |> remove_space_before(i);
+            ctx |> remove_space_before(i)
         }
     }
 }
@@ -1036,9 +1036,9 @@ def fmt_remove_space_before_semicolon(var ctx: FormatterCtx) {
 def fmt_type_colon(var ctx: FormatterCtx) {
     for (i in range(1, length(ctx.tokens) - 1)) {
         if (ctx.tokens[i].isInType && ctx |> eq(i, ":")) {
-            ctx |> add_space_before(i);
+            ctx |> add_space_before(i)
             if (!new_line_before(ctx, i + 1)) {
-                ctx |> add_space_before(i + 1);
+                ctx |> add_space_before(i + 1)
             }
         }
     }
@@ -1075,13 +1075,13 @@ def fmt_spaces_around_operators(var ctx: FormatterCtx) {
     for (i in range(1, length(ctx.tokens) - 1)) {
         if (!empty(ctx.tokens[i].str)) {
             if (is_unary(ctx, i) && !new_line_before(ctx, i)) {
-                ctx |> remove_space_before(i + 1);
+                ctx |> remove_space_before(i + 1)
             }
             if (ctx |> need_space_only_before(i) && !is_unary(ctx, i)) {
-                ctx |> add_space_before(i);
+                ctx |> add_space_before(i)
             }
             elif (ctx |> need_spaces_around(i) && !is_unary(ctx, i)) {
-                ctx |> make_spaces_around(i);
+                ctx |> make_spaces_around(i)
             }
         }
     }
@@ -1095,7 +1095,7 @@ def fmt_space_after_keyword(var ctx: FormatterCtx) {
     for (i in range(1, length(ctx.tokens) - 1)) {
         if (space_after_keywords |> find_index(ctx.tokens[i].str) >= 0) {
             if (!new_line_before(ctx, i + 1)) {
-                ctx |> add_space_before(i + 1);
+                ctx |> add_space_before(i + 1)
             }
         }
         // add space only after 'return <expr>' expression
@@ -1132,7 +1132,7 @@ def fmt_remove_space_inside_parens(var ctx: FormatterCtx) {
             ctx |> remove_space_before(i + 1);
         }
         if (ctx |> eq(i, ")")) {
-            ctx |> remove_space_before(i);
+            ctx |> remove_space_before(i)
         }
     }
 }
@@ -1141,7 +1141,7 @@ def fmt_remove_space_inside_parens(var ctx: FormatterCtx) {
 def fmt_remove_space_before_as(var ctx: FormatterCtx) {
     for (i in range(1, length(ctx.tokens))) {
         if (!new_line_before(ctx, i) && ctx |> eq(i, "as") && ctx |> eq(i - 1, "?")) {
-            ctx |> remove_space_before(i);
+            ctx |> remove_space_before(i)
         }
     }
 }
@@ -1177,22 +1177,22 @@ def fmt_remove_space_before_array_of_type(var ctx: FormatterCtx) {
 }
 
 
-let type_specifiers = fixed_array<string>( "?", "&", "#");
+let type_specifiers = fixed_array<string>( "?", "&", "#")
 
 def fmt_glue_type_specifiers(var ctx: FormatterCtx) {
     for (i in range(1, length(ctx.tokens))) {
         if (ctx.tokens[i].isInType) {
             if (ctx.tokens[i].tokenType == TokenType.UNKNOWN && type_specifiers |> find_index(ctx.tokens[i].str) >= 0) {
-                ctx |> remove_space_before(i);
+                ctx |> remove_space_before(i)
             }
             if (ctx |> eq(i, "const") && ctx |> eq(i - 1, "-", "==")) {
-                ctx |> remove_space_before(i);
+                ctx |> remove_space_before(i)
             }
             if (ctx |> eq(i, "-", "==")) {
-                ctx |> add_space_before(i);
+                ctx |> add_space_before(i)
             }
             if (ctx |> eq(i - 1, "|")) {
-                ctx |> add_space_before(i);
+                ctx |> add_space_before(i)
             }
         }
     }
@@ -1205,8 +1205,8 @@ def fmt_space_after_cast_type(var ctx: FormatterCtx) {
             if (type_after_keyword |> find_index(ctx.tokens[i].str) >= 0) {
                 for (j in range(i + 2, length(ctx.tokens))) {
                     if (!ctx.tokens[j].isInType && ctx.tokens[j].tokenType != TokenType.COMMENT) {
-                        ctx |> add_space_before(j);
-                        break;
+                        ctx |> add_space_before(j)
+                        break
                     }
                 }
             }
@@ -1217,104 +1217,104 @@ def fmt_space_after_cast_type(var ctx: FormatterCtx) {
 def fmt_destructure_space(var ctx: FormatterCtx) {
     for (i in range(0, length(ctx.tokens) - 1)) {
         if (ctx |> eq(i, "let", "var") && ctx.tokens[i + 1].spaces == 0) {
-            ctx |> add_space_before(i + 1);
+            ctx |> add_space_before(i + 1)
         }
     }
 }
 
 
 def do_format(var ctx: FormatterCtx) {
-    ctx |> parse_all_tokens();
-    ctx |> process_formatter_tokens();
+    ctx |> parse_all_tokens()
+    ctx |> process_formatter_tokens()
 
     if (ctx |> have_formatter_token("ignore-file")) {
-        return;
+        return
     }
 
-    ctx |> mark_token_context();
+    ctx |> mark_token_context()
     //ctx |> debug_print_tokens()
-    ctx |> fmt_spaces_around_operators();
-    ctx |> fmt_function_call_param_paren_call();
-    ctx |> fmt_space_after_comma();
-    ctx |> fmt_space_after_semicolon();
-    ctx |> fmt_function_decl_param_paren();
-    ctx |> fmt_type_colon();
-    ctx |> fmt_space_after_cast_type();
-    ctx |> fmt_remove_space_before_comma();
-    ctx |> fmt_remove_space_before_semicolon();
-    ctx |> fmt_remove_space_inside_parens();
-    ctx |> fmt_remove_space_before_as();
-    ctx |> fmt_glue_type_specifiers();
-    ctx |> fmt_space_after_keyword();
-    ctx |> fmt_space_after_paren();
-    ctx |> fmt_space_after_square_brackets();
-    ctx |> fmt_function_arguments();
-    ctx |> fmt_remove_space_before_args();
-    ctx |> fmt_remove_space_before_end_of_object();
-    ctx |> fmt_remove_space_before_object_type();
-    ctx |> fmt_remove_space_before_array_of_type();
-    ctx |> fmt_destructure_space();
+    ctx |> fmt_spaces_around_operators()
+    ctx |> fmt_function_call_param_paren_call()
+    ctx |> fmt_space_after_comma()
+    ctx |> fmt_space_after_semicolon()
+    ctx |> fmt_function_decl_param_paren()
+    ctx |> fmt_type_colon()
+    ctx |> fmt_space_after_cast_type()
+    ctx |> fmt_remove_space_before_comma()
+    ctx |> fmt_remove_space_before_semicolon()
+    ctx |> fmt_remove_space_inside_parens()
+    ctx |> fmt_remove_space_before_as()
+    ctx |> fmt_glue_type_specifiers()
+    ctx |> fmt_space_after_keyword()
+    ctx |> fmt_space_after_paren()
+    ctx |> fmt_space_after_square_brackets()
+    ctx |> fmt_function_arguments()
+    ctx |> fmt_remove_space_before_args()
+    ctx |> fmt_remove_space_before_end_of_object()
+    ctx |> fmt_remove_space_before_object_type()
+    ctx |> fmt_remove_space_before_array_of_type()
+    ctx |> fmt_destructure_space()
 
-    let top = length(ctx.tokens) - 1;
+    let top = length(ctx.tokens) - 1
     for (it in range(16)) {
-        let i = top - it;
+        let i = top - it
         if (i < 0 || !empty(ctx.tokens[i].str)) {
-            break;
+            break
         }
-        ctx.tokens[i].spaces = 0;
+        ctx.tokens[i].spaces = 0
     }
 }
 
 
 def public format_source_string(file_data: string const& implicit): string {
-    var inscope ctx: FormatterCtx;
-    ctx.data <- [ for (c in file_data); uint8(c) ];
-    ctx.data |> push(uint8(0));
-    ctx |> do_format();
-    return generate_source(ctx);
+    var inscope ctx: FormatterCtx
+    ctx.data <- [ for (c in file_data); uint8(c) ]
+    ctx.data |> push(uint8(0))
+    ctx |> do_format()
+    return generate_source(ctx)
 }
 
 
 def format_source(var ctx: FormatterCtx; file_data: array<uint8> const& implicit): string {
-    ctx.data := file_data;
-    ctx.data |> push(uint8(0));
-    ctx |> do_format();
-    return generate_source(ctx);
+    ctx.data := file_data
+    ctx.data |> push(uint8(0))
+    ctx |> do_format()
+    return generate_source(ctx)
 }
 
 
 def public format_source(file_data: array<uint8> const& implicit): string {
-    var inscope ctx: FormatterCtx;
-    return ctx |> format_source(file_data);
+    var inscope ctx: FormatterCtx
+    return ctx |> format_source(file_data)
 }
 
 
 def public format_file(var ctx: FormatterCtx; file_name: string const&) {
-    var unformatted: string = "";
-    var formatted: string = "";
+    var unformatted: string = ""
+    var formatted: string = ""
     fopen(file_name, "rb") <| $(fr) {
         if (fr == null) {
-            to_log(LOG_ERROR, "cannot open '{file_name}'\n");
+            to_log(LOG_ERROR, "cannot open '{file_name}'\n")
         }
         else {
             fmap(fr) <| $(data) {
-                unformatted = string(data);
-                formatted = ctx |> format_source(data);
+                unformatted = string(data)
+                formatted = ctx |> format_source(data)
             }
         }
     }
 
     if (ctx.debugMode) {
-        to_log(LOG_DEBUG, formatted);
+        to_log(LOG_DEBUG, formatted)
     }
 
     if (!empty(formatted) && formatted != unformatted && !ctx.debugMode) {
         fopen(file_name, "wb") <| $(fw) {
             if (fw == null) {
-                to_log(LOG_ERROR, "cannot open '{file_name} for write'\n");
+                to_log(LOG_ERROR, "cannot open '{file_name} for write'\n")
             }
             else {
-                fw |> fprint(formatted);
+                fw |> fprint(formatted)
             }
         }
     }
@@ -1322,60 +1322,52 @@ def public format_file(var ctx: FormatterCtx; file_name: string const&) {
 
 
 def public format_file(file_name: string const&) {
-    var inscope ctx: FormatterCtx;
-    ctx |> format_file(file_name);
+    var inscope ctx: FormatterCtx
+    ctx |> format_file(file_name)
 }
 
 
 def public format_files(var ctx: FormatterCtx; file_names: array<string>&) {
     for (fname in file_names) {
-        ctx |> format_file(fname);
+        ctx |> format_file(fname)
     }
 }
 
 
 def public format_files(file_names: array<string>&) {
-    var inscope ctx: FormatterCtx;
-    ctx |> format_files(file_names);
+    var inscope ctx: FormatterCtx
+    ctx |> format_files(file_names)
 }
 
+/*
 [export]
-def main() {
-    var fileNames: array<string>;
-    var filesListFn: string = "";
-    var ignore = true;
-    for (arg in get_command_line_arguments()) {
-        if (arg == "--debug") {
-            debugMode = true;
-        }
-        if (arg == "-args") {
-            ignore = false;
-            continue;
-        }
-        if (!ignore) {
-            if (arg |> character_at(0) != '-') {
-                fileNames |> push(arg);
-            }
-            if (arg |> starts_with("--files:")) {
-                filesListFn = arg |> slice(8);
-            }
-        }
-    }
-    if (!empty(filesListFn)) {
-        fopen(filesListFn, "rb") <| $(f) {
-            if (f == null) {
-                to_log(LOG_ERROR, "cannot open '{filesListFn}'\n");
-            } else {
-                while (!feof(f)) {
-                    var file_name = fgets(f);
-                    if (!empty(file_name)) {
-                        file_name = replace(file_name, "\n", "");
-                        file_name = replace(file_name, "\r", "");
-                        fileNames |> push(file_name);
-                    }
-                }
-            }
-        }
-    }
-    format_files(fileNames);
-}
+def main()
+    var fileNames: array<string>
+    var filesListFn: string = ""
+    var ignore = true
+    for arg in get_command_line_arguments()
+        if arg == "--debug"
+            debugMode = true
+        if arg == "-args"
+            ignore = false
+            continue
+        if !ignore
+            if arg |> character_at(0) != '-'
+                fileNames |> push(arg)
+            if arg |> starts_with("--files:")
+                filesListFn = arg |> slice(8)
+
+    if !empty(filesListFn)
+        fopen(filesListFn, "rb") <| $(f)
+            if f == null
+                to_log(LOG_ERROR, "cannot open '{filesListFn}'\n")
+            else
+                while !feof(f)
+                    var file_name = fgets(f)
+                    if !empty(file_name)
+                        file_name = replace(file_name, "\n", "")
+                        file_name = replace(file_name, "\r", "")
+                        fileNames |> push(file_name)
+
+    format_files(fileNames)
+*/

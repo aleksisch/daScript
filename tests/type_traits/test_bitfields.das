@@ -13,16 +13,16 @@ bitfield Test {
 def test_bitfield_traits ( t : T? ) {
     for (name,bit in each(type<Test>),count()) {
         if (bit==0) {
-            t |> equal("one", name);
+            t |> equal("one", name)
         }
         elif (bit==1) {
-            t |> equal("two", name);
+            t |> equal("two", name)
         }
         elif (bit==2) {
-            t |> equal("three", name);
+            t |> equal("three", name)
         }
         else {
-            t |> failure("unexpected bitfield value");
+            t |> failure("unexpected bitfield value")
         }
     }
 }

@@ -23,40 +23,40 @@ require daslib/templates_boost
 
 variant Terminal {
     // Literal: "Hello world"
-    lit: string;
+    lit: string
 
     // Range: set('0'..'9', 'a'..'z')
-    charset: tuple< chars : bool[256]; intervals : array< tuple<int;int> > >;
+    charset: tuple< chars : bool[256]; intervals : array< tuple<int;int> > >
 
     // Log: allows to send messages via `log("Parsed A: {a}")`
-    log_msg: ExpressionPtr;
+    log_msg: ExpressionPtr
 
     // Name of the result (int)
-    number: string;
+    number: string
 
     // WS <- [' ', '\n', '\t']*
-    whitespace: void?;
+    whitespace: void?
 
     // TS <- ['\t', ' ']*
-    taborspace: void?;
+    taborspace: void?
 
     // Any charachter
-    any: void?;
+    any: void?
 
     // Aka `cut operator`: a way to throw an error on failing
-    commit: void?;
+    commit: void?
 
     // End of file (!.)
-    EOF: void?;
+    EOF: void?
 
     // End of line \r\n | \n
-    EOL: void?;
+    EOL: void?
 
     // "..." as <name>
-    string_: string;
+    string_: string
 
     // double_ as <name>
-    double_: string;
+    double_: string
 }
 
 
@@ -64,45 +64,45 @@ typedef Nonterminal = string;
 
 
 variant Rule {
-    seq: array<Rule_?>;        // rule(R1, R2, R3)
-    alt: array<Alternative>;   // seq <| {...} ; seq <| {...}; etc
-    subrule: Rule_?;           // (R1)
+    seq: array<Rule_?>        // rule(R1, R2, R3)
+    alt: array<Alternative>   // seq <| {...} ; seq <| {...}; etc
+    subrule: Rule_?           // (R1)
 
-    maybe_repeat: Rule_?;      // * Rule
-    repeat: Rule_?;            // + Rule
+    maybe_repeat: Rule_?      // * Rule
+    repeat: Rule_?            // + Rule
 
-    option: Rule_?;            // MB(Rule)
+    option: Rule_?            // MB(Rule)
 
-    terminal: Terminal;
-    nonterminal: Nonterminal;
-    bound_nonterminal: tuple<Nonterminal; string>;
+    terminal: Terminal
+    nonterminal: Nonterminal
+    bound_nonterminal: tuple<Nonterminal; string>
 
     // Extracts text from a (nonterminal) rule for custom interpretation
-    text_extraction: Rule_?;  // "{digits}" as ds
+    text_extraction: Rule_?  // "{digits}" as ds
 
     // Do not consume the input
-    not_rule: Rule_?;     // !Rule
-    and_rule: Rule_?;     // PEEK(Rule)
+    not_rule: Rule_?     // !Rule
+    and_rule: Rule_?     // PEEK(Rule)
 }
 
 
 struct Rule_ {
-    name: string; // Bound name for ? * + ()
-    rule: Rule;
+    name: string // Bound name for ? * + ()
+    rule: Rule
 }
 
 
 // E.g. var <name>: <type_>
 struct Definition {
-    name: string;
+    name: string
 
-    type_: TypeDeclPtr;
+    type_: TypeDeclPtr
 
-    rule: Rule;
+    rule: Rule
 }
 
 
 struct Alternative {
-    rule: Rule_?;
-    action: ExpressionPtr;
+    rule: Rule_?
+    action: ExpressionPtr
 }

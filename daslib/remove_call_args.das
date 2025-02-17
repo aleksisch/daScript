@@ -17,25 +17,25 @@ require daslib/templates_boost
 def get_remove_indices(func) {
     for (ann in func.annotations) {
         if (ann.annotation.name == "remove_call_args") {
-            return <- get_remove_indices(ann.arguments);
+            return <- get_remove_indices(ann.arguments)
         }
     }
-    return <- array<int>();
+    return <- array<int>()
 }
 
 
 [macro_function]
 def get_remove_indices(args : AnnotationArgumentList) {
-    var indices : array<int>;
+    var indices : array<int>
     for (arg in args) {
         if (arg.name == "arg") {
-            indices |> push(arg.iValue);
+            indices |> push(arg.iValue)
         }
     }
     if (length(indices) > 0) {
-        indices |> sort() <| $(a, b) => a >= b;
+        indices |> sort() <| $(a, b) => a >= b
     }
-    return <- indices;
+    return <- indices
 }
 
 
@@ -43,44 +43,44 @@ def get_remove_indices(args : AnnotationArgumentList) {
 class RemoveCallArgsMacro : AstFunctionAnnotation {
     //! This macro remove all arguments by given indeces [remove_call_args(arg=(1,2,3))]
     def override apply(var func:FunctionPtr; var group:ModuleGroup; args:AnnotationArgumentList; var errors : das_string) : bool {
-        var removeIndices <- get_remove_indices(args);
+        var removeIndices <- get_remove_indices(args)
         if (length(removeIndices) == 0) {
-            return true;
+            return true
         }
 
         for (arg in func.arguments) {
-            arg.flags |= VariableFlags.marked_used; // to disable errors: unused function argument
+            arg.flags |= VariableFlags.marked_used // to disable errors: unused function argument
         }
 
-        var inscope fn <- clone_function(func);
-        fn.flags |= FunctionFlags.generated | FunctionFlags.exports;
+        var inscope fn <- clone_function(func)
+        fn.flags |= FunctionFlags.generated | FunctionFlags.exports
         for (idx in removeIndices) {
-            fn.arguments |> erase(idx);
+            fn.arguments |> erase(idx)
         }
 
         for (i in iter_range(fn.annotations)) {
             if (fn.annotations[i].annotation.name == "remove_call_args") {
-                fn.annotations |> erase(i);
-                break;
+                fn.annotations |> erase(i)
+                break
             }
         }
 
-        compiling_module() |> add_function(fn);
-        return true;
+        compiling_module() |> add_function(fn)
+        return true
     }
 
     def override transform ( var call : smart_ptr<ExprCallFunc>; var errors : das_string ) : ExpressionPtr {
-        var removeIndices <- get_remove_indices(call.func);
+        var removeIndices <- get_remove_indices(call.func)
 
         if (length(removeIndices) == 0) {
-            return <- default<ExpressionPtr>;
+            return <- default<ExpressionPtr>
         }
 
-        var inscope newCall <- clone_expression(call);
-        var ncall = newCall as ExprCall;
+        var inscope newCall <- clone_expression(call)
+        var ncall = newCall as ExprCall
         for (idx in removeIndices) {
-            ncall.arguments |> erase(idx);
+            ncall.arguments |> erase(idx)
         }
-        return <- newCall;
+        return <- newCall
     }
 }

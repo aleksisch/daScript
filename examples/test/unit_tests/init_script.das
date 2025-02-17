@@ -1,22 +1,22 @@
 options gen2;
 var {
-    value = 0;
+    value = 0
 }
 
 [init]
 def c1 {
-    value++;
+    value++
 }
 
 [init,no_aot]
 def c2 {
-    value+=2;
+    value+=2
 }
 
 [export]
 def test {
-    assert(value==3);
-    return true;
+    assert(value==3)
+    return true
 }
 
 

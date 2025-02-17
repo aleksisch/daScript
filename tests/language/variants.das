@@ -2,16 +2,16 @@ options gen2;
 require dastest/testing_boost public
 
 struct A {
-	a: int;
+	a: int
 }
 
 struct B {
-	b: int;
+	b: int
 }
 
 variant Foo {
-	a: A;
-    b: B;
+	a: A
+    b: B
 }
 
 let foo <- fixed_array<Foo>(
@@ -21,12 +21,12 @@ let foo <- fixed_array<Foo>(
 
 [test]
 def test_multiple_variants ( t : T? ) {
-    t |> success ( foo[0] is a );
+    t |> success ( foo[0] is a )
     if (foo[0] is a) {
-        t |> equal ( 1, (foo[0] as a).a );
+        t |> equal ( 1, (foo[0] as a).a )
     }
-    t |> success ( foo[1] is b );
+    t |> success ( foo[1] is b )
     if (foo[1] is b) {
-        t |> equal ( 2, (foo[1] as b).b );
+        t |> equal ( 2, (foo[1] as b).b )
     }
 }

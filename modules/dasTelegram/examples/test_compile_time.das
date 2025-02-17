@@ -3,7 +3,7 @@ require telegram/tbotapi
 
 [export]
 def main {
-    pass;
+    pass
 }
 
 options log_compile_time

@@ -1,8 +1,8 @@
 options gen2;
 var {
-    global_1 = "from a";
-    global_2 = "from a";
-    global_3 = "from_a";
+    global_1 = "from a"
+    global_2 = "from a"
+    global_3 = "from_a"
 }
 
 typedef aliasInA = int;
@@ -14,32 +14,32 @@ enum enumInA {
 }
 
 struct structInA {
-    a : int;
+    a : int
 }
 
 [generic]
 def from_a_get_3() {
-    return global_3;
+    return global_3
 }
 
 def fun_1 {
-    return "from_a";
+    return "from_a"
 }
 
 def fun_2 {
-    return "from_a";
+    return "from_a"
 }
 
 def fun_3 {
-    return "from_a";
+    return "from_a"
 }
 
 def from_a_get_fun_3() {
-    return fun_3();
+    return fun_3()
 }
 
 [export]
 def test {
-    return true;
+    return true
 }
 

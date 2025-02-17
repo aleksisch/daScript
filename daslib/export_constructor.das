@@ -17,14 +17,14 @@ class ExportConstructor : AstStructureAnnotation {
     //! implements 'export_constructor' macro, adds function make`{StructureName} which makes a new instance of a class or structure
     def override apply ( var st:StructurePtr; var group:ModuleGroup; args:AnnotationArgumentList; var errors : das_string ) : bool {
         if (args |> length!=0) {
-            errors := "expecting [export_constructor] to have no arguments";
-            return false;
+            errors := "expecting [export_constructor] to have no arguments"
+            return false
         }
-        var inscope qfn <- qmacro_function("make`{st.name}") <| $(){
-            return new <$t(st)>();
+        var inscope qfn <- qmacro_function("make`{st.name}") <| $() {
+            return new <$t(st)>()
         }
-        qfn.flags |= FunctionFlags.exports;
-        add_function(st._module, qfn);
-        return true;
+        qfn.flags |= FunctionFlags.exports
+        add_function(st._module, qfn)
+        return true
     }
 }

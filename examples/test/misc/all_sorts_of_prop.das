@@ -1,56 +1,56 @@
 options gen2;
 def get(cb : block<(a : string#) : void>) {
 	unsafe {
-		cb |> invoke(reinterpret<string#> "foo");
+		cb |> invoke(reinterpret<string#> "foo")
     }
 }
 
 struct Foo {
-	resz : string;
+	resz : string
 }
 
 def operator . res := ( var f : Foo; st : string# ) {
-	f.resz := st;
+	f.resz := st
 }
 
 [export]
 def main() {
 	if (true) {
-		var res : string;
+		var res : string
 		get() <| $ (name) {
-			res := name;
+			res := name
         }
-		debug(res);
+		debug(res)
     }
 	if (true) {
-		var f : Foo;
+		var f : Foo
 		get() <| $ (name) {
-			f.resz := name;
+			f.resz := name
         }
-		debug(f);
+		debug(f)
     }
 	if (true) {
-		var f : Foo;
+		var f : Foo
 		get() <| $ (name) {
-			f.res := name;
+			f.res := name
         }
-		debug(f);
+		debug(f)
     }
 }
 
 class sealed UIFrame {
     def const operator . sizezz() : float2 {
-		print("get value");
-        return float2(1,2);
+		print("get value")
+        return float2(1,2)
     }
     def operator . sizezz :=(value : float2) {
-        print("set {value}\n");
+        print("set {value}\n")
     }
 }
 
 [export]
 def apply_canvas_anchoring(var frame : UIFrame?; parentSize : float2 ) {
-	frame.sizezz := parentSize;
+	frame.sizezz := parentSize
 }
 
 options log

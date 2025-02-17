@@ -13,21 +13,21 @@ var public g_failed = false;
 var public g_errors : array<string>;
 
 def unreachable(message: string = "dasPEG: unreachable") {
-    stackwalk(false, false);
-    panic(message);
+    stackwalk(false, false)
+    panic(message)
 }
 
 def abort(message: string) {
-    g_failed = true;
-    g_errors |> push(message);
+    g_failed = true
+    g_errors |> push(message)
 }
 
 def iota {
     return <- generator<int>() <| $() {
-        var i: int = 0;
+        var i: int = 0
         while (true) {
-            i += 1;
-            return false if (i == 0) else yield i;
+            i += 1
+            return false if (i == 0) else yield i
         }
     }
 }

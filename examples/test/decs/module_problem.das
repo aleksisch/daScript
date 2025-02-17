@@ -4,6 +4,6 @@ require test_module
 
 [export]
 def act(dt: float) {
-    game_end(true);
+    game_end(true)
 }
 

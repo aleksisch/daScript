@@ -33,108 +33,108 @@ class AppendCondAnnotation : AstFunctionAnnotation {
     for (ann in func.annotations) {
       if (ann.annotation.name=="apply_in_context") {
         if (!(find_arg(ann.arguments,"patched") is nothing)) {
-          return true;
+          return true
         }
       }
     }
 
     if (args |> length != 1) {
-      errors := "expecting one argument";
-      return false;
+      errors := "expecting one argument"
+      return false
     }
 
-    var contextName = "";
+    var contextName = ""
     for (argv in args) {
-      let val = get_annotation_argument_value(argv);
+      let val = get_annotation_argument_value(argv)
       if (val is tBool) {
-        contextName = "{argv.name}";
+        contextName = "{argv.name}"
       }
       elif (val is tString) {
-        contextName = val as tString;
+        contextName = val as tString
       }
       else {
-        errors := "invalid argument type {argv.name}";
-        return false;
+        errors := "invalid argument type {argv.name}"
+        return false
       }
     }
 
     for (arg in func.arguments) {
       if (is_temp_type(arg._type,true) && !(arg._type.flags.temporary || arg._type.flags._implicit)) {
-        errors := "argument {arg.name} needs to be temporary or implicit, i.e. {describe(arg._type)}# or {describe(arg._type)} implicit";
-        return false;
+        errors := "argument {arg.name} needs to be temporary or implicit, i.e. {describe(arg._type)}# or {describe(arg._type)} implicit"
+        return false
       }
     }
 
     for (ann in func.annotations) {
       if (ann.annotation.name=="apply_in_context") {
-        astChanged = true;
-        ann.arguments |> add_annotation_argument("patched",true);
+        astChanged = true
+        ann.arguments |> add_annotation_argument("patched",true)
       }
     }
 
-    let resName = "__res__";
-    let ctxCloneFnName = "CONTEXT_CLONE`{func.name}";
-    let ctxFnName = "CONTEXT`{func.name}";
-    var inscope ctxFnArguments : array<VariablePtr>;
-    var inscope ctxFnBlockList : array<ExpressionPtr>;
-    var inscope callInCtxArguments : array<ExpressionPtr>;
+    let resName = "__res__"
+    let ctxCloneFnName = "CONTEXT_CLONE`{func.name}"
+    let ctxFnName = "CONTEXT`{func.name}"
+    var inscope ctxFnArguments : array<VariablePtr>
+    var inscope ctxFnBlockList : array<ExpressionPtr>
+    var inscope callInCtxArguments : array<ExpressionPtr>
     for (arg in func.arguments) {
-      ctxFnArguments |> emplace_new <| clone_variable(arg);
-      callInCtxArguments |> emplace_new <| qmacro($i(arg.name));
+      ctxFnArguments |> emplace_new <| clone_variable(arg)
+      callInCtxArguments |> emplace_new <| qmacro($i(arg.name))
     }
     if (!func.result.isVoid) {
-      var inscope resType = clone_type(func.result);
-      resType.flags &= ~TypeDeclFlags.constant;
-      ctxFnArguments |> emplace_new <| qmacro_variable(resName,type<$t(resType)?>);
-      ctxFnBlockList |> emplace_new <| qmacro_expr(${*$i(resName) = $c(ctxCloneFnName)($a(callInCtxArguments));});
+      var inscope resType = clone_type(func.result)
+      resType.flags &= ~TypeDeclFlags.constant
+      ctxFnArguments |> emplace_new <| qmacro_variable(resName,type<$t(resType)?>)
+      ctxFnBlockList |> emplace_new <| qmacro_expr(${*$i(resName) = $c(ctxCloneFnName)($a(callInCtxArguments));})
     }
     else {
-      ctxFnBlockList |> emplace_new <| qmacro($c(ctxCloneFnName)($a(callInCtxArguments)));
+      ctxFnBlockList |> emplace_new <| qmacro($c(ctxCloneFnName)($a(callInCtxArguments)))
     }
     var inscope ctxFn <- qmacro_function(ctxFnName) <| $ ( $a(ctxFnArguments) ) : void {
       unsafe {
-        verify(has_debug_agent_context($v(contextName)),"debug agent is not installed");
-        verify(addr(get_debug_agent_context($v(contextName))) == addr(this_context()),"agent context mismatch");
-        $b(ctxFnBlockList);
+        verify(has_debug_agent_context($v(contextName)),"debug agent is not installed")
+        verify(addr(get_debug_agent_context($v(contextName))) == addr(this_context()),"agent context mismatch")
+        $b(ctxFnBlockList)
       }
     }
-    ctxFn.moreFlags |= MoreFunctionFlags.pinvoke;
-    compiling_module() |> add_function(ctxFn);
+    ctxFn.moreFlags |= MoreFunctionFlags.pinvoke
+    compiling_module() |> add_function(ctxFn)
 
-    var inscope fn <- clone_function(func);
-    fn.name := ctxCloneFnName;
-    fn.flags |= FunctionFlags.generated | FunctionFlags.privateFunction | FunctionFlags.exports;
-    func.body := null;
-    var inscope funcBlocklist : array<ExpressionPtr>;
+    var inscope fn <- clone_function(func)
+    fn.name := ctxCloneFnName
+    fn.flags |= FunctionFlags.generated | FunctionFlags.privateFunction | FunctionFlags.exports
+    func.body := null
+    var inscope funcBlocklist : array<ExpressionPtr>
     if (!func.result.isVoid) {
-      funcBlocklist |> emplace_new <| qmacro_expr(${let $i(resName) : $t(func.result);});
+      funcBlocklist |> emplace_new <| qmacro_expr(${let $i(resName) : $t(func.result);})
     }
-    var inscope pinvokeArguments : array<ExpressionPtr>;
+    var inscope pinvokeArguments : array<ExpressionPtr>
     for (arg in func.arguments) {
       if (arg._type.isRef && !arg._type.isRefType) {
-        pinvokeArguments |> emplace_new <| qmacro(unsafe(addr($i(arg.name))));
+        pinvokeArguments |> emplace_new <| qmacro(unsafe(addr($i(arg.name))))
       }
       else {
-        pinvokeArguments |> emplace_new <| qmacro($i(arg.name));
+        pinvokeArguments |> emplace_new <| qmacro($i(arg.name))
       }
     }
     if (!func.result.isVoid) {
-      pinvokeArguments |> emplace_new <| qmacro(unsafe(addr($i(resName))));
+      pinvokeArguments |> emplace_new <| qmacro(unsafe(addr($i(resName))))
     }
-    funcBlocklist |> emplace_new <| qmacro(unsafe(invoke_in_context(get_debug_agent_context($v(contextName)),@@$c(ctxFnName),$a(pinvokeArguments))));
+    funcBlocklist |> emplace_new <| qmacro(unsafe(invoke_in_context(get_debug_agent_context($v(contextName)),@@$c(ctxFnName),$a(pinvokeArguments))))
     if (!func.result.isVoid) {
-      funcBlocklist |> emplace_new() <| qmacro_expr(${return $i(resName);});
+      funcBlocklist |> emplace_new() <| qmacro_expr(${return $i(resName);})
     }
     unsafe {
-      func.body <- qmacro_block() <| $(){
+      func.body <- qmacro_block() <| $() {
         unsafe {
-          verify(has_debug_agent_context($v(contextName)),"debug agent is not installed");
-          verify(addr(get_debug_agent_context($v(contextName))) != addr(this_context()),"agent context mismatch");
-          $b(funcBlocklist);
+          verify(has_debug_agent_context($v(contextName)),"debug agent is not installed")
+          verify(addr(get_debug_agent_context($v(contextName))) != addr(this_context()),"agent context mismatch")
+          $b(funcBlocklist)
         }
       }
     }
-    compiling_module() |> add_function(fn);
-    return true;
+    compiling_module() |> add_function(fn)
+    return true
   }
 }

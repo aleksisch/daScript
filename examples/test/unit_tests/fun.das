@@ -8,100 +8,100 @@ options gen2;
 require daslib/functional
 
 def is_even(x:int) {
-    return x % 2 == 0;
+    return x % 2 == 0
 }
 
 def twice(x:int) {
-    return x + x;
+    return x + x
 }
 
 def add(a,b:int) {
-    return a + b;
+    return a + b
 }
 
 [sideeffects]
 def verify_even(arr) {
     for (x,y in arr,range(50)) {
-        assert(x==y*2);
+        assert(x==y*2)
     }
 }
 
 def first(x) {
-    return x._0;
+    return x._0
 }
 
 def operator != ( a,b : tuple<int;float> ) {
-    return a._0!=b._0 || a._1!=b._1;
+    return a._0!=b._0 || a._1!=b._1
 }
 
 def operator != ( a,b : array<int> ) {
     if (length(a) != length(b)) {
-        return true;
+        return true
     }
     for (x,y in a,b) {
         if (x != y) {
-            return true;
+            return true
         }
     }
-    return false;
+    return false
 }
 
 def is_same(a,b) {
     for (x,y in a,b) {
         if (x != y) {
-            return false;
+            return false
         }
     }
-    return true;
+    return true
 }
 
 def verify_14 ( t ) {
     for (x,y in range(1,4),t) {
-        assert(y[0]==x && y[1]==2);
+        assert(y[0]==x && y[1]==2)
     }
 }
 
 [export]
 def test {
     // compehension
-    verify_even() <| [iterator for (x in range(100)); x; where x % 2==0];
+    verify_even() <| [iterator for (x in range(100)); x; where x % 2==0]
 
     // array comprehension
-    verify_even() <| [for (x in range(100)); x; where x % 2==0];
+    verify_even() <| [for (x in range(100)); x; where x % 2==0]
 
     // comprehension iterator with moveable type
-    verify_14() <| [iterator for (x in range(1,4)); array<int>( x,2)];
+    verify_14() <| [iterator for (x in range(1,4)); array<int>( x,2)]
 
     // comprehension array with moveable type
-    verify_14() <| [for (x in range(1,4)); array<int>( x,2) ];
+    verify_14() <| [for (x in range(1,4)); array<int>( x,2) ]
 
     (   // filter with function
             range(100)
         |>  each()
         |>  filter(@@is_even)
         |>  verify_even()
-    );
+    )
 
     (   // filter with lambda
             range(100)
         |>  each()
         |>  filter( @(x) => x % 2==0 )
         |>  verify_even()
-    );
+    )
 
     (   // map
             range(50)
         |>  each()
         |>  map( @@twice )
         |>  verify_even()
-    );
+    )
 
     (   // map with lambbda
             range(50)
         |>  each()
         |>  map( @(x : int) => x + x )
         |>  verify_even()
-    );
+    )
 
     (   // filter and map with moveable type
             [iterator for (x in range(100)); array<int>( x,2)]
@@ -109,7 +109,7 @@ def test {
         |>  map ( @(x) : array<int> => <- array<int>( x[0], x[0], x[0] ) )
         |>  map ( @(x) : int => x[0] )
         |>  verify_even()
-    );
+    )
 
     (   // reduce non-ref iterator with block
             range(10)
@@ -117,14 +117,14 @@ def test {
         |>  reduce( $(x,y) => x + y )
         |>  is_equal(45)
         |>  verify()
-    );
+    )
 
     (   // reduce ref iterator with block
             [iterator for (x in range(10)); x]
         |>  reduce( $(x,y) => x + y )
         |>  is_equal(45)
         |>  verify()
-    );
+    )
 
     (   // reduce non-ref iterator with lambda
             range(10)
@@ -132,7 +132,7 @@ def test {
         |>  reduce( @(x,y) => x + y )
         |>  is_equal(45)
         |>  verify()
-    );
+    )
 
     (   // reduce non-ref iterator with function
             range(10)
@@ -140,7 +140,7 @@ def test {
         |>  reduce( @@add )
         |>  is_equal(45)
         |>  verify()
-    );
+    )
 
     (   // reduce single element sequence
             range(45,46)
@@ -148,7 +148,7 @@ def test {
         |>  reduce( @@add )
         |>  is_equal(45)
         |>  verify()
-    );
+    )
 
     (   // reduce ref type
             range(10)
@@ -158,7 +158,7 @@ def test {
         |>  first()
         |>  is_equal(45)
         |>  verify()
-    );
+    )
 
     (   // sum
             range(10)
@@ -166,13 +166,13 @@ def test {
         |>  sum()
         |>  is_equal(45)
         |>  verify()
-    );
+    )
 
     (   // any (pass)
             fixed_array<bool>( true,false)
         |>  any()
         |>  verify()
-    );
+    )
 
     (   // any (fail)
             range(10)
@@ -181,7 +181,7 @@ def test {
         |>  any()
         |>  not()
         |>  verify()
-    );
+    )
 
     (   // all (pass)
             range(10)
@@ -189,7 +189,7 @@ def test {
         |>  map ( @(x) : bool => x < 100 )
         |>  all()
         |>  verify()
-    );
+    )
 
     (   // all (fail)
             range(10)
@@ -200,7 +200,7 @@ def test {
         |>  all()
         |>  not()
         |>  verify()
-    );
+    )
 
     (   // islice
             range(10)
@@ -209,7 +209,7 @@ def test {
         |>  sum()
         |>  is_equal(6)
         |>  verify()
-    );
+    )
 
     (   // count
             count(0,10)
@@ -217,7 +217,7 @@ def test {
         |>  sum()
         |>  is_equal(450)
         |>  verify()
-    );
+    )
 
     (   // infinite repeat
             repeat(10)
@@ -226,7 +226,7 @@ def test {
         |>  length()
         |>  is_equal(5)
         |>  verify()
-    );
+    )
 
     (   // limited repeat
             repeat(10,6)
@@ -234,7 +234,7 @@ def test {
         |>  length()
         |>  is_equal(6)
         |>  verify()
-    );
+    )
 
     (   // cycle <by value>
         range(1,4)
@@ -243,7 +243,7 @@ def test {
     |>  islice(0,10)
     |>  is_same( [iterator for (x in range(10)); (x % 3)+1] )
     |>  verify()
-    );
+    )
 
     (   // cycle <by reference>
         [iterator for (x in range(1,4)); ( x,2.5)]
@@ -251,7 +251,7 @@ def test {
     |>  islice(0,10)
     |>  is_same([iterator for (x in range(10)); ( (x%3)+1,2.5)])
     |>  verify()
-    );
+    )
 
     (   // cycle <by moveable>
         [iterator for (x in range(1,4)); array<int>( x,2)]
@@ -259,8 +259,8 @@ def test {
     |>  islice(0,10)
     |>  is_same([iterator for (x in range(10)); array<int>( (x%3)+1,2)])
     |>  verify()
-    );
+    )
 
-    return true;
+    return true
 }
 

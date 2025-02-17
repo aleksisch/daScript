@@ -3,18 +3,18 @@ options gen2;
 
 def fold(a:array<auto(numt)>;var from:numt) {
     for (x in a) {
-        from += x;
+        from += x
     }
-    return from;
+    return from
 }
 
 [export]
 def test:bool {
-    var a:array<float>;
-    push(a,1.0);
-    push(a,2.0);
-    push(a,3.0);
-    let q = fold(a,13.0);
-    assert(q==19.0);
-    return true;
+    var a:array<float>
+    push(a,1.0)
+    push(a,2.0)
+    push(a,3.0)
+    let q = fold(a,13.0)
+    assert(q==19.0)
+    return true
 }

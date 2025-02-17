@@ -8,12 +8,12 @@ require math
 [test]
 def test_matrix_op ( t:T? ) {
     t |> run("fuzz pack_float_to_byte") <| @@ ( t : T? ) {
-        var fake <- Faker();
+        var fake <- Faker()
         fuzz <| $() {
-            t |> accept ( pack_float_to_byte(fake |> random_float4) );
+            t |> accept ( pack_float_to_byte(fake |> random_float4) )
         }
         fuzz <| $() {
-            t |> accept ( unpack_byte_to_float(fake |> random_uint) );
+            t |> accept ( unpack_byte_to_float(fake |> random_uint) )
         }
     }
 }

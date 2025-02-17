@@ -4,11 +4,11 @@ options gen2;
 def test {
     return <- generator<bool>() <| $() {
         for (x in range(10)) {
-            print("coroutine: step {x}\n");
-            yield true;
+            print("coroutine: step {x}\n")
+            yield true
         }
-        print("almost done\n");
-        yield true;
-        return false;
+        print("almost done\n")
+        yield true
+        return false
     }
 }

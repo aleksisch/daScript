@@ -12,10 +12,10 @@ def SetConsoleTitle(lpConsoleTitle:string) {}
 
 [export]
 def main {
-    let proc_n = GetCurrentProcessorNumber();
-    print("current processor {proc_n}\n");
-    SetConsoleTitle("hello, console title\n");
-    ExitProcess(1234);
+    let proc_n = GetCurrentProcessorNumber()
+    print("current processor {proc_n}\n")
+    SetConsoleTitle("hello, console title\n")
+    ExitProcess(1234)
 }
 
 

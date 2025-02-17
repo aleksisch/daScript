@@ -15,14 +15,14 @@ require daslib/macro_boost
 
 def private fakeFuncName ( prog:ProgramPtr; expr:ExpressionPtr ) {
     if (expr is ExprVar) {
-        return string((expr as ExprVar).name);
+        return string((expr as ExprVar).name)
     }
     elif (expr is ExprConstString) {
-        return string((expr as ExprConstString).value);
+        return string((expr as ExprConstString).value)
     }
     else {
-        macro_error(prog,expr.at,"fakeFuncName: unsupported expression");
-        return "";
+        macro_error(prog,expr.at,"fakeFuncName: unsupported expression")
+        return ""
     }
 }
 
@@ -30,25 +30,25 @@ def private fakeFuncName ( prog:ProgramPtr; expr:ExpressionPtr ) {
 class FakeNumericMacro : AstCallMacro {
     //! This macro convert fake_numeric(func_id) to the comprehensive faker test::
     def override visit ( prog:ProgramPtr; mod:Module?; var expr:smart_ptr<ExprCallMacro> ) : ExpressionPtr {
-        macro_verify(length(expr.arguments)==1,prog,expr.at,"expecting fake_numeric(func_name), incorrect number of arguments");
-        let func_name = fakeFuncName(prog,expr.arguments[0]);
+        macro_verify(length(expr.arguments)==1,prog,expr.at,"expecting fake_numeric(func_name), incorrect number of arguments")
+        let func_name = fakeFuncName(prog,expr.arguments[0])
         return <-qmacro_block <| $() {
             t |> run($v(func_name)) <| @@ ( t : T? ) {
-                var fake <- Faker();
+                var fake <- Faker()
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float) );
+                    t |> accept ( $c(func_name)(fake |> random_float) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_double) );
+                    t |> accept ( $c(func_name)(fake |> random_double) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float2) );
+                    t |> accept ( $c(func_name)(fake |> random_float2) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float3) );
+                    t |> accept ( $c(func_name)(fake |> random_float3) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float4) );
+                    t |> accept ( $c(func_name)(fake |> random_float4) )
                 }
             }
         }
@@ -60,25 +60,25 @@ class FakeNumericMacro : AstCallMacro {
 class FakeNumericMacro2 : AstCallMacro {
     //! This macro convert fake_numeric(func_id) to the comprehensive faker test::
     def override visit ( prog:ProgramPtr; mod:Module?; var expr:smart_ptr<ExprCallMacro> ) : ExpressionPtr {
-        macro_verify(length(expr.arguments)==1,prog,expr.at,"expecting fake_numeric2(func_name), incorrect number of arguments");
-        let func_name = fakeFuncName(prog,expr.arguments[0]);
+        macro_verify(length(expr.arguments)==1,prog,expr.at,"expecting fake_numeric2(func_name), incorrect number of arguments")
+        let func_name = fakeFuncName(prog,expr.arguments[0])
         return <-qmacro_block <| $() {
             t |> run($v(func_name)) <| @@ ( t : T? ) {
-                var fake <- Faker();
+                var fake <- Faker()
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float,  fake |> random_float ) );
+                    t |> accept ( $c(func_name)(fake |> random_float,  fake |> random_float ) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_double, fake |> random_double ) );
+                    t |> accept ( $c(func_name)(fake |> random_double, fake |> random_double ) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float2, fake |> random_float2 ) );
+                    t |> accept ( $c(func_name)(fake |> random_float2, fake |> random_float2 ) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float3, fake |> random_float3 ) );
+                    t |> accept ( $c(func_name)(fake |> random_float3, fake |> random_float3 ) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float4, fake |> random_float4 ) );
+                    t |> accept ( $c(func_name)(fake |> random_float4, fake |> random_float4 ) )
                 }
             }
         }
@@ -89,25 +89,25 @@ class FakeNumericMacro2 : AstCallMacro {
 class FakeNumericMacro3 : AstCallMacro {
     //! This macro convert fake_numeric(func_id) to the comprehensive faker test::
     def override visit ( prog:ProgramPtr; mod:Module?; var expr:smart_ptr<ExprCallMacro> ) : ExpressionPtr {
-        macro_verify(length(expr.arguments)==1,prog,expr.at,"expecting fake_numeric2(func_name), incorrect number of arguments");
-        let func_name = fakeFuncName(prog,expr.arguments[0]);
+        macro_verify(length(expr.arguments)==1,prog,expr.at,"expecting fake_numeric2(func_name), incorrect number of arguments")
+        let func_name = fakeFuncName(prog,expr.arguments[0])
         return <-qmacro_block <| $() {
             t |> run($v(func_name)) <| @@ ( t : T? ) {
-                var fake <- Faker();
+                var fake <- Faker()
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float,  fake |> random_float, fake |> random_float ) );
+                    t |> accept ( $c(func_name)(fake |> random_float,  fake |> random_float, fake |> random_float ) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_double, fake |> random_double, fake |> random_double ) );
+                    t |> accept ( $c(func_name)(fake |> random_double, fake |> random_double, fake |> random_double ) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float2, fake |> random_float2, fake |> random_float2 ) );
+                    t |> accept ( $c(func_name)(fake |> random_float2, fake |> random_float2, fake |> random_float2 ) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float3, fake |> random_float3, fake |> random_float3 ) );
+                    t |> accept ( $c(func_name)(fake |> random_float3, fake |> random_float3, fake |> random_float3 ) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float4, fake |> random_float4, fake |> random_float4 ) );
+                    t |> accept ( $c(func_name)(fake |> random_float4, fake |> random_float4, fake |> random_float4 ) )
                 }
             }
         }
@@ -119,22 +119,22 @@ class FakeNumericMacro3 : AstCallMacro {
 class FakeFloatMacro : AstCallMacro {
     //! This macro convert fake_numeric(func_id) to the comprehensive faker test::
     def override visit ( prog:ProgramPtr; mod:Module?; var expr:smart_ptr<ExprCallMacro> ) : ExpressionPtr {
-        macro_verify(length(expr.arguments)==1,prog,expr.at,"expecting fake_numeric(func_name), incorrect number of arguments");
-        let func_name = fakeFuncName(prog,expr.arguments[0]);
+        macro_verify(length(expr.arguments)==1,prog,expr.at,"expecting fake_numeric(func_name), incorrect number of arguments")
+        let func_name = fakeFuncName(prog,expr.arguments[0])
         return <-qmacro_block <| $() {
             t |> run($v(func_name)) <| @@ ( t : T? ) {
-                var fake <- Faker();
+                var fake <- Faker()
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float) );
+                    t |> accept ( $c(func_name)(fake |> random_float) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float2) );
+                    t |> accept ( $c(func_name)(fake |> random_float2) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float3) );
+                    t |> accept ( $c(func_name)(fake |> random_float3) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float4) );
+                    t |> accept ( $c(func_name)(fake |> random_float4) )
                 }
             }
         }
@@ -146,22 +146,22 @@ class FakeFloatMacro : AstCallMacro {
 class FakeFloatMacro2 : AstCallMacro {
     //! This macro convert fake_numeric(func_id) to the comprehensive faker test::
     def override visit ( prog:ProgramPtr; mod:Module?; var expr:smart_ptr<ExprCallMacro> ) : ExpressionPtr {
-        macro_verify(length(expr.arguments)==1,prog,expr.at,"expecting fake_numeric2(func_name), incorrect number of arguments");
-        let func_name = fakeFuncName(prog,expr.arguments[0]);
+        macro_verify(length(expr.arguments)==1,prog,expr.at,"expecting fake_numeric2(func_name), incorrect number of arguments")
+        let func_name = fakeFuncName(prog,expr.arguments[0])
         return <-qmacro_block <| $() {
             t |> run($v(func_name)) <| @@ ( t : T? ) {
-                var fake <- Faker();
+                var fake <- Faker()
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float,  fake |> random_float ) );
+                    t |> accept ( $c(func_name)(fake |> random_float,  fake |> random_float ) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float2, fake |> random_float2 ) );
+                    t |> accept ( $c(func_name)(fake |> random_float2, fake |> random_float2 ) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float3, fake |> random_float3 ) );
+                    t |> accept ( $c(func_name)(fake |> random_float3, fake |> random_float3 ) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float4, fake |> random_float4 ) );
+                    t |> accept ( $c(func_name)(fake |> random_float4, fake |> random_float4 ) )
                 }
             }
         }
@@ -172,22 +172,22 @@ class FakeFloatMacro2 : AstCallMacro {
 class FakeFloatMacro3 : AstCallMacro {
     //! This macro convert fake_numeric(func_id) to the comprehensive faker test::
     def override visit ( prog:ProgramPtr; mod:Module?; var expr:smart_ptr<ExprCallMacro> ) : ExpressionPtr {
-        macro_verify(length(expr.arguments)==1,prog,expr.at,"expecting fake_numeric2(func_name), incorrect number of arguments");
-        let func_name = fakeFuncName(prog,expr.arguments[0]);
+        macro_verify(length(expr.arguments)==1,prog,expr.at,"expecting fake_numeric2(func_name), incorrect number of arguments")
+        let func_name = fakeFuncName(prog,expr.arguments[0])
         return <-qmacro_block <| $() {
             t |> run($v(func_name)) <| @@ ( t : T? ) {
-                var fake <- Faker();
+                var fake <- Faker()
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float,  fake |> random_float,  fake |> random_float ) );
+                    t |> accept ( $c(func_name)(fake |> random_float,  fake |> random_float,  fake |> random_float ) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float2, fake |> random_float2, fake |> random_float2 ) );
+                    t |> accept ( $c(func_name)(fake |> random_float2, fake |> random_float2, fake |> random_float2 ) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float3, fake |> random_float3, fake |> random_float3 ) );
+                    t |> accept ( $c(func_name)(fake |> random_float3, fake |> random_float3, fake |> random_float3 ) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float4, fake |> random_float4, fake |> random_float4 ) );
+                    t |> accept ( $c(func_name)(fake |> random_float4, fake |> random_float4, fake |> random_float4 ) )
                 }
             }
         }
@@ -199,19 +199,19 @@ class FakeFloatMacro3 : AstCallMacro {
 class FakeFloatMacro_234 : AstCallMacro {
     //! This macro convert fake_numeric(func_id) to the comprehensive faker test::
     def override visit ( prog:ProgramPtr; mod:Module?; var expr:smart_ptr<ExprCallMacro> ) : ExpressionPtr {
-        macro_verify(length(expr.arguments)==1,prog,expr.at,"expecting fake_numeric(func_name), incorrect number of arguments");
-        let func_name = fakeFuncName(prog,expr.arguments[0]);
+        macro_verify(length(expr.arguments)==1,prog,expr.at,"expecting fake_numeric(func_name), incorrect number of arguments")
+        let func_name = fakeFuncName(prog,expr.arguments[0])
         return <-qmacro_block <| $() {
             t |> run($v(func_name)) <| @@ ( t : T? ) {
-                var fake <- Faker();
+                var fake <- Faker()
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float2) );
+                    t |> accept ( $c(func_name)(fake |> random_float2) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float3) );
+                    t |> accept ( $c(func_name)(fake |> random_float3) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float4) );
+                    t |> accept ( $c(func_name)(fake |> random_float4) )
                 }
             }
         }
@@ -223,19 +223,19 @@ class FakeFloatMacro_234 : AstCallMacro {
 class FakeFloatMacro2_234 : AstCallMacro {
     //! This macro convert fake_numeric(func_id) to the comprehensive faker test::
     def override visit ( prog:ProgramPtr; mod:Module?; var expr:smart_ptr<ExprCallMacro> ) : ExpressionPtr {
-        macro_verify(length(expr.arguments)==1,prog,expr.at,"expecting fake_numeric2(func_name), incorrect number of arguments");
-        let func_name = fakeFuncName(prog,expr.arguments[0]);
+        macro_verify(length(expr.arguments)==1,prog,expr.at,"expecting fake_numeric2(func_name), incorrect number of arguments")
+        let func_name = fakeFuncName(prog,expr.arguments[0])
         return <-qmacro_block <| $() {
             t |> run($v(func_name)) <| @@ ( t : T? ) {
-                var fake <- Faker();
+                var fake <- Faker()
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float2, fake |> random_float2 ) );
+                    t |> accept ( $c(func_name)(fake |> random_float2, fake |> random_float2 ) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float3, fake |> random_float3 ) );
+                    t |> accept ( $c(func_name)(fake |> random_float3, fake |> random_float3 ) )
                 }
                 fuzz <| $() {
-                    t |> accept ( $c(func_name)(fake |> random_float4, fake |> random_float4 ) );
+                    t |> accept ( $c(func_name)(fake |> random_float4, fake |> random_float4 ) )
                 }
             }
         }
