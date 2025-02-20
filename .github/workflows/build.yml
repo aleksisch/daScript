@@ -186,6 +186,9 @@ jobs:
             ./bin/"${{ matrix.cmake_preset }}"/daslang ./das-fmt/dasfmt.das -- --path ./ --verify
             ;;
            *)
+            ls -lh
+            ls -lh ./das-fmt
+            ls -lh ./das-fmt/das-fmt
             ./bin/daslang ./das-dmt/dasfmt.das -- --path ./ --verify
             ;;
         esac
