@@ -378,31 +378,6 @@ namespace das {
             return (!mtd || mtd->isAlias()) ? nullptr : mtd;
         }
 
-        // WARNING: this is really really slow, use faster tests when u can isAutoOrAlias for one
-        // type chain is fully resolved, and not aliased \ auto
-        bool isFullySealedType(const TypeDeclPtr & ptr, das_set<const TypeDecl *> & all ) {
-            if (!ptr) return false;
-            if ( ptr->baseType==Type::tStructure || ptr->baseType==Type::tTuple || ptr->baseType==Type::tVariant ) {
-                auto thisType = ptr.get();
-                if ( all.find(thisType)!=all.end() ) return true;
-                all.insert(thisType);
-            }
-            if (ptr->baseType==Type::autoinfer || ptr->baseType==Type::alias) return false;
-            if (ptr->firstType && !isFullySealedType(ptr->firstType,all)) return false;
-            if (ptr->secondType && !isFullySealedType(ptr->secondType,all)) return false;
-            for (auto & argT : ptr->argTypes) {
-                if (argT && !isFullySealedType(argT,all)) return false;
-            }
-            if ( ptr->structType ) {
-                for ( auto & fd : ptr->structType->fields )
-                    if ( !isFullySealedType(fd.type,all) ) return false;
-            }
-            return true;
-        }
-        bool isFullySealedType(const TypeDeclPtr & ptr) {
-            das_set<const TypeDecl *> all;
-            return isFullySealedType(ptr, all);
-        }
         // infer alias type
         TypeDeclPtr inferAlias ( const TypeDeclPtr & decl, const FunctionPtr & fptr = nullptr, AliasMap * aliases = nullptr, OptionsMap * options = nullptr, bool autoToAlias=false ) const {
             autoToAlias |= decl->autoToAlias;
@@ -874,7 +849,9 @@ namespace das {
                 }
             }
             // match inferable block
-            if (inferBlock && passType->isAuto() && (passType->isGoodBlockType() || passType->isGoodLambdaType() || passType->isGoodFunctionType())) {
+            if (inferBlock && passType->isAuto() &&
+                (passType->isGoodBlockType() || passType->isGoodLambdaType() || passType->isGoodFunctionType()
+                    || passType->isGoodArrayType() || passType->isGoodTableType() )) {
                 return TypeDecl::inferGenericType(passType, argType, true, true, options) != nullptr;
             }
             // compare types which don't need inference
@@ -1253,6 +1230,15 @@ namespace das {
             return result;
         }
 
+        uint64_t getLookupHash ( const vector<TypeDeclPtr> & types ) const {
+            uint64_t argHash = UINT64_C(14695981039346656037);
+            for ( auto & arg : types ) {
+                arg->getLookupHash(argHash);
+            }
+            DAS_VERIFY(argHash);
+            return argHash;
+        }
+
         MatchingFunctions findMatchingFunctions ( const string & name, const vector<TypeDeclPtr> & types, bool inferBlock = false, bool visCheck = true ) const {
             string moduleName, funcName;
             splitTypeName(name, moduleName, funcName);
@@ -1260,6 +1246,9 @@ namespace das {
             auto inWhichModule = getSearchModule(moduleName);
             auto thisModule = program->thisModule.get();
             auto hFuncName = hash64z(funcName.c_str());
+#if DAS_FUNCTION_HASH_LOOKUP
+            uint64_t argHash = 0;
+#endif
             program->library.foreach([&](Module * mod) -> bool {
                 auto itFnList = mod->functionsByName.find(hFuncName);
                 if ( itFnList != mod->functionsByName.end() ) {
@@ -1270,9 +1259,29 @@ namespace das {
                         if ( !visCheck || isVisibleFunc(inWhichModule,getFunctionVisModule(pFn.get()) ) ) {
                             if ( !pFn->fromGeneric || thisModule->isVisibleDirectly(mod) ) {
                                 if ( canCallPrivate(pFn,inWhichModule,thisModule) ) {
+#if !(DAS_FUNCTION_HASH_LOOKUP)
                                     if ( isFunctionCompatible(pFn, types, false, inferBlock) ) {
                                         result.push_back(pFn.get());
                                     }
+#else
+
+                                    if ( !argHash ) {
+                                        argHash = getLookupHash(types);
+                                    }
+                                    auto itLook = pFn->lookup.find(argHash);    // if found in lookup
+                                    if ( itLook != pFn->lookup.end() ) {
+                                        if ( itLook->second ) {
+                                            result.push_back(pFn.get());
+                                        }
+                                        continue;
+                                    }
+                                    if ( isFunctionCompatible(pFn, types, false, inferBlock) ) {
+                                        result.push_back(pFn.get());
+                                        pFn->lookup[argHash] = true;
+                                    } else {
+                                        pFn->lookup[argHash] = false;
+                                    }
+#endif
                                 }
                             }
                         }
@@ -2099,9 +2108,6 @@ namespace das {
                     }
                 }
             }
-            // TODO: verify. correct test is in fact the one bellow
-            //  if ( isFullySealedType(decl.type) ) {
-            // isFullyInferred may be sufficient
             if ( decl.type->isFullyInferred() ) {
                 int fieldAlignemnt = decl.type->getAlignOf();
                 int fa = fieldAlignemnt - 1;
@@ -3027,8 +3033,6 @@ namespace das {
                 auto mkBlock = static_pointer_cast<ExprMakeBlock>(expr->arguments[0]);
                 auto block = static_pointer_cast<ExprBlock>(mkBlock->block);
                 if ( auto bT = block->makeBlockType() ) {
-                    // TODO: verify
-                    // if ( !isFullySealedType(bT) ) {
                     if ( bT->isAutoOrAlias() ) {
                         error("can't infer generator block type",  "", "",
                             expr->at, CompilationError::invalid_block);
@@ -3183,8 +3187,6 @@ namespace das {
         ExpressionPtr convertBlockToLambda ( ExprMakeBlock * expr ) {
             auto block = static_pointer_cast<ExprBlock>(expr->block);
             if ( auto bT = block->makeBlockType() ) {
-                // TODO: verify
-                // if ( !isFullySealedType(bT) ) {
                 if ( bT->isAutoOrAlias() ) {
                     error("can't infer lambda block type",  "", "",
                         expr->at, CompilationError::invalid_block);
@@ -3248,8 +3250,6 @@ namespace das {
         ExpressionPtr convertBlockToLocalFunction ( ExprMakeBlock * expr ) {
             auto block = static_pointer_cast<ExprBlock>(expr->block);
             if ( auto bT = block->makeBlockType() ) {
-                // TODO: verify
-                // if ( !isFullySealedType(bT) ) {
                 if ( bT->isAutoOrAlias() ) {
                     error("can't infer local function block type",  "", "",
                         expr->at, CompilationError::invalid_block);
@@ -3280,8 +3280,6 @@ namespace das {
             expr->type = block->makeBlockType();
             if ( expr->isLambda ) {
                 expr->type->baseType = Type::tLambda;
-                // TODO: verify
-                // if ( isFullySealedType(expr->type) ) {
                 if ( !expr->type->isAutoOrAlias() ) {
                     if ( auto unInferred = isFullyInferredBlock(block.get()) ) {
                         TextWriter tt;
@@ -3674,8 +3672,6 @@ namespace das {
                       expr->at, CompilationError::typeinfo_auto);
                 return Visitor::visit(expr);
             }
-            // TODO: verify, is this even necessary now that we have tests above?
-            // if ( !isFullySealedType(expr->typeexpr) ) {
             if ( expr->typeexpr->isAutoOrAlias() ) {
                 error("is " + (expr->typeexpr ? describeType(expr->typeexpr) : "...") + " can't be fully inferred", "", "",
                       expr->at, CompilationError::type_not_found);
@@ -4175,7 +4171,7 @@ namespace das {
                     if ( expr->typeexpr->isStructure() ) {
                         auto decl = expr->typeexpr->structType->findField(expr->subtrait);
                         // NOTE: we do need to check if its fully sealed here
-                        if ( isFullySealedType(expr->typeexpr) ) {
+                        if ( expr->typeexpr->isFullySealed() ) {
                             reportAstChanged();
                             return make_smart<ExprConstInt>(expr->at, decl->offset);
                         } else {
@@ -5470,7 +5466,11 @@ namespace das {
                 }
                 if ( possibleEnums.size()==1 ) {
                     auto td = make_smart<TypeDecl>(possibleEnums.back());
-                    return make_smart<ExprConstEnumeration>(expr->at, expr->name, td);
+                    auto res = make_smart<ExprConstEnumeration>(expr->at, expr->name, td);
+                    bool infE = false;
+                    res->value = getEnumerationValue(res.get(), infE);
+                    if ( infE ) res->type = td;
+                    return res;
                 } else if ( possibleBitfields.size()==1 ) {
                     auto alias = possibleBitfields.back();
                     int bit = alias->findArgumentIndex(expr->name);
@@ -5479,6 +5479,7 @@ namespace das {
                         td->ref = false;
                         auto bitConst = new ExprConstBitfield(expr->at, 1u << bit);
                         bitConst->bitfieldType = make_smart<TypeDecl>(*alias);
+                        bitConst->type = td;
                         return bitConst;
                     } else {
                         error("bitfield '" + expr->name + "' not found in " + describeType(alias), "", "",
@@ -7542,8 +7543,6 @@ namespace das {
                     return Visitor::visit(expr);
                 }
                 for ( auto & var : expr->variables ) {
-                    // TODO: verify
-                    // if ( !isFullySealedType(var->type) ) {
                     if ( var->type->isAutoOrAlias() ) {
                         error("type not ready yet", "", "", var->at);
                         return Visitor::visit(expr);
@@ -8361,7 +8360,8 @@ namespace das {
                     && "if this happens, we are calling infer function call without checking for '[expr]'. do that from where we call up the stack.");
                 // if its an auto or an alias
                 // we only allow it, if its a block or lambda
-                if ( ar->type->baseType!=Type::tBlock && ar->type->baseType!=Type::tLambda && ar->type->baseType!=Type::tFunction ) {
+                if ( ar->type->baseType!=Type::tBlock && ar->type->baseType!=Type::tLambda && ar->type->baseType!=Type::tFunction
+                        && ar->type->baseType!=Type::tArray && ar->type->baseType!=Type::tTable ) {
                     if ( ar->type->isAutoOrAlias() ) {
                         return false;
                     }
@@ -8390,19 +8390,37 @@ namespace das {
                 // infer FORWARD types
                 for ( size_t iF=0, iFs=expr->arguments.size(); iF!=iFs; ++iF ) {
                     auto & arg = expr->arguments[iF];
-                    if ( arg->type->isAuto() && (arg->type->isGoodBlockType() || arg->type->isGoodLambdaType() || arg->type->isGoodFunctionType()) ) {
-                        if ( arg->rtti_isMakeBlock() ) { // "it's always MakeBlock. unless its function and @@funcName
-                            auto mkBlock = static_pointer_cast<ExprMakeBlock>(arg);
-                            auto block = static_pointer_cast<ExprBlock>(mkBlock->block);
-                            auto retT = TypeDecl::inferGenericType(mkBlock->type, funcC->arguments[iF]->type, true, true, nullptr);
-                            DAS_ASSERTF ( retT, "how? it matched during findMatchingFunctions the same way");
-                            TypeDecl::applyAutoContracts(mkBlock->type, funcC->arguments[iF]->type);
-                            block->returnType = make_smart<TypeDecl>(*retT->firstType);
-                            for ( size_t ba=0, bas=retT->argTypes.size(); ba!=bas; ++ba ) {
-                                block->arguments[ba]->type = make_smart<TypeDecl>(*retT->argTypes[ba]);
+                    if ( arg->type->isAuto() ) {
+                        if ( arg->type->isGoodBlockType() || arg->type->isGoodLambdaType() || arg->type->isGoodFunctionType() ) {
+                            if ( arg->rtti_isMakeBlock() ) { // "it's always MakeBlock. unless its function and @@funcName
+                                auto mkBlock = static_pointer_cast<ExprMakeBlock>(arg);
+                                auto block = static_pointer_cast<ExprBlock>(mkBlock->block);
+                                auto retT = TypeDecl::inferGenericType(mkBlock->type, funcC->arguments[iF]->type, true, true, nullptr);
+                                DAS_ASSERTF ( retT, "how? it matched during findMatchingFunctions the same way");
+                                TypeDecl::applyAutoContracts(mkBlock->type, funcC->arguments[iF]->type);
+                                block->returnType = make_smart<TypeDecl>(*retT->firstType);
+                                for ( size_t ba=0, bas=retT->argTypes.size(); ba!=bas; ++ba ) {
+                                    block->arguments[ba]->type = make_smart<TypeDecl>(*retT->argTypes[ba]);
+                                }
+                                setBlockCopyMoveFlags(block.get());
+                                reportAstChanged();
                             }
-                            setBlockCopyMoveFlags(block.get());
-                            reportAstChanged();
+                        } else if ( arg->type->isGoodArrayType() || arg->type->isGoodTableType() ) {
+                            if ( arg->rtti_isMakeStruct() ) {   // its always MakeStruct
+                                auto mkStruct = static_pointer_cast<ExprMakeStruct>(arg);
+                                if ( mkStruct->structs.size() ) {
+                                    error("internal compiler error: array<auto> type not under default<array<auto>> or default<table<auto;auto>>", "", "", expr->at);
+                                    return nullptr;
+                                }
+                                auto retT = TypeDecl::inferGenericType(mkStruct->type, funcC->arguments[iF]->type, true, true, nullptr);
+                                DAS_ASSERTF ( retT, "how? it matched during findMatchingFunctions the same way");
+                                TypeDecl::applyAutoContracts(mkStruct->type, funcC->arguments[iF]->type);
+                                mkStruct->makeType = retT;
+                                reportAstChanged();
+                            } else {
+                                error("internal compiler error: unknown array<auto> type not under make strcut", "", "", expr->at);
+                                return nullptr;
+                            }
                         }
                     }
                 }
@@ -9526,6 +9544,16 @@ namespace das {
                     valT->constant = false;
                     expr->makeType->argTypes.push_back(valT);
                 }
+                if ( expr->recordNames.size() ) {
+                    if ( expr->recordNames.size() != expr->values.size() ) {
+                        error("tuple field names mismatch", "", "",
+                            expr->at, CompilationError::invalid_type);
+                    } else {
+                        for ( size_t ri=0, rsize=expr->recordNames.size(); ri!=rsize; ++ri ) {
+                            expr->makeType->argNames.push_back(expr->recordNames[ri]);
+                        }
+                    }
+                }
             }
             expr->type = make_smart<TypeDecl>(*expr->makeType);
             verifyType(expr->type);
@@ -9887,6 +9915,9 @@ namespace das {
                 auto mnh = fn->getMangledNameHash();
                 if ( hash != mnh ) {
                     refreshFunctions.emplace_back(make_tuple(fn.get(), hash, mnh));
+#if DAS_FUNCTION_HASH_LOOKUP
+                    { AstFuncLookup dummy; swap(fn->lookup,dummy); }    // invalidate lookup hash, something changed
+#endif
                 }
             });
             for ( auto rfn : refreshFunctions ) {

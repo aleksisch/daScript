@@ -388,6 +388,39 @@ namespace das
 
     // semantic hash
 
+    __forceinline uint64_t hashmix ( uint64_t hash, uint64_t key ) {
+        hash ^= key;
+        hash *= UINT64_C(0x9e3779b97f4a7c15);
+        hash ^= rotr64_c(hash,31);
+        hash *= UINT64_C(0x9e3779b97f4a7c15);
+        hash ^= rotr64_c(hash, 28);
+        return hash;
+    }
+
+    void TypeDecl::getLookupHash(uint64_t & hash) const {
+        hash = hashmix(hash, baseType);
+        hash = hashmix(hash, flags);
+        for ( auto d : dim ) {
+            hash = hashmix(hash, d);
+        }
+        if ( structType ) {
+            hash = hashmix(hash, intptr_t(structType));
+        } else if ( enumType ) {
+            hash = hashmix(hash, intptr_t(enumType));
+        } else if ( annotation ) {
+            hash = hashmix(hash, intptr_t(annotation));
+        }
+        if ( firstType ) {
+            firstType->getLookupHash(hash);
+        }
+        if ( secondType ) {
+            secondType->getLookupHash(hash);
+        }
+        for ( auto & argT : argTypes ) {
+            argT->getLookupHash(hash);
+        }
+    }
+
     uint64_t TypeDecl::getSemanticHash() const {
         HashBuilder hb;
         return getSemanticHash(hb);
@@ -2380,6 +2413,37 @@ namespace das
             }
         }
         return false;
+    }
+
+    // WARNING: this is really really slow, use faster tests when u can isAutoOrAlias for one
+    // type chain is fully resolved, and not aliased \ auto
+    bool TypeDecl::isFullySealed(das_set<const Structure *> & all ) const {
+        if (baseType==Type::autoinfer || baseType==Type::alias) return false;
+        for (auto di : dim) {
+            if (di == TypeDecl::dimAuto) {
+                return false;
+            }
+        }
+        if ( baseType==Type::tStructure ) {
+            if ( structType ) {
+                if ( all.find(structType)!=all.end() ) return true;
+                all.insert(structType);
+                for ( auto & fd : structType->fields ) {
+                    if ( !fd.type->isFullySealed(all) ) return false;
+                }
+
+            }
+        }
+        if (firstType && !firstType->isFullySealed(all)) return false;
+        if (secondType && !firstType->isFullySealed(all)) return false;
+        for (auto & argT : argTypes) {
+            if (argT && !argT->isFullySealed(all)) return false;
+        }
+        return true;
+    }
+    bool TypeDecl::isFullySealed() const {
+        das_set<const Structure *> all;
+        return isFullySealed(all);
     }
 
     bool TypeDecl::isFullyInferred() const {

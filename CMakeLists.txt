@@ -344,6 +344,8 @@ FLEX(src/parser/ds_lexer.lpp)
 FLEX(src/parser/ds2_lexer.lpp)
 BISON(src/parser/ds_parser.ypp)
 BISON(src/parser/ds2_parser.ypp)
+FLEX(utils/dasFsormatter/ds_lexer.lpp)
+BISON(utils/dasFormatter/ds_parser.ypp)
 
 SET(PARSER_GENERATED_SRC
 # 1st parser
@@ -632,6 +634,15 @@ src/simulate/fs_file_info.cpp
 ${DAS_MODULES_RESOLVE_INC}
 )
 
+# das formatter
+SET(DASCRIPT_FMT_SRC
+        ${PROJECT_SOURCE_DIR}/utils/dasFormatter/fmt.cpp
+        ${PROJECT_SOURCE_DIR}/utils/dasFormatter/formatter.cpp
+        ${PROJECT_SOURCE_DIR}/utils/dasFormatter/helpers.cpp
+        ${PROJECT_SOURCE_DIR}/utils/dasFormatter/ds_parser.cpp
+        CACHE INTERNAL "DAS_DASCRIPT_FMT_SRC"
+)
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
   set_source_files_properties(src/builtin/module_builtin_ast_serialize.cpp PROPERTIES
     COMPILE_FLAGS "-fexceptions"
@@ -679,7 +690,7 @@ include_directories(include)
 include_directories(3rdparty/fmt/include)
 ADD_LIBRARY(libDaScript ${PARSER_GENERATED_SRC} ${PARSER_SRC} ${VECMATH_SRC} ${AST_SRC} ${BUILTIN_SRC}
     ${MISC_SRC} ${SIMULATE_SRC} ${SIMULATE_FUSION_SRC} ${TEST_SRC} ${MAIN_SRC}
-	${DAGOR_NOISE_SRC} ${FLAT_HASH_MAP_SRC} ${FAST_FLOAT_SRC})
+	${DAGOR_NOISE_SRC} ${FLAT_HASH_MAP_SRC} ${FAST_FLOAT_SRC} ${DASCRIPT_FMT_SRC})
 ADD_DEPENDENCIES(libDaScript need_and_resolve)
 ADD_PROJECT_XXD_DEPENDS(libDaScript)
 target_include_directories(libDaScript PUBLIC
@@ -742,8 +753,10 @@ if (NOT ${DAS_TOOLS_DISABLED})
 
     SOURCE_GROUP_FILES("main" DAS_DASCRIPT_MAIN_SRC)
 
+    SET(SRC_LIBRARIES libDaScript libDaScriptTest Threads::Threads ${DAS_MODULES_LIBS})
+
     add_executable(daslang ${DAS_DASCRIPT_MAIN_SRC})
-    TARGET_LINK_LIBRARIES(daslang libDaScript libDaScriptTest Threads::Threads ${DAS_MODULES_LIBS})
+    TARGET_LINK_LIBRARIES(daslang ${SRC_LIBRARIES})
     # ADD_DEPENDENCIES(daslang libDaScript libDaScriptTest ${DAS_MODULES_LIBS})
     SETUP_CPP11(daslang)
     SETUP_LTO(daslang)
@@ -757,6 +770,16 @@ if (NOT ${DAS_TOOLS_DISABLED})
     )
     install(FILES ${DASLIB_SOURCES}
         DESTINATION ${DAS_INSTALL_DASLIBDIR}
+    )
+
+    add_executable(das-fmt ${PROJECT_SOURCE_DIR}/utils/dasFormatter/main.cpp)
+    TARGET_LINK_LIBRARIES(das-fmt ${SRC_LIBRARIES})
+
+    SETUP_CPP11(das-fmt)
+    SETUP_LTO(das-fmt)
+
+    INSTALL(TARGETS das-fmt
+        RUNTIME DESTINATION ${DAS_INSTALL_BINDIR}
     )
 
     #IF(APPLE)

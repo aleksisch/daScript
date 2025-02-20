@@ -67,6 +67,7 @@ void das_accept_cpp_comment ( vector<CommentReader *> & crdi, yyscan_t scanner, 
 
 %x indent
 %x strb
+%x strfmt
 %x c_comment
 %x cpp_comment
 %x include
@@ -125,6 +126,7 @@ void das_accept_cpp_comment ( vector<CommentReader *> & crdi, yyscan_t scanner, 
     }
 }
 <normal>"\/\/" {
+    yyextra->last_token_end = tokAt(yyscanner,*yylloc_param);
     BEGIN(cpp_comment);
     if ( !yyextra->g_CommentReaders.empty() ) {
         auto tak = tokAt(yyscanner,*yylloc_param);
@@ -170,6 +172,7 @@ void das_accept_cpp_comment ( vector<CommentReader *> & crdi, yyscan_t scanner, 
     }
 }
 <c_comment>[\r\n]  {                 /* skipping comment eol */
+    YYNEWLINE(yyscanner);
     if ( !yyextra->g_CommentReaders.empty() ) {
         auto tak = tokAt(yyscanner,*yylloc_param);
         for ( auto & crd : yyextra->g_CommentReaders ) crd->accept(*yytext, tak);
@@ -231,6 +234,28 @@ void das_accept_cpp_comment ( vector<CommentReader *> & crdi, yyscan_t scanner, 
     yylval_param->ch = *yytext;
     return STRING_CHARACTER;
 }
+<strfmt><<EOF>>             {
+    das_yyfatalerror(yylloc_param,yyscanner,"string format exceeds file", CompilationError::string_constant_exceeds_file);
+    BEGIN(normal);
+    return END_STRING;
+}
+<strfmt>\n                {
+    yylval_param->ch = *yytext;
+    YYNEWLINE(yyscanner);
+    return STRING_CHARACTER;
+}
+<strfmt>\t                {
+    yylval_param->ch = *yytext;
+    return STRING_CHARACTER;
+}
+<strfmt>\}                {
+    BEGIN(normal);
+    unput('}');
+}
+<strfmt>.                 {
+    yylval_param->ch = *yytext;
+    return STRING_CHARACTER;
+}
 <indent>[ \t\r]*\n      /* skip empty line */ {
     yyextra->das_current_line_indent = 0;
     YYNEWLINE(yyscanner);
@@ -275,17 +300,29 @@ void das_accept_cpp_comment ( vector<CommentReader *> & crdi, yyscan_t scanner, 
             das_yyfatalerror(yylloc_param,yyscanner,"invalid indentation"); // pretend tab was pressed
             yyextra->das_current_line_indent = (yyextra->das_current_line_indent + yyextra->das_tab_size) & ~(yyextra->das_tab_size-1);
         }
+        yylval_param->i = yyextra->das_indent_level;
         yyextra->das_indent_level++;
         #ifdef FLEX_DEBUG
         printf("emit {, cli=%i, indent =%i\n", yyextra->das_current_line_indent, yyextra->das_indent_level);
         #endif
-        return '{';
+
+        yylloc_param->first_line = yyextra->last_token_end.line;
+        yylloc_param->first_column = yyextra->last_token_end.column;
+        yylloc_param->last_line = yyextra->last_token_end.line;
+        yylloc_param->last_column = yyextra->last_token_end.column;
+        // yylloc_param->last_column -= 1;
+        return OPEN_BRACE;
     } else if (yyextra->das_current_line_indent < yyextra->das_indent_level*yyextra->das_tab_size ) {
         yyextra->das_indent_level--;
         #ifdef FLEX_DEBUG
         printf("emit }, cli=%i, indent =%i\n", yyextra->das_current_line_indent, yyextra->das_indent_level);
         #endif
-        return '}';
+        yylval_param->i = yyextra->das_indent_level;
+        yylloc_param->first_line = yyextra->last_token_end.last_line;
+        yylloc_param->first_column = yyextra->last_token_end.last_column;
+        yylloc_param->last_line = yyextra->last_token_end.last_line;
+        yylloc_param->last_column = yyextra->last_token_end.last_column;
+        return CLOSE_BRACE;
     } else {
         BEGIN(normal);
     }
@@ -298,7 +335,9 @@ void das_accept_cpp_comment ( vector<CommentReader *> & crdi, yyscan_t scanner, 
             #ifdef FLEX_DEBUG
             printf("emit }\n");
             #endif
-            return '}';
+            yylloc_param->first_line = yylloc_param->last_line;
+            yylloc_param->first_column = yylloc_param->last_column;
+            return CLOSE_BRACE;
         } else {
             return 0;
         }
@@ -755,12 +794,35 @@ void das_accept_cpp_comment ( vector<CommentReader *> & crdi, yyscan_t scanner, 
 <normal>"\.\."                              return DOTDOT;
 <normal>"\|\>"                              return RPIPE;
 <normal>\<\|[ \t\r]*\/\/.*\n {
+    yyextra->last_token_end = tokAt(yyscanner,*yylloc_param);
+    yyextra->last_token_end.column += 2;
     yyextra->das_need_oxford_comma = false;
     unput('\n');
     das_accept_cpp_comment(yyextra->g_CommentReaders, yyscanner, *yylloc_param, yytext);
     return LBPIPE;
 }
-<normal>\<\|[ \t\r]*\n                      yyextra->das_need_oxford_comma = false; unput('\n'); return LBPIPE;
+
+<normal>\<\|[ \t]*\$\(\)\{[ \t\r]*\n                      {
+    yyextra->das_need_oxford_comma = false;
+    unput('\n');
+    unput('{');
+    YYCOLUMN(yyextra->das_yycolumn -= 5, "UNPUT {"); // maybe 2?
+    return LBPIPE;
+}
+
+<normal>\<\|[ \t]*\{[ \t\r]*\n                      {
+    yyextra->das_need_oxford_comma = false;
+    unput('\n');
+    unput('{');
+    YYCOLUMN(yyextra->das_yycolumn -= 2, "UNPUT {");
+    return LBPIPE;
+}
+<normal>\<\|[ \t\r]*\n                      {
+    yyextra->das_need_oxford_comma = false;
+    unput('\n');
+    YYCOLUMN(yyextra->das_yycolumn -= 1, "UNPUT {");
+    return LBPIPE;
+}
 <normal>\<\|[ \t]\$                         {
     unput('$');
     YYCOLUMN(yyextra->das_yycolumn--, "UNPUT $");
@@ -814,14 +876,14 @@ void das_accept_cpp_comment ( vector<CommentReader *> & crdi, yyscan_t scanner, 
 }
 <normal>"\<\|"                              return LPIPE;
 <normal>"\$\$"                              return MTAG_E;
-<normal>\$e([^a-zA-Z0-9_])                  unput(yytext[yyleng-1]); return MTAG_E;
-<normal>\$i([^a-zA-Z0-9_])                  unput(yytext[yyleng-1]); return MTAG_I;
-<normal>\$v([^a-zA-Z0-9_])                  unput(yytext[yyleng-1]); return MTAG_V;
-<normal>\$b([^a-zA-Z0-9_])                  unput(yytext[yyleng-1]); return MTAG_B;
-<normal>\$a([^a-zA-Z0-9_])                  unput(yytext[yyleng-1]); return MTAG_A;
-<normal>\$t([^a-zA-Z0-9_])                  unput(yytext[yyleng-1]); return MTAG_T;
-<normal>\$c([^a-zA-Z0-9_])                  unput(yytext[yyleng-1]); return MTAG_C;
-<normal>\$f([^a-zA-Z0-9_])                  unput(yytext[yyleng-1]); return MTAG_F;
+<normal>\$e([^a-zA-Z0-9_])                  unput(yytext[yyleng-1]); YYCOLUMN(yyextra->das_yycolumn--, "UNPUT $"); return MTAG_E;
+<normal>\$i([^a-zA-Z0-9_])                  unput(yytext[yyleng-1]); YYCOLUMN(yyextra->das_yycolumn--, "UNPUT $"); return MTAG_I;
+<normal>\$v([^a-zA-Z0-9_])                  unput(yytext[yyleng-1]); YYCOLUMN(yyextra->das_yycolumn--, "UNPUT $"); return MTAG_V;
+<normal>\$b([^a-zA-Z0-9_])                  unput(yytext[yyleng-1]); YYCOLUMN(yyextra->das_yycolumn--, "UNPUT $"); return MTAG_B;
+<normal>\$a([^a-zA-Z0-9_])                  unput(yytext[yyleng-1]); YYCOLUMN(yyextra->das_yycolumn--, "UNPUT $"); return MTAG_A;
+<normal>\$t([^a-zA-Z0-9_])                  unput(yytext[yyleng-1]); YYCOLUMN(yyextra->das_yycolumn--, "UNPUT $"); return MTAG_T;
+<normal>\$c([^a-zA-Z0-9_])                  unput(yytext[yyleng-1]); YYCOLUMN(yyextra->das_yycolumn--, "UNPUT $"); return MTAG_C;
+<normal>\$f([^a-zA-Z0-9_])                  unput(yytext[yyleng-1]); YYCOLUMN(yyextra->das_yycolumn--, "UNPUT $"); return MTAG_F;
 <normal>"\?\?"                              return QQ;
 <normal>"\?\["                              {
     yyextra->das_nested_square_braces ++;
@@ -920,6 +982,13 @@ void das_accept_cpp_comment ( vector<CommentReader *> & crdi, yyscan_t scanner, 
         das_yyfatalerror(yylloc_param,yyscanner,"mismatching curly braces", CompilationError::mismatching_parentheses);
         return LEXER_ERROR;
     }
+    const auto txt = string(yytext);
+    auto offset = txt.rfind('\n');
+    const auto npos = -1;
+    if (offset != npos) {
+        yylloc_param->first_line -= std::count(txt.begin(), txt.end(), '\n');
+        yylloc_param->last_column = txt.size() - (offset + 1);
+    }
     yyextra->das_nested_curly_braces -= 2;
     return SEMICOLON_CUR_CUR;
 }
@@ -932,6 +1001,13 @@ void das_accept_cpp_comment ( vector<CommentReader *> & crdi, yyscan_t scanner, 
     if ( !yyextra->das_nested_square_braces ) {
         das_yyfatalerror(yylloc_param,yyscanner,"mismatching square braces", CompilationError::mismatching_parentheses);
         return LEXER_ERROR;
+    }
+    const auto txt = string(yytext);
+    auto offset = txt.rfind('\n');
+    const auto npos = -1;
+    if (offset != npos) {
+        yylloc_param->first_line -= std::count(txt.begin(), txt.end(), '\n');
+        yylloc_param->last_column = txt.size() - (offset + 1);
     }
     yyextra->das_nested_curly_braces --;
     yyextra->das_nested_square_braces --;
@@ -947,6 +1023,13 @@ void das_accept_cpp_comment ( vector<CommentReader *> & crdi, yyscan_t scanner, 
         das_yyfatalerror(yylloc_param,yyscanner,"mismatching square braces", CompilationError::mismatching_parentheses);
         return LEXER_ERROR;
     }
+    const auto txt = string(yytext);
+    auto offset = txt.rfind('\n');
+    const auto npos = -1;
+    if (offset != npos) {
+        yylloc_param->first_line -= std::count(txt.begin(), txt.end(), '\n');
+        yylloc_param->last_column = txt.size() - (offset + 1);
+    }
     yyextra->das_nested_curly_braces --;
     yyextra->das_nested_square_braces --;
     return COMMA_CUR_SQR;
@@ -958,6 +1041,14 @@ void das_accept_cpp_comment ( vector<CommentReader *> & crdi, yyscan_t scanner, 
         return LEXER_ERROR;
     }
     yyextra->das_nested_square_braces -= 2;
+    const auto txt = string(yytext);
+    auto offset = txt.rfind('\n');
+    const auto npos = -1;
+    if (offset != npos) {
+        yylloc_param->first_line -= std::count(txt.begin(), txt.end(), '\n');
+        yylloc_param->last_column = txt.size() - (offset + 1);
+    }
+
     return SEMICOLON_SQR_SQR;
 }
 
@@ -973,6 +1064,9 @@ void das_accept_cpp_comment ( vector<CommentReader *> & crdi, yyscan_t scanner, 
     YYCOLUMN(yyextra->das_yycolumn = 0, "NEW LINE");
 }
 <normal>(\/\/.*)*\n {
+    if (yyextra->last_token_end.line != tokAt(yyscanner,*yylloc_param).line) {
+        yyextra->last_token_end = tokAt(yyscanner,*yylloc_param);
+    }
     YYCOLUMN(yyextra->das_yycolumn = 0, "NEW LINE");
     das_accept_cpp_comment(yyextra->g_CommentReaders, yyscanner, *yylloc_param, yytext);
     if  ( !yyextra->das_nested_parentheses && !yyextra->das_nested_curly_braces && !yyextra->das_nested_square_braces ) {
@@ -988,7 +1082,9 @@ void das_accept_cpp_comment ( vector<CommentReader *> & crdi, yyscan_t scanner, 
             #ifdef FLEX_DEBUG
             printf("emit ; at EOL\n");
             #endif
-            return ';';
+            yylloc_param->first_line = yyextra->last_token_end.line;
+            yylloc_param->first_column = yyextra->last_token_end.column;
+            return SEMICOLON;
         }
     }
 }
@@ -1004,7 +1100,9 @@ void das_accept_cpp_comment ( vector<CommentReader *> & crdi, yyscan_t scanner, 
                 #ifdef FLEX_DEBUG
                 printf("emit ; at EOF\n");
                 #endif
-                return ';';
+                yylloc_param->first_line = yyextra->last_token_end.line;
+                yylloc_param->first_column = yyextra->last_token_end.column;
+                return SEMICOLON;
             }
         } else {
             return 0;
@@ -1019,6 +1117,11 @@ void das_accept_cpp_comment ( vector<CommentReader *> & crdi, yyscan_t scanner, 
 <normal>.                                   return *yytext;
 
 %%
+
+void das_strfmt ( yyscan_t yyscanner ) {
+    struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;
+    BEGIN(strfmt);
+}
 
 void das_accept_sequence ( yyscan_t yyscanner, const char * seq, size_t seqLen, int lineNo, FileInfo * info ) {
     struct yyguts_t * yyg = (struct yyguts_t*)yyscanner;

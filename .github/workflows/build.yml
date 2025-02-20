@@ -105,7 +105,7 @@ jobs:
 
     steps:
     - name: "SCM Checkout"
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: "Install CMake and Ninja"
       uses: lukka/get-cmake@latest
@@ -147,6 +147,12 @@ jobs:
             ;;
         esac
 
+    - name: "Clone required repos"
+      uses: actions/checkout@master
+      with:
+        repository: aleksisch/das-fmt     # Path to repository with das-fmt scripts
+        path: das-fmt
+
     - name: "Build: Daslang"
       run: |
         set -eux
@@ -157,21 +163,33 @@ jobs:
               linux64)
                 cmake --no-warn-unused-cli -B./build -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake_preset }} -G "${{ matrix.cmake_generator }}"
                 cd build
-                ninja daslang
-                ninja daScriptTest
+                ninja
                 ;;
               windows*)
                 cmake --no-warn-unused-cli -B./build -G "${{ matrix.cmake_generator }}" -T host=x86 -A ${{ matrix.architecture_string }}
-                cmake --build ./build --config ${{ matrix.cmake_preset }} --target daslang
-                cmake --build ./build --config ${{ matrix.cmake_preset }} --target daScriptTest
+                cmake --build ./build --config ${{ matrix.cmake_preset }}
                 ;;
               *)
                 CC=clang CXX=clang++ cmake --no-warn-unused-cli -B./build -DCMAKE_OSX_ARCHITECTURES="x86_64" -DCMAKE_BUILD_TYPE:STRING=${{ matrix.cmake_preset }}  -G "${{ matrix.cmake_generator }}"
                 cd build
-                ninja daslang
-                ninja daScriptTest
+                ninja
                 ;;
             esac
+            ;;
+        esac
+
+    - name: "Run formatter"
+      run: |
+        set -eux
+        case "${{ matrix.target }}${{ matrix.architecture }}" in
+           windows*)
+            ./bin/"${{ matrix.cmake_preset }}"/daslang ./das-fmt/dasfmt.das -- --path ./ --verify
+            ;;
+           *)
+            ls -lh
+            ls -lh ./das-fmt
+            ls -lh ./das-fmt/das-fmt
+            ./bin/daslang ./das-dmt/dasfmt.das -- --path ./ --verify
             ;;
         esac
 
