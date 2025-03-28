@@ -2967,7 +2967,7 @@ namespace das {
                 ss << "__builtin_table_keys(__context__,";
             } else if (call->name == "values") {
                 ss << "__builtin_table_values(__context__,";
-            } else if ( call->name=="invoke" ) {
+            } else if ( call->name=="invoke" || call->rtti_isInvoke() ) {
                 auto bt = call->arguments[0]->type->baseType;
                 int methodOffset = -1;
                 string methodName;
