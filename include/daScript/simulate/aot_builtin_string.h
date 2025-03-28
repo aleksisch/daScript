@@ -1,6 +1,9 @@
 #pragma once
 
 #include "daScript/ast/ast_typefactory.h"
+#include "daScript/misc/arraytype.h"
+#include "daScript/simulate/debug_print.h"
+#include "daScript/simulate/simulate.h"
 
 namespace das {
 

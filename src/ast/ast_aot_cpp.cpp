@@ -2095,7 +2095,11 @@ namespace das {
             return Visitor::visit(c);
         }
         virtual ExpressionPtr visit ( ExprConstInt64 * c ) override {
-            ss << "INT64_C(" << c->getValue() << ")";
+            if (c->getValue() == INT64_MIN) {
+                ss << "INT64_MIN"; // silence overflow warning
+            } else {
+                ss << "INT64_C(" << c->getValue() << ")";
+            }
             return Visitor::visit(c);
         }
         virtual ExpressionPtr visit ( ExprConstUInt8 * c ) override {
