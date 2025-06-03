@@ -1824,9 +1824,12 @@ namespace das {
         }
     };
 
-    template <typename R, typename ...Arg, size_t... I>
-    __forceinline R CallAotStaticFunction ( R (* fn) (Arg...), Context & ctx, index_sequence<I...> ) {
-        return fn(cast_aot_arg<Arg>::to(ctx,ctx.abiArguments()[I?I-1:0])...);
+    template <typename R, typename ...Arg>
+    __forceinline R CallAotStaticFunction ( R (* fn) (Arg...), Context & ctx ) {
+        auto args = ctx.abiArguments();
+        return [&]<size_t... I>(index_sequence<I...>) -> R {
+            return fn(cast_aot_arg<Arg>::to(ctx,args[I?I-1:0])...);
+        }(std::make_index_sequence<sizeof...(Arg)>{});
     }
 
     template <typename FunctionType>
@@ -1836,7 +1839,7 @@ namespace das {
     struct ImplAotStaticFunction<R (*)(Arg...)> {
         static __forceinline vec4f call ( R (*fn) (Arg...), Context & ctx ) {
             return cast<R>::from(
-                CallAotStaticFunction<R,Arg...>(fn,ctx,make_index_sequence<sizeof...(Arg)>())
+                CallAotStaticFunction<R,Arg...>(fn,ctx)
             );
         }
     };
@@ -1844,7 +1847,7 @@ namespace das {
     template <typename ...Arg>
     struct ImplAotStaticFunction<void (*)(Arg...)> {
         static __forceinline vec4f call ( void (*fn) (Arg...), Context & ctx ) {
-            CallAotStaticFunction<void,Arg...>(fn,ctx,make_index_sequence<sizeof...(Arg)>());
+            CallAotStaticFunction<void,Arg...>(fn,ctx);
             return v_zero();
         }
     };
@@ -1856,7 +1859,7 @@ namespace das {
     struct ImplAotStaticFunctionCMRES<R (*)(Arg...)> {
         static __forceinline void call ( R (*fn) (Arg...), Context & ctx ) {
             using result = typename remove_const<R>::type;
-            *((result *) ctx.abiCMRES) = CallAotStaticFunction<R,Arg...>(fn,ctx,make_index_sequence<sizeof...(Arg)>());
+            *((result *) ctx.abiCMRES) = CallAotStaticFunction<R,Arg...>(fn,ctx);
         }
     };
 
