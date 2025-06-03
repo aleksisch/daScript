@@ -954,7 +954,7 @@ namespace das {
     string describeCppFunc ( Function * fn, BlockVariableCollector * collector, bool needName = true, bool needInline = true ) {
         TextWriter ss;
         if ( needInline ) {
-            ss << "inline ";
+            ss << "static inline ";
         }
         describeLocalCppType(ss,fn->result,CpptSubstitureRef::no, CpptSkipConst::yes);
         ss << " ";
@@ -1198,7 +1198,7 @@ namespace das {
         }
         virtual void preVisit ( Function * fn) override {
             Visitor::preVisit(fn);
-            ss << "\ninline ";
+            ss << "\nstatic inline ";
             describeLocalCppType(ss,fn->result,CpptSubstitureRef::no, CpptSkipConst::yes);
             ss << " " << aotFuncName(fn) << " ( Context * __context__";
         }
