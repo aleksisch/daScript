@@ -3686,18 +3686,18 @@ namespace das {
             }
             uint64_t semH = fn->aotHash;
             logs << "    aotLib[0x" << HEX << semH << DEC << "] = +[](Context & ctx) -> SimNode* {\n";
-            logs << "        return ctx.code->makeNode<AutoSimNode_Aot";
+            logs << "        return ctx.code->makeAotNode<SimNode_Aot";
             if ( fn->copyOnReturn || fn->moveOnReturn ) {
                 logs << "CMRES";
             }
-            logs << "<&" << aotFuncName(fn) << ">>();\n    };\n";
+            logs << ">(&" << aotFuncName(fn) << ");\n    };\n";
         }
         if ( context.totalVariables || funInit ) {
             uint64_t semH = context.getInitSemanticHash();
             semH = getInitSemanticHashWithDep(semH);
             logs << "    // [[ init script ]]\n";
             logs << "    aotLib[0x" << HEX << semH << DEC << "] = +[](Context & ctx) -> SimNode* {\n";
-            logs << "        ctx.aotInitScript = ctx.code->makeNode<AutoSimNode_Aot<&__init_script>>();\n";
+            logs << "        ctx.aotInitScript = ctx.code->makeAotNode<SimNode_Aot>(&__init_script);\n";
             logs << "        return ctx.aotInitScript;\n";
             logs << "    };\n";
         }
