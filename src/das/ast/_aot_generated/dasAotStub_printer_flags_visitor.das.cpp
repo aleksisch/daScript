@@ -3,7 +3,7 @@
 #include "daScript/simulate/simulate.h"
 #include "daScript/simulate/aot.h"
 #include "daScript/simulate/aot_library.h"
-
+#include "daScript/simulate/standalone_ctx_utils.h"
  // require builtin
  // require rtti
 #include "daScript/simulate/aot_builtin_rtti.h"
@@ -3832,54 +3832,22 @@ static inline printer_flags_visitor::SetPrinterFlags SetPrinterFlags_a250df0e5dc
 }
 
 static void registerAotFunctions ( AotLibrary & aotLib ) {
-    aotLib[0xa20da7cdc8a0932c] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&finalize_be6dc88fda742529);
-    };
-    aotLib[0x65c83baaef13a1] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprBlockExpression_cd888b01c2b669a7);
-    };
-    aotLib[0xe93bb450ac55a3ef] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprNewArgument_14187e2d1c37d4a);
-    };
-    aotLib[0x400e72523d70313f] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprCallArgument_4d8ac64d5a70b963);
-    };
-    aotLib[0x1dc95a5634925d17] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprLooksLikeCallArgument_1ea138a7252b4638);
-    };
-    aotLib[0xe6adb8e07223b13b] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprIfThenElse_d73e8f72eacd5b2);
-    };
-    aotLib[0x36ae84b5548d6c49] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprWhile_5c1d6d1641222954);
-    };
-    aotLib[0x1bc7ef545566d235] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprReturn_9b64916f24bbfcb7);
-    };
-    aotLib[0xb47722fa9deaba77] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprCopy_ee38d207a0640bed);
-    };
-    aotLib[0x1a3d481bd30a6850] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprClone_3f3bb9e7b4ef2d6c);
-    };
-    aotLib[0x43965e7878c72776] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprVar_5845319dd9b1ac5f);
-    };
-    aotLib[0x8bce4ca7016e5a3d] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprTypeInfo_61f129f5d7e91754);
-    };
-    aotLib[0x62f6310d9c7144b0] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprArrayComprehension_c075324e7425d9e8);
-    };
-    aotLib[0x6eca092b3da9d6ee] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlags_0x27___finalize_eb233d467d949b66);
-    };
-    aotLib[0x4c614b58a1a56a64] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&used_flags_9469ef118a919c62);
-    };
-    aotLib[0xb51eb1598d4a3a3e] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_AotCMRES>(&SetPrinterFlags_a250df0e5dc6a661);
-    };
+    aotLib[0xa20da7cdc8a0932c] = Alloc<SimNode_Aot, &finalize_be6dc88fda742529>();
+    aotLib[0x65c83baaef13a1] = Alloc<SimNode_Aot, &_FuncSetPrinterFlagsTickpreVisitExprBlockExpression_cd888b01c2b669a7>();
+    aotLib[0xe93bb450ac55a3ef] = Alloc<SimNode_Aot, &_FuncSetPrinterFlagsTickpreVisitExprNewArgument_14187e2d1c37d4a>();
+    aotLib[0x400e72523d70313f] = Alloc<SimNode_Aot, &_FuncSetPrinterFlagsTickpreVisitExprCallArgument_4d8ac64d5a70b963>();
+    aotLib[0x1dc95a5634925d17] = Alloc<SimNode_Aot, &_FuncSetPrinterFlagsTickpreVisitExprLooksLikeCallArgument_1ea138a7252b4638>();
+    aotLib[0xe6adb8e07223b13b] = Alloc<SimNode_Aot, &_FuncSetPrinterFlagsTickpreVisitExprIfThenElse_d73e8f72eacd5b2>();
+    aotLib[0x36ae84b5548d6c49] = Alloc<SimNode_Aot, &_FuncSetPrinterFlagsTickpreVisitExprWhile_5c1d6d1641222954>();
+    aotLib[0x1bc7ef545566d235] = Alloc<SimNode_Aot, &_FuncSetPrinterFlagsTickpreVisitExprReturn_9b64916f24bbfcb7>();
+    aotLib[0xb47722fa9deaba77] = Alloc<SimNode_Aot, &_FuncSetPrinterFlagsTickpreVisitExprCopy_ee38d207a0640bed>();
+    aotLib[0x1a3d481bd30a6850] = Alloc<SimNode_Aot, &_FuncSetPrinterFlagsTickpreVisitExprClone_3f3bb9e7b4ef2d6c>();
+    aotLib[0x43965e7878c72776] = Alloc<SimNode_Aot, &_FuncSetPrinterFlagsTickpreVisitExprVar_5845319dd9b1ac5f>();
+    aotLib[0x8bce4ca7016e5a3d] = Alloc<SimNode_Aot, &_FuncSetPrinterFlagsTickpreVisitExprTypeInfo_61f129f5d7e91754>();
+    aotLib[0x62f6310d9c7144b0] = Alloc<SimNode_Aot, &_FuncSetPrinterFlagsTickpreVisitExprArrayComprehension_c075324e7425d9e8>();
+    aotLib[0x6eca092b3da9d6ee] = Alloc<SimNode_Aot, &_FuncSetPrinterFlags_0x27___finalize_eb233d467d949b66>();
+    aotLib[0x4c614b58a1a56a64] = Alloc<SimNode_Aot, &used_flags_9469ef118a919c62>();
+    aotLib[0xb51eb1598d4a3a3e] = Alloc<SimNode_AotCMRES, &SetPrinterFlags_a250df0e5dc6a661>();
     resolveTypeInfoAnnotations();
 }
 

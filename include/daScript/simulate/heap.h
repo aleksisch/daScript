@@ -460,9 +460,9 @@ namespace das {
             if ( prefixWithHeader ) {
                 char * data = allocate(sizeof(TT) + sizeof(NodePrefix));
                 new ((void *)data) NodePrefix(sizeof(TT));
-                return new ((void *)(data + sizeof(NodePrefix))) TT(tt);
+                return new ((void *)(data + sizeof(NodePrefix))) TT(das::move(tt));
             } else {
-                return new ((void *)allocate(sizeof(TT))) TT(tt);
+                return new ((void *)allocate(sizeof(TT))) TT(das::move(tt));
             }
         }
 

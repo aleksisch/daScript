@@ -71,9 +71,9 @@ namespace das {
 
 
     template <typename TT, auto fn>
-    static auto Alloc() -> SimNode*(*)(Context &ctx) {
+    auto Alloc() -> SimNode*(*)(Context &ctx) {
         return +[](Context & ctx) -> SimNode* {
-            return ctx.code->makeAotNode<TT>(&fn);
+            return ctx.code->makeAotNode<TT>(fn);
         };
     }
 

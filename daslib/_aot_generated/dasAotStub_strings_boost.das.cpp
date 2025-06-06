@@ -3,7 +3,7 @@
 #include "daScript/simulate/simulate.h"
 #include "daScript/simulate/aot.h"
 #include "daScript/simulate/aot_library.h"
-
+#include "daScript/simulate/standalone_ctx_utils.h"
  // require builtin
  // require math
 #include "daScript/simulate/aot_builtin_math.h"
@@ -377,51 +377,21 @@ static inline char * replace_multiple_d0cf6948c5333e25 ( Context * __context__, 
 }
 
 static void registerAotFunctions ( AotLibrary & aotLib ) {
-    aotLib[0x380b7455b0a2f9f5] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTickresizeTick4811697762258667383_14682004b38ad2a1);
-    };
-    aotLib[0x4dae975ff549d69b] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTickcloneTick3038771811667655495_4060192a3cb0948);
-    };
-    aotLib[0x8ff205c681819963] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTick_return_with_lockcheckTick2939372000839727345_354a9a0b57d554a0);
-    };
-    aotLib[0x8cfab1c459867f92] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTickfinalizeTick13836114024949725080_5be9a99f60cdfbba);
-    };
-    aotLib[0x439426c0e62e2f81] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTickfinalizeTick13836114024949725080_c2c15811c6d720e8);
-    };
-    aotLib[0x31e785d0d32596a0] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTickresizeTick4811697762258667383_c1a73db481e59a8b);
-    };
-    aotLib[0xd5b298fc293f15ad] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTickresizeTick4811697762258667383_1bdb9995fa062a51);
-    };
-    aotLib[0x983ece9be972c6d9] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTickswapTick6899974565646937647_4b12db88e6e6aa18);
-    };
-    aotLib[0x93680ae9c38c532] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTickemptyTick15399874715904164783_17e819552d1fbeb4);
-    };
-    aotLib[0x2cdd6a9efa3197df] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&wide_53059f73cffda483);
-    };
-    aotLib[0x4d12a7ea6bd28d97] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_AotCMRES>(&split_e671885aa89ee032);
-    };
-    aotLib[0xb7f216ac51574988] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_AotCMRES>(&split_by_chars_143571b759d8cb31);
-    };
-    aotLib[0x38cd58da5e8d5634] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&levenshtein_distance_81cc63ff8762bd35);
-    };
-    aotLib[0x4c9205449631d7cb] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&levenshtein_distance_fast_4be142fb1ec75f90);
-    };
-    aotLib[0x80367ae3d8465b8f] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&replace_multiple_d0cf6948c5333e25);
-    };
+    aotLib[0x380b7455b0a2f9f5] = Alloc<SimNode_Aot, &_FuncbuiltinTickresizeTick4811697762258667383_14682004b38ad2a1>();
+    aotLib[0x4dae975ff549d69b] = Alloc<SimNode_Aot, &_FuncbuiltinTickcloneTick3038771811667655495_4060192a3cb0948>();
+    aotLib[0x8ff205c681819963] = Alloc<SimNode_Aot, &_FuncbuiltinTick_return_with_lockcheckTick2939372000839727345_354a9a0b57d554a0>();
+    aotLib[0x8cfab1c459867f92] = Alloc<SimNode_Aot, &_FuncbuiltinTickfinalizeTick13836114024949725080_5be9a99f60cdfbba>();
+    aotLib[0x439426c0e62e2f81] = Alloc<SimNode_Aot, &_FuncbuiltinTickfinalizeTick13836114024949725080_c2c15811c6d720e8>();
+    aotLib[0x31e785d0d32596a0] = Alloc<SimNode_Aot, &_FuncbuiltinTickresizeTick4811697762258667383_c1a73db481e59a8b>();
+    aotLib[0xd5b298fc293f15ad] = Alloc<SimNode_Aot, &_FuncbuiltinTickresizeTick4811697762258667383_1bdb9995fa062a51>();
+    aotLib[0x983ece9be972c6d9] = Alloc<SimNode_Aot, &_FuncbuiltinTickswapTick6899974565646937647_4b12db88e6e6aa18>();
+    aotLib[0x93680ae9c38c532] = Alloc<SimNode_Aot, &_FuncbuiltinTickemptyTick15399874715904164783_17e819552d1fbeb4>();
+    aotLib[0x2cdd6a9efa3197df] = Alloc<SimNode_Aot, &wide_53059f73cffda483>();
+    aotLib[0x4d12a7ea6bd28d97] = Alloc<SimNode_AotCMRES, &split_e671885aa89ee032>();
+    aotLib[0xb7f216ac51574988] = Alloc<SimNode_AotCMRES, &split_by_chars_143571b759d8cb31>();
+    aotLib[0x38cd58da5e8d5634] = Alloc<SimNode_Aot, &levenshtein_distance_81cc63ff8762bd35>();
+    aotLib[0x4c9205449631d7cb] = Alloc<SimNode_Aot, &levenshtein_distance_fast_4be142fb1ec75f90>();
+    aotLib[0x80367ae3d8465b8f] = Alloc<SimNode_Aot, &replace_multiple_d0cf6948c5333e25>();
     resolveTypeInfoAnnotations();
 }
 

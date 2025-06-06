@@ -3,7 +3,7 @@
 #include "daScript/simulate/simulate.h"
 #include "daScript/simulate/aot.h"
 #include "daScript/simulate/aot_library.h"
-
+#include "daScript/simulate/standalone_ctx_utils.h"
  // require builtin
  // require math
 #include "daScript/simulate/aot_builtin_math.h"
@@ -287,72 +287,28 @@ static inline float4x4 planar_shadow_a86997e7f64f1f6a ( Context * __context__, f
 }
 
 static void registerAotFunctions ( AotLibrary & aotLib ) {
-    aotLib[0xf8cfe9a85cf8fdd1] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&degrees_328d4d049bd30cef);
-    };
-    aotLib[0x603e1dd85478753] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&radians_ee8c5a366585b95f);
-    };
-    aotLib[0x144bc2dbab160c31] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&RGBA_TO_UCOLOR_8f89c82e07162cc6);
-    };
-    aotLib[0x97dfe3b86dee2820] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&RGBA_TO_UCOLOR_df49aebb37a8d688);
-    };
-    aotLib[0xaa35b1021da529dd] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&UCOLOR_TO_RGBA_21168ce8b8a51982);
-    };
-    aotLib[0xf7e603df189060a3] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&UCOLOR_TO_RGB_a553283ab423e6b5);
-    };
-    aotLib[0xe51f41dd8b88ba2] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&linear_to_SRGB_90213175148fa8e);
-    };
-    aotLib[0x936baa5b38c3cd18] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&linear_to_SRGB_2e29306dc06d8b4);
-    };
-    aotLib[0x633c5437ca0b500] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&linear_to_SRGB_1da25f3c83567208);
-    };
-    aotLib[0x9608254a0b6c3bda] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&is_intersecting_3ca7c7524f1c9dc5);
-    };
-    aotLib[0x46727c5df780304d] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&is_intersecting_c31d318a049eb335);
-    };
-    aotLib[0x9f7c1c8e559736c5] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&is_intersecting_7b1ab43c978ef6b);
-    };
-    aotLib[0x63f1702616d0946d] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_AotCMRES>(&look_at_lh_cbb8ffd0a0e23fe4);
-    };
-    aotLib[0xed8a56bf67a96fb8] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_AotCMRES>(&look_at_rh_b237be682c2bdd82);
-    };
-    aotLib[0x88691fd07df33dd8] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_AotCMRES>(&perspective_lh_955bc910ea34b8d8);
-    };
-    aotLib[0x40df745e700e8d42] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_AotCMRES>(&perspective_rh_e09d74c3c9231ca2);
-    };
-    aotLib[0xccc723f440725a4d] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_AotCMRES>(&perspective_rh_opengl_448c2e9e57ce734f);
-    };
-    aotLib[0x59d6f1be891889d1] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_AotCMRES>(&ortho_rh_9ba657365d994f79);
-    };
-    aotLib[0x55899e1f1210a683] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&plane_dot_fbb442007739e1a5);
-    };
-    aotLib[0x4af3d9821225b63d] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&plane_normalize_b33d45ea1c8c4042);
-    };
-    aotLib[0x995db7d5e25da56b] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&plane_from_point_normal_fedc1a1c58148189);
-    };
-    aotLib[0x77473aac7878f0a4] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_AotCMRES>(&planar_shadow_a86997e7f64f1f6a);
-    };
+    aotLib[0xf8cfe9a85cf8fdd1] = Alloc<SimNode_Aot, &degrees_328d4d049bd30cef>();
+    aotLib[0x603e1dd85478753] = Alloc<SimNode_Aot, &radians_ee8c5a366585b95f>();
+    aotLib[0x144bc2dbab160c31] = Alloc<SimNode_Aot, &RGBA_TO_UCOLOR_8f89c82e07162cc6>();
+    aotLib[0x97dfe3b86dee2820] = Alloc<SimNode_Aot, &RGBA_TO_UCOLOR_df49aebb37a8d688>();
+    aotLib[0xaa35b1021da529dd] = Alloc<SimNode_Aot, &UCOLOR_TO_RGBA_21168ce8b8a51982>();
+    aotLib[0xf7e603df189060a3] = Alloc<SimNode_Aot, &UCOLOR_TO_RGB_a553283ab423e6b5>();
+    aotLib[0xe51f41dd8b88ba2] = Alloc<SimNode_Aot, &linear_to_SRGB_90213175148fa8e>();
+    aotLib[0x936baa5b38c3cd18] = Alloc<SimNode_Aot, &linear_to_SRGB_2e29306dc06d8b4>();
+    aotLib[0x633c5437ca0b500] = Alloc<SimNode_Aot, &linear_to_SRGB_1da25f3c83567208>();
+    aotLib[0x9608254a0b6c3bda] = Alloc<SimNode_Aot, &is_intersecting_3ca7c7524f1c9dc5>();
+    aotLib[0x46727c5df780304d] = Alloc<SimNode_Aot, &is_intersecting_c31d318a049eb335>();
+    aotLib[0x9f7c1c8e559736c5] = Alloc<SimNode_Aot, &is_intersecting_7b1ab43c978ef6b>();
+    aotLib[0x63f1702616d0946d] = Alloc<SimNode_AotCMRES, &look_at_lh_cbb8ffd0a0e23fe4>();
+    aotLib[0xed8a56bf67a96fb8] = Alloc<SimNode_AotCMRES, &look_at_rh_b237be682c2bdd82>();
+    aotLib[0x88691fd07df33dd8] = Alloc<SimNode_AotCMRES, &perspective_lh_955bc910ea34b8d8>();
+    aotLib[0x40df745e700e8d42] = Alloc<SimNode_AotCMRES, &perspective_rh_e09d74c3c9231ca2>();
+    aotLib[0xccc723f440725a4d] = Alloc<SimNode_AotCMRES, &perspective_rh_opengl_448c2e9e57ce734f>();
+    aotLib[0x59d6f1be891889d1] = Alloc<SimNode_AotCMRES, &ortho_rh_9ba657365d994f79>();
+    aotLib[0x55899e1f1210a683] = Alloc<SimNode_Aot, &plane_dot_fbb442007739e1a5>();
+    aotLib[0x4af3d9821225b63d] = Alloc<SimNode_Aot, &plane_normalize_b33d45ea1c8c4042>();
+    aotLib[0x995db7d5e25da56b] = Alloc<SimNode_Aot, &plane_from_point_normal_fedc1a1c58148189>();
+    aotLib[0x77473aac7878f0a4] = Alloc<SimNode_AotCMRES, &planar_shadow_a86997e7f64f1f6a>();
     resolveTypeInfoAnnotations();
 }
 

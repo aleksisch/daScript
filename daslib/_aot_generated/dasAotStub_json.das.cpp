@@ -3,7 +3,7 @@
 #include "daScript/simulate/simulate.h"
 #include "daScript/simulate/aot.h"
 #include "daScript/simulate/aot_library.h"
-
+#include "daScript/simulate/standalone_ctx_utils.h"
  // require builtin
  // require math
 #include "daScript/simulate/aot_builtin_math.h"
@@ -1314,114 +1314,42 @@ static inline char * try_fixing_broken_json_775d055e7662f545 ( Context * __conte
 }}
 
 static void registerAotFunctions ( AotLibrary & aotLib ) {
-    aotLib[0x1f8eb5798352d074] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTickfinalizeTick13836114024949725080_947eb3679f75acfb);
-    };
-    aotLib[0xc3ef6b18a0f68d18] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&finalize_84c79a7dca44bc54);
-    };
-    aotLib[0xb539e29c865b24d2] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_AotCMRES>(&_FuncbuiltinTickeachTick9663565701927713696_a5be278cde5d81db);
-    };
-    aotLib[0x56aed9f0fde0dd26] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTicknextTick17450348357676149856_ba3f4a54e51a0d57);
-    };
-    aotLib[0x9e683f3840fb4e50] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_AotCMRES>(&_FuncbuiltinTickeachTick4044332007967089362_d13e7572e5849aa5);
-    };
-    aotLib[0xcba4b4c693ad27e9] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTickpushTick14133213201864676143_9fcb5919841caa67);
-    };
-    aotLib[0x7fa3294d3c5e8e91] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_Func_lambda_json_99_1Tickfunction_68f4b5ef1fe57bcb);
-    };
-    aotLib[0x6216102503c74f8a] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_Func_lambda_json_99_1Tickfinalizer_6a5d6f57263e2c6);
-    };
-    aotLib[0x75b51b72d52835b1] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTicknextTick17450348357676149856_1b3ef80a3dcc04cd);
-    };
-    aotLib[0x757174c8e0779fa7] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTickpushTick10769833213962245646_6cd6869ac3f64160);
-    };
-    aotLib[0x65d0d1d606e714f1] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTickkey_existsTick16808803843923989214_963e1e05a7a36522);
-    };
-    aotLib[0x91de40987b0422b7] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTickinsertTick4246857231018487965_29d8ad7ca1533e22);
-    };
-    aotLib[0x9b132ec14277d8e] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_AotCMRES>(&_FuncbuiltinTickkeysTick2205854368403803976_af3fb0980986a73d);
-    };
-    aotLib[0xbe6bf559e7438eff] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_AotCMRES>(&_FuncbuiltinTickvaluesTick1935193042646774172_28fa1957dfd9ef24);
-    };
-    aotLib[0x18d007417d793e4c] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&JV_ce211d1e71008fa9);
-    };
-    aotLib[0x139c1d56191f1ac] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&JV_43c82a6d7fd1ff94);
-    };
-    aotLib[0x4e0c157e87d12c39] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&JV_3089bab5056075c5);
-    };
-    aotLib[0x8b3ae76e1fdfcd2a] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&JVNull_3f0f085424b7fe8);
-    };
-    aotLib[0xe8ce6088f32f0d16] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&JV_6901630789757c95);
-    };
-    aotLib[0x6466ee36f75495d3] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&JV_6c9dca23db320dde);
-    };
-    aotLib[0xac41379e52273f7b] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_AotCMRES>(&lexer_2df326c8b334fd59);
-    };
-    aotLib[0xa5ed318ebd5141f9] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_AotCMRES>(&lexer_aac99b31b3891faa);
-    };
-    aotLib[0x859743c6ad2d6155] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&next_27d57912014fa3fd);
-    };
-    aotLib[0xb96eaee5f5d14a85] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_AotCMRES>(&_lexer_a791902f9ba041bc);
-    };
-    aotLib[0x8556ae0398cc70d4] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&expect_token_64d38888955068d7);
-    };
-    aotLib[0x496520e82ad29a06] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&expect_symbol_43731f7509c5cf1d);
-    };
-    aotLib[0x44e2593187450abc] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&parse_value_98ae1ad97bf60f4e);
-    };
-    aotLib[0x991773493b8221c] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&read_json_6774330ff8c847be);
-    };
-    aotLib[0x134e4e8655b3b71a] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&read_json_2d3b7389aacf6c4e);
-    };
-    aotLib[0x7d5e6a0bb0c63ab5] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&set_no_trailing_zeros_d4237d25dc07f42);
-    };
-    aotLib[0x774cdf64fe382a02] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&set_no_empty_arrays_9ebecd06d53649aa);
-    };
-    aotLib[0x2e060cf7eca4a27b] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&set_allow_duplicate_keys_6bf718eb3cbbc30e);
-    };
-    aotLib[0x97424859a40fb4b7] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&write_value_4660291999923f04);
-    };
-    aotLib[0xf9b83342d77d95a0] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&write_json_4ca7e9d53e461d0c);
-    };
-    aotLib[0x165706d413f31678] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&write_json_edc94e9dcf6349fc);
-    };
-    aotLib[0xd0ecb0a00f735caf] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&try_fixing_broken_json_775d055e7662f545);
-    };
+    aotLib[0x1f8eb5798352d074] = Alloc<SimNode_Aot, &_FuncbuiltinTickfinalizeTick13836114024949725080_947eb3679f75acfb>();
+    aotLib[0xc3ef6b18a0f68d18] = Alloc<SimNode_Aot, &finalize_84c79a7dca44bc54>();
+    aotLib[0xb539e29c865b24d2] = Alloc<SimNode_AotCMRES, &_FuncbuiltinTickeachTick9663565701927713696_a5be278cde5d81db>();
+    aotLib[0x56aed9f0fde0dd26] = Alloc<SimNode_Aot, &_FuncbuiltinTicknextTick17450348357676149856_ba3f4a54e51a0d57>();
+    aotLib[0x9e683f3840fb4e50] = Alloc<SimNode_AotCMRES, &_FuncbuiltinTickeachTick4044332007967089362_d13e7572e5849aa5>();
+    aotLib[0xcba4b4c693ad27e9] = Alloc<SimNode_Aot, &_FuncbuiltinTickpushTick14133213201864676143_9fcb5919841caa67>();
+    aotLib[0x7fa3294d3c5e8e91] = Alloc<SimNode_Aot, &_Func_lambda_json_99_1Tickfunction_68f4b5ef1fe57bcb>();
+    aotLib[0x6216102503c74f8a] = Alloc<SimNode_Aot, &_Func_lambda_json_99_1Tickfinalizer_6a5d6f57263e2c6>();
+    aotLib[0x75b51b72d52835b1] = Alloc<SimNode_Aot, &_FuncbuiltinTicknextTick17450348357676149856_1b3ef80a3dcc04cd>();
+    aotLib[0x757174c8e0779fa7] = Alloc<SimNode_Aot, &_FuncbuiltinTickpushTick10769833213962245646_6cd6869ac3f64160>();
+    aotLib[0x65d0d1d606e714f1] = Alloc<SimNode_Aot, &_FuncbuiltinTickkey_existsTick16808803843923989214_963e1e05a7a36522>();
+    aotLib[0x91de40987b0422b7] = Alloc<SimNode_Aot, &_FuncbuiltinTickinsertTick4246857231018487965_29d8ad7ca1533e22>();
+    aotLib[0x9b132ec14277d8e] = Alloc<SimNode_AotCMRES, &_FuncbuiltinTickkeysTick2205854368403803976_af3fb0980986a73d>();
+    aotLib[0xbe6bf559e7438eff] = Alloc<SimNode_AotCMRES, &_FuncbuiltinTickvaluesTick1935193042646774172_28fa1957dfd9ef24>();
+    aotLib[0x18d007417d793e4c] = Alloc<SimNode_Aot, &JV_ce211d1e71008fa9>();
+    aotLib[0x139c1d56191f1ac] = Alloc<SimNode_Aot, &JV_43c82a6d7fd1ff94>();
+    aotLib[0x4e0c157e87d12c39] = Alloc<SimNode_Aot, &JV_3089bab5056075c5>();
+    aotLib[0x8b3ae76e1fdfcd2a] = Alloc<SimNode_Aot, &JVNull_3f0f085424b7fe8>();
+    aotLib[0xe8ce6088f32f0d16] = Alloc<SimNode_Aot, &JV_6901630789757c95>();
+    aotLib[0x6466ee36f75495d3] = Alloc<SimNode_Aot, &JV_6c9dca23db320dde>();
+    aotLib[0xac41379e52273f7b] = Alloc<SimNode_AotCMRES, &lexer_2df326c8b334fd59>();
+    aotLib[0xa5ed318ebd5141f9] = Alloc<SimNode_AotCMRES, &lexer_aac99b31b3891faa>();
+    aotLib[0x859743c6ad2d6155] = Alloc<SimNode_Aot, &next_27d57912014fa3fd>();
+    aotLib[0xb96eaee5f5d14a85] = Alloc<SimNode_AotCMRES, &_lexer_a791902f9ba041bc>();
+    aotLib[0x8556ae0398cc70d4] = Alloc<SimNode_Aot, &expect_token_64d38888955068d7>();
+    aotLib[0x496520e82ad29a06] = Alloc<SimNode_Aot, &expect_symbol_43731f7509c5cf1d>();
+    aotLib[0x44e2593187450abc] = Alloc<SimNode_Aot, &parse_value_98ae1ad97bf60f4e>();
+    aotLib[0x991773493b8221c] = Alloc<SimNode_Aot, &read_json_6774330ff8c847be>();
+    aotLib[0x134e4e8655b3b71a] = Alloc<SimNode_Aot, &read_json_2d3b7389aacf6c4e>();
+    aotLib[0x7d5e6a0bb0c63ab5] = Alloc<SimNode_Aot, &set_no_trailing_zeros_d4237d25dc07f42>();
+    aotLib[0x774cdf64fe382a02] = Alloc<SimNode_Aot, &set_no_empty_arrays_9ebecd06d53649aa>();
+    aotLib[0x2e060cf7eca4a27b] = Alloc<SimNode_Aot, &set_allow_duplicate_keys_6bf718eb3cbbc30e>();
+    aotLib[0x97424859a40fb4b7] = Alloc<SimNode_Aot, &write_value_4660291999923f04>();
+    aotLib[0xf9b83342d77d95a0] = Alloc<SimNode_Aot, &write_json_4ca7e9d53e461d0c>();
+    aotLib[0x165706d413f31678] = Alloc<SimNode_Aot, &write_json_edc94e9dcf6349fc>();
+    aotLib[0xd0ecb0a00f735caf] = Alloc<SimNode_Aot, &try_fixing_broken_json_775d055e7662f545>();
     // [[ init script ]]
     aotLib[0x9b6e94d9f096d966] = +[](Context & ctx) -> SimNode* {
         ctx.aotInitScript = ctx.code->makeAotNode<SimNode_Aot>(&__init_script);

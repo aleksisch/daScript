@@ -3689,7 +3689,7 @@ namespace das {
             if ( fn->copyOnReturn || fn->moveOnReturn ) {
                 logs << "CMRES";
             }
-            logs << ", &" << aotFuncName(fn) << ">();\n    };\n";
+            logs << ", &" << aotFuncName(fn) << ">();\n";
         }
         if ( context.totalVariables || funInit ) {
             uint64_t semH = context.getInitSemanticHash();

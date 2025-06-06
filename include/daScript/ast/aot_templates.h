@@ -8,7 +8,7 @@ R"(#include "daScript/misc/platform.h"
 #include "daScript/simulate/simulate.h"
 #include "daScript/simulate/aot.h"
 #include "daScript/simulate/aot_library.h"
-
+#include "daScript/simulate/standalone_ctx_utils.h"
 )";
 
 inline const char *AOT_HEADERS = R"(

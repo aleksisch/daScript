@@ -3,7 +3,7 @@
 #include "daScript/simulate/simulate.h"
 #include "daScript/simulate/aot.h"
 #include "daScript/simulate/aot_library.h"
-
+#include "daScript/simulate/standalone_ctx_utils.h"
  // require builtin
  // require math
 #include "daScript/simulate/aot_builtin_math.h"
@@ -174,27 +174,13 @@ static inline Sequence DAS_COMMENT((uint32_t)) each_random_uint_afea9e974e8227bf
 }
 
 static void registerAotFunctions ( AotLibrary & aotLib ) {
-    aotLib[0x390bb07ee4f51e50] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncrandomTickrandom_uintTick15141358123050100739_ace3444e720a3102);
-    };
-    aotLib[0x78e003330fac06f1] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&finalize_4ae6526745d6b78f);
-    };
-    aotLib[0xbdd618fbc7ac3e7d] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_AotCMRES>(&_FuncbuiltinTickeachTick9663565701927713696_aee705fe23b1c7b9);
-    };
-    aotLib[0x6fb77c0f7353e48d] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncrandomTickrandom_seedTick15287272150245073176_dd30826a0cea51ed);
-    };
-    aotLib[0xabd94a563e16633e] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_Func_lambda_random_111_1Tickfunction_f401add82667d26);
-    };
-    aotLib[0xc930f58f7e2fe2df] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_Aot>(&_Func_lambda_random_111_1Tickfinalizer_a949ea6b2586918a);
-    };
-    aotLib[0x60d5f8aa8ce7975b] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeAotNode<SimNode_AotCMRES>(&each_random_uint_afea9e974e8227bf);
-    };
+    aotLib[0x390bb07ee4f51e50] = Alloc<SimNode_Aot, &_FuncrandomTickrandom_uintTick15141358123050100739_ace3444e720a3102>();
+    aotLib[0x78e003330fac06f1] = Alloc<SimNode_Aot, &finalize_4ae6526745d6b78f>();
+    aotLib[0xbdd618fbc7ac3e7d] = Alloc<SimNode_AotCMRES, &_FuncbuiltinTickeachTick9663565701927713696_aee705fe23b1c7b9>();
+    aotLib[0x6fb77c0f7353e48d] = Alloc<SimNode_Aot, &_FuncrandomTickrandom_seedTick15287272150245073176_dd30826a0cea51ed>();
+    aotLib[0xabd94a563e16633e] = Alloc<SimNode_Aot, &_Func_lambda_random_111_1Tickfunction_f401add82667d26>();
+    aotLib[0xc930f58f7e2fe2df] = Alloc<SimNode_Aot, &_Func_lambda_random_111_1Tickfinalizer_a949ea6b2586918a>();
+    aotLib[0x60d5f8aa8ce7975b] = Alloc<SimNode_AotCMRES, &each_random_uint_afea9e974e8227bf>();
     // [[ init script ]]
     aotLib[0xccb3379a77146546] = +[](Context & ctx) -> SimNode* {
         ctx.aotInitScript = ctx.code->makeAotNode<SimNode_Aot>(&__init_script);
