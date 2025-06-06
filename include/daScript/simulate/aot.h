@@ -1863,17 +1863,26 @@ namespace das {
         }
     };
 
-    template <typename FuncT, FuncT fn>
     struct SimNode_Aot : SimNode_CallBase {
-        __forceinline SimNode_Aot ( ) : SimNode_CallBase(LineInfo(),"") {
-            aotFunction = (void*) fn;
+        vec4f (*argsConvert)(void* fn, Context& context) = nullptr;
+
+        __forceinline SimNode_Aot (void* fn, vec4f (*init)(void* fn, Context& context)) : SimNode_CallBase(LineInfo(),"") {
+            aotFunction = fn;
+            argsConvert = init;
         }
+
+        template <typename FuncT>
+        static SimNode_Aot create(FuncT fn) {
+            vec4f (*ptr)(void*, Context&) =  +[](void* fn2, Context& context) {return ImplAotStaticFunction<FuncT>::call(reinterpret_cast<FuncT>(fn2), context); };
+            return SimNode_Aot(reinterpret_cast<void *>(fn), ptr);
+        }
+
         DAS_EVAL_ABI virtual vec4f eval ( Context & context ) override {
             DAS_PROFILE_NODE
             vec4f * aa = context.abiArg;
             vec4f stub[1];
             if ( !aa ) context.abiArg = stub;
-            auto res = ImplAotStaticFunction<FuncT>::call(*fn, context);
+            auto res = argsConvert(aotFunction, context);
             context.abiArg = aa;
             context.abiResult() = res;
             return res;
@@ -1881,17 +1890,28 @@ namespace das {
     };
 
     template <auto fn>
-    using AutoSimNode_Aot = SimNode_Aot<decltype(fn), fn>;
+    using AutoSimNode_Aot = SimNode_Aot;
 
-    template <typename FuncT, FuncT fn>
     struct SimNode_AotCMRES : SimNode_CallBase {
-        __forceinline SimNode_AotCMRES ( ) : SimNode_CallBase(LineInfo(),"") {}
+        void (*argsConvert)(void* fn, Context& context) = nullptr;
+
+        __forceinline SimNode_AotCMRES (void* fn, void (*argsConvert_)(void*, Context&)) : SimNode_CallBase(LineInfo(),"") {
+            aotFunction = fn;
+            argsConvert = argsConvert_;
+        }
+
+        template <typename FuncT>
+        static SimNode_AotCMRES create(FuncT fn) {
+            void (*ptr)(void*, Context&) = +[](void* fn2, Context& context) {ImplAotStaticFunctionCMRES<FuncT>::call(reinterpret_cast<FuncT>(fn2), context); };
+            return {reinterpret_cast<void *>(fn), ptr};
+        }
+
         DAS_EVAL_ABI virtual vec4f eval ( Context & context ) override {
             DAS_PROFILE_NODE
             vec4f * aa = context.abiArg;
             vec4f stub[1];
             if ( !aa ) context.abiArg = stub;
-            ImplAotStaticFunctionCMRES<FuncT>::call(*fn, context);
+            argsConvert(aotFunction, context);
             context.abiArg = aa;
             context.abiResult() = cast<void *>::from(context.abiCMRES);
             return context.abiResult();
@@ -1899,7 +1919,7 @@ namespace das {
     };
 
     template <auto fn>
-    using AutoSimNode_AotCMRES = SimNode_AotCMRES<decltype(fn), fn>;
+    using AutoSimNode_AotCMRES = SimNode_AotCMRES;
 
 #ifdef _MSC_VER
 #pragma warning(push)

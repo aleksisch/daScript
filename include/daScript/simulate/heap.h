@@ -453,6 +453,19 @@ namespace das {
     public:
         NodeAllocator() {}
 
+        template<typename TT, typename R, typename... Args>
+        TT * makeAotNode(R(*fn)(Args...)) {
+            totalNodesAllocated ++;
+            TT tt = TT::template create<R(*)(Args...)>(fn);
+            if ( prefixWithHeader ) {
+                char * data = allocate(sizeof(TT) + sizeof(NodePrefix));
+                new ((void *)data) NodePrefix(sizeof(TT));
+                return new ((void *)(data + sizeof(NodePrefix))) TT(tt);
+            } else {
+                return new ((void *)allocate(sizeof(TT))) TT(tt);
+            }
+        }
+
         /*
         * GCC really likes the version with separate if. CLANG \ MSVC strongly prefer the one bellow with __forceinline.
         * This saves ~1.6mb of code on MSVC\CLANG as of 11/23/2020.

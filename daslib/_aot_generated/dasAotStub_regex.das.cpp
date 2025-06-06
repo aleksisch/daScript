@@ -238,93 +238,93 @@ TypeInfo * __tinfo_20[1] = { &__type_info__af90fe4c864e9d52 };
 TypeInfo * __tinfo_21[2] = { &__type_info__af90fe4c864e9d52, &__type_info__af90fe4c864e9d52 };
 TypeInfo * __tinfo_22[2] = { &__type_info__37d36026a6078a42, &__type_info__af63ee4c86020b22 };
 
-inline void _FuncbuiltinTickresizeTick4811697762258667383_839271fc9974c3bd ( Context * __context__, TArray<regex::ReNode *> & __Arr_rename_at_68_0, int32_t __newSize_rename_at_68_1 );
-inline void _FuncbuiltinTickfinalizeTick13836114024949725080_93dd7ca7375a7759 ( Context * __context__, TArray<regex::ReNode *> & __a_rename_at_1182_2 );
-inline int32_t _FuncbuiltinTicklengthTick18150397773952384912_fcdb4107749fac2d ( Context * __context__, TDim<regex::ReNode *,2> const  & __a_rename_at_581_4 );
-inline void finalize_1b3fa79e78928d5e ( Context * __context__, regex::ReNode & ____this_rename_at_29_5 );
-inline regex::Regex & _FuncbuiltinTick_return_with_lockcheckTick2939372000839727345_182d4b6f1ba86427 ( Context * __context__, regex::Regex & __a_rename_at_50_6 );
-inline int32_t _FuncregexTickfrom_hexTick16446213900708532977_faa1e859112ad2ec ( Context * __context__, int32_t __ch1_rename_at_240_7, int32_t __ch2_rename_at_240_8 );
-inline void finalize_4d9dff2c4111fea5 ( Context * __context__, AutoVariant<regex::ReNode *,void *> & ____this_rename_at_422_9 );
-inline void finalize_2e3cca8177873ef7 ( Context * __context__, regex::ReNode * & ____this_rename_at_519_10 );
-inline void _FuncbuiltinTickpushTick10769833213962245646_76636a7a79f1cc9 ( Context * __context__, TArray<regex::ReNode *> & __Arr_rename_at_181_11, regex::ReNode * __value_rename_at_181_12 );
-inline TArray<regex::ReNode *> _FuncbuiltinTickto_array_moveTick3185538323411982277_d525ede85535d1d6 ( Context * __context__, TDim<regex::ReNode *,2> & __a_rename_at_1342_13 );
-inline void _FuncbuiltinTickpushTick10769833213962245646_689721e2e03454a5 ( Context * __context__, TArray<AutoTuple<range,char *>> & __Arr_rename_at_181_15, AutoTuple<range,char *> & __value_rename_at_181_16 );
-inline bool _FuncbuiltinTicknextTick17450348357676149856_78a056decb3ca45d ( Context * __context__, Sequence DAS_COMMENT((uint32_t)) & __it_rename_at_1223_17, uint32_t & __value_rename_at_1223_18 );
-inline uint32_t re_gen_get_rep_limit_aa71779c47fee5b8 ( Context * __context__ );
-inline void trace_7794f549fda55dde ( Context * __context__, char * const  __msg_rename_at_79_19, int32_t __offset_rename_at_79_20 );
-inline void note_7794f549fda55dde ( Context * __context__, char * const  __msg_rename_at_86_21, int32_t __offset_rename_at_86_22 );
-inline void trace_backtrack_60bdee73e3315732 ( Context * __context__ );
-inline void trace_value_599ec0b97b535e0e ( Context * __context__, regex::ReNode * const  __value_rename_at_99_23 );
-inline AutoVariant<regex::ReNode *,void *> nada_a36e274f9f880579 ( Context * __context__ );
-inline AutoVariant<regex::ReNode *,void *> maybe_cb698f19184a9bc8 ( Context * __context__, regex::ReNode * __value_rename_at_114_24 );
-inline bool eos_bcd93149648ad887 ( Context * __context__, char * const  __expr_rename_at_119_25, int32_t __offset_rename_at_119_26 );
-inline int32_t at_ac9760d67b4716d0 ( Context * __context__, char * const  __expr_rename_at_123_27, int32_t __offset_rename_at_123_28 );
-inline int32_t next_c7b14aa26d681478 ( Context * __context__, AutoVariant<regex::ReNode *,void *> const  & __re_rename_at_142_29 );
-inline bool is_set_empty_1f052aa7f260c4eb ( Context * __context__, TDim<uint32_t,8> const  & __cset_rename_at_150_30 );
-inline void set_or_char_5d5313390b879abc ( Context * __context__, TDim<uint32_t,8> & __cset_rename_at_159_32, int32_t __ch_rename_at_159_33 );
-inline void set_or_range_40be02560bdb916d ( Context * __context__, TDim<uint32_t,8> & __cset_rename_at_163_34, range __bits_rename_at_163_35 );
-inline void set_invert_4fb9b64ebf15e148 ( Context * __context__, TDim<uint32_t,8> & __cset_rename_at_169_37 );
-inline void set_or_set_f7fe9d5d2a5b194b ( Context * __context__, TDim<uint32_t,8> & __cset_rename_at_175_39, TDim<uint32_t,8> const  & __eset_rename_at_175_40 );
-inline void set_negative_e65d971bcd9eb5c1 ( Context * __context__, TDim<uint32_t,8> & __cset_rename_at_181_45 );
-inline void set_meta_4ca7bb80700cac47 ( Context * __context__, TDim<uint32_t,8> & __cset_rename_at_187_47, int32_t __che_rename_at_187_48 );
-inline bool is_meta_character_5210d144f518e88e ( Context * __context__, int32_t __ch_rename_at_218_52 );
-inline bool is_set_character_b3eb8d77360f374d ( Context * __context__, int32_t __ch_rename_at_222_53 );
-inline int32_t from_hex_34b87ad3a69093f9 ( Context * __context__, int32_t __ch_rename_at_226_54 );
-inline char * string_from_hex_3b7c632d00a40daf ( Context * __context__, int32_t __ch1_rename_at_244_55 );
-inline char * string_from_hex_7d459c50a54015ae ( Context * __context__, int32_t __ch1_rename_at_248_56, int32_t __ch2_rename_at_248_57 );
-inline AutoVariant<regex::ReNode *,void *> re_char_ad3a1a9a724cb1d4 ( Context * __context__, char * const  __expr_rename_at_253_58, int32_t __offset_rename_at_253_59 );
-inline AutoVariant<regex::ReNode *,void *> re_set_items_73cf660bb8bb0a00 ( Context * __context__, char * const  __expr_rename_at_302_66, int32_t __offset_rename_at_302_67 );
-inline AutoVariant<regex::ReNode *,void *> re_set_a55f6e80806300ed ( Context * __context__, char * const  __expr_rename_at_404_79, int32_t __offset_rename_at_404_80 );
-inline AutoVariant<regex::ReNode *,void *> re_any_9e5c841624efd77c ( Context * __context__, char * const  __expr_rename_at_438_84, int32_t __offset_rename_at_438_85 );
-inline AutoVariant<regex::ReNode *,void *> re_eos_91af11e09a55593b ( Context * __context__, char * const  __expr_rename_at_450_86, int32_t __offset_rename_at_450_87 );
-inline AutoVariant<regex::ReNode *,void *> re_group_a76956b21d051425 ( Context * __context__, char * const  __expr_rename_at_462_88, int32_t __offset_rename_at_462_89 );
-inline AutoVariant<regex::ReNode *,void *> re_elementary_8e517f8be58bf1a6 ( Context * __context__, char * const  __expr_rename_at_482_91, int32_t __offset_rename_at_482_92 );
-inline regex::ReNode * mk_concat_913ccfa999a26595 ( Context * __context__, regex::ReNode * __left_rename_at_510_98, regex::ReNode * __right_rename_at_510_99 );
-inline regex::ReNode * mk_union_3fd1209b4c81276d ( Context * __context__, regex::ReNode * __left_rename_at_538_101, regex::ReNode * __right_rename_at_538_102 );
-inline AutoVariant<regex::ReNode *,void *> re_re_57e53314b2b816e9 ( Context * __context__, char * const  __expr_rename_at_565_104, int32_t __offset_rename_at_565_105 );
-inline AutoVariant<regex::ReNode *,void *> re_basic_15c8a30187b8f90a ( Context * __context__, char * const  __expr_rename_at_600_110, int32_t __offset_rename_at_600_111 );
-inline regex::ReNode * re_parse_a11fbde82111aa69 ( Context * __context__, char * const  __expr_rename_at_620_114 );
-inline void visit_top_down_4fecc3dfe95f303c ( Context * __context__, regex::ReNode * __node_rename_at_633_117, Block DAS_COMMENT((void,regex::ReNode *)) const  & __blk_rename_at_633_118 );
-inline void re_assign_next_18621bfa0d3dbb85 ( Context * __context__, regex::Regex & __re_rename_at_649_120 );
-inline void re_assign_groups_269827e3d8834c3a ( Context * __context__, regex::Regex & __re_rename_at_666_124 );
-inline void re_assign_match_functions_d1123942ad08a870 ( Context * __context__, regex::Regex & __re_rename_at_681_127 );
-inline uint8_t const  * re_match2_single_char_efd3120a5ed2dc78 ( Context * __context__, regex::Regex & __regex_rename_at_730_129, regex::ReNode * __node_rename_at_730_130, uint8_t const  * const  __str_rename_at_730_131 );
-inline uint8_t const  * re_match2_char_563cc8699254595c ( Context * __context__, regex::Regex & __regex_rename_at_753_134, regex::ReNode * __node_rename_at_753_135, uint8_t const  * const  __str_rename_at_753_136 );
-inline uint8_t const  * re_match2_union_483bf85dbc5196dd ( Context * __context__, regex::Regex & __regex_rename_at_779_139, regex::ReNode * __node_rename_at_779_140, uint8_t const  * const  __str_rename_at_779_141 );
-inline uint8_t const  * re_match2_set_31b09b463a9d7b2b ( Context * __context__, regex::Regex & __regex_rename_at_797_144, regex::ReNode * __node_rename_at_797_145, uint8_t const  * const  __str_rename_at_797_146 );
-inline uint8_t const  * re_match2_any_9b00b66687d95b62 ( Context * __context__, regex::Regex & __regex_rename_at_820_149, regex::ReNode * __node_rename_at_820_150, uint8_t const  * const  __str_rename_at_820_151 );
-inline uint8_t const  * re_match2_concat_2bd31fc7755cdf2a ( Context * __context__, regex::Regex & __regex_rename_at_840_154, regex::ReNode * __node_rename_at_840_155, uint8_t const  * const  __str_rename_at_840_156 );
-inline uint8_t const  * re_match2_eos_a35408df9434ba3c ( Context * __context__, regex::Regex & __regex_rename_at_857_159, regex::ReNode * __node_rename_at_857_160, uint8_t const  * const  __str_rename_at_857_161 );
-inline uint8_t const  * re_match2_question_4acdfdc420ce399a ( Context * __context__, regex::Regex & __regex_rename_at_874_163, regex::ReNode * __node_rename_at_874_164, uint8_t const  * const  __str_rename_at_874_165 );
-inline uint8_t const  * re_match2_plus_adb26cc707eb0c55 ( Context * __context__, regex::Regex & __regex_rename_at_893_169, regex::ReNode * __node_rename_at_893_170, uint8_t const  * const  __str_rename_at_893_171 );
-inline uint8_t const  * re_match2_plus_set_aeb296540242ef22 ( Context * __context__, regex::Regex & __regex_rename_at_928_177, regex::ReNode * __node_rename_at_928_178, uint8_t const  * const  __str_rename_at_928_179 );
-inline uint8_t const  * re_match2_star_bb64c06dd606906e ( Context * __context__, regex::Regex & __regex_rename_at_971_184, regex::ReNode * __node_rename_at_971_185, uint8_t const  * const  __str_rename_at_971_186 );
-inline uint8_t const  * re_match2_group_82784eced054ba4e ( Context * __context__, regex::Regex & __regex_rename_at_1000_192, regex::ReNode * __node_rename_at_1000_193, uint8_t const  * const  __str_rename_at_1000_194 );
-inline bool re_early_out_80d62a0fdd14cb06 ( Context * __context__, TDim<uint32_t,8> & __cset_rename_at_1020_197, regex::ReNode * const  __node_rename_at_1020_198 );
-inline bool is_valid_87c94e9920e8a112 ( Context * __context__, regex::Regex & __re_rename_at_1063_203 );
-inline bool regex_compile_b802a48fba17c551 ( Context * __context__, regex::Regex & __re_rename_at_1068_204, char * const  __expr_rename_at_1068_205 );
-inline regex::Regex regex_compile_d14729dab5987744 ( Context * __context__, char * const  __expr_rename_at_1082_206 );
-inline regex::Regex regex_compile_8b8cd96a70efcb1c ( Context * __context__, regex::Regex & __re_rename_at_1090_208 );
-inline int32_t regex_match_d1084a47d6e2d53e ( Context * __context__, regex::Regex & __regex_rename_at_1098_209, char * const  __str_rename_at_1098_210, int32_t __offset_rename_at_1098_211 );
-inline char * regex_group_f150ed72d9c6b909 ( Context * __context__, regex::Regex const  & __regex_rename_at_1117_213, int32_t __index_rename_at_1117_214, char * const  __match_rename_at_1117_215 );
-inline void regex_foreach_7115f79e7b67800f ( Context * __context__, regex::Regex & __regex_rename_at_1124_217, char * const  __str_rename_at_1124_218, Block DAS_COMMENT((bool,range)) const  & __blk_rename_at_1124_219 );
-inline char * regex_replace_6c020ee2b76e6419 ( Context * __context__, regex::Regex & __regex_rename_at_1172_226, char * const  __str_rename_at_1172_227, Block DAS_COMMENT((char *,char * const )) const  & __blk_rename_at_1172_228 );
-inline void regex_debug_35a427292763c452 ( Context * __context__, regex::Regex const  & __regex_rename_at_1226_238 );
-inline void debug_set_13e232e40e242fa0 ( Context * __context__, TDim<uint32_t,8> const  & __cset_rename_at_1243_240 );
-inline void debug_re_f8fd4cc00f0dc78d ( Context * __context__, regex::ReNode * const  __node_rename_at_1256_242, int32_t __tab_rename_at_1256_243 );
-inline int32_t rnd_set_character_6517e452a18c5606 ( Context * __context__, TDim<uint32_t,8> const  & __cset_rename_at_1317_245, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1317_246 );
-inline void re_gen2_fail_a5fdf20930267896 ( Context * __context__, regex::ReNode * __node_rename_at_1325_249, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1325_250, StringBuilderWriter & __str_rename_at_1325_251 );
-inline void re_gen2_char_e6b9f720990cc2d7 ( Context * __context__, regex::ReNode * __node_rename_at_1332_252, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1332_253, StringBuilderWriter & __str_rename_at_1332_254 );
-inline void re_gen2_union_44153b0e184e2888 ( Context * __context__, regex::ReNode * __node_rename_at_1343_256, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1343_257, StringBuilderWriter & __str_rename_at_1343_258 );
-inline void re_gen2_set_5483397ec36cfff0 ( Context * __context__, regex::ReNode * __node_rename_at_1354_261, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1354_262, StringBuilderWriter & __str_rename_at_1354_263 );
-inline void re_gen2_any_200931e8e5db950 ( Context * __context__, regex::ReNode * __node_rename_at_1365_265, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1365_266, StringBuilderWriter & __str_rename_at_1365_267 );
-inline void re_gen2_concat_bb7cd4a1d8751a6c ( Context * __context__, regex::ReNode * __node_rename_at_1378_270, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1378_271, StringBuilderWriter & __str_rename_at_1378_272 );
-inline void re_gen2_eos_6a9fe263836b5d74 ( Context * __context__, regex::ReNode * __node_rename_at_1386_274, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1386_275, StringBuilderWriter & __str_rename_at_1386_276 );
-inline void re_gen2_question_f2a2ead57fd4a9 ( Context * __context__, regex::ReNode * __node_rename_at_1396_278, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1396_279, StringBuilderWriter & __str_rename_at_1396_280 );
-inline void re_gen2_plus_9fe66025caf188a9 ( Context * __context__, regex::ReNode * __node_rename_at_1414_284, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1414_285, StringBuilderWriter & __str_rename_at_1414_286 );
-inline void re_gen2_star_5bbabd524a57385c ( Context * __context__, regex::ReNode * __node_rename_at_1433_291, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1433_292, StringBuilderWriter & __str_rename_at_1433_293 );
-inline void re_gen2_group_cc75131bc454c003 ( Context * __context__, regex::ReNode * __node_rename_at_1452_298, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1452_299, StringBuilderWriter & __str_rename_at_1452_300 );
-inline char * re_gen_e78126cc4b992ab9 ( Context * __context__, regex::Regex & __re_rename_at_1466_303, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1466_304 );
+static inline void _FuncbuiltinTickresizeTick4811697762258667383_839271fc9974c3bd ( Context * __context__, TArray<regex::ReNode *> & __Arr_rename_at_68_0, int32_t __newSize_rename_at_68_1 );
+static inline void _FuncbuiltinTickfinalizeTick13836114024949725080_93dd7ca7375a7759 ( Context * __context__, TArray<regex::ReNode *> & __a_rename_at_1215_2 );
+static inline int32_t _FuncbuiltinTicklengthTick18150397773952384912_fcdb4107749fac2d ( Context * __context__, TDim<regex::ReNode *,2> const  & __a_rename_at_581_4 );
+static inline void finalize_1b3fa79e78928d5e ( Context * __context__, regex::ReNode & ____this_rename_at_29_5 );
+static inline regex::Regex & _FuncbuiltinTick_return_with_lockcheckTick2939372000839727345_182d4b6f1ba86427 ( Context * __context__, regex::Regex & __a_rename_at_50_6 );
+static inline int32_t _FuncregexTickfrom_hexTick16446213900708532977_faa1e859112ad2ec ( Context * __context__, int32_t __ch1_rename_at_240_7, int32_t __ch2_rename_at_240_8 );
+static inline void finalize_4d9dff2c4111fea5 ( Context * __context__, AutoVariant<regex::ReNode *,void *> & ____this_rename_at_422_9 );
+static inline void finalize_2e3cca8177873ef7 ( Context * __context__, regex::ReNode * & ____this_rename_at_519_10 );
+static inline void _FuncbuiltinTickpushTick10769833213962245646_76636a7a79f1cc9 ( Context * __context__, TArray<regex::ReNode *> & __Arr_rename_at_181_11, regex::ReNode * __value_rename_at_181_12 );
+static inline TArray<regex::ReNode *> _FuncbuiltinTickto_array_moveTick3185538323411982277_d525ede85535d1d6 ( Context * __context__, TDim<regex::ReNode *,2> & __a_rename_at_1375_13 );
+static inline void _FuncbuiltinTickpushTick10769833213962245646_689721e2e03454a5 ( Context * __context__, TArray<AutoTuple<range,char *>> & __Arr_rename_at_181_15, AutoTuple<range,char *> & __value_rename_at_181_16 );
+static inline bool _FuncbuiltinTicknextTick17450348357676149856_78a056decb3ca45d ( Context * __context__, Sequence DAS_COMMENT((uint32_t)) & __it_rename_at_1256_17, uint32_t & __value_rename_at_1256_18 );
+static inline uint32_t re_gen_get_rep_limit_aa71779c47fee5b8 ( Context * __context__ );
+static inline void trace_7794f549fda55dde ( Context * __context__, char * const  __msg_rename_at_79_19, int32_t __offset_rename_at_79_20 );
+static inline void note_7794f549fda55dde ( Context * __context__, char * const  __msg_rename_at_86_21, int32_t __offset_rename_at_86_22 );
+static inline void trace_backtrack_60bdee73e3315732 ( Context * __context__ );
+static inline void trace_value_599ec0b97b535e0e ( Context * __context__, regex::ReNode * const  __value_rename_at_99_23 );
+static inline AutoVariant<regex::ReNode *,void *> nada_a36e274f9f880579 ( Context * __context__ );
+static inline AutoVariant<regex::ReNode *,void *> maybe_cb698f19184a9bc8 ( Context * __context__, regex::ReNode * __value_rename_at_114_24 );
+static inline bool eos_bcd93149648ad887 ( Context * __context__, char * const  __expr_rename_at_119_25, int32_t __offset_rename_at_119_26 );
+static inline int32_t at_ac9760d67b4716d0 ( Context * __context__, char * const  __expr_rename_at_123_27, int32_t __offset_rename_at_123_28 );
+static inline int32_t next_c7b14aa26d681478 ( Context * __context__, AutoVariant<regex::ReNode *,void *> const  & __re_rename_at_142_29 );
+static inline bool is_set_empty_1f052aa7f260c4eb ( Context * __context__, TDim<uint32_t,8> const  & __cset_rename_at_150_30 );
+static inline void set_or_char_5d5313390b879abc ( Context * __context__, TDim<uint32_t,8> & __cset_rename_at_159_32, int32_t __ch_rename_at_159_33 );
+static inline void set_or_range_40be02560bdb916d ( Context * __context__, TDim<uint32_t,8> & __cset_rename_at_163_34, range __bits_rename_at_163_35 );
+static inline void set_invert_4fb9b64ebf15e148 ( Context * __context__, TDim<uint32_t,8> & __cset_rename_at_169_37 );
+static inline void set_or_set_f7fe9d5d2a5b194b ( Context * __context__, TDim<uint32_t,8> & __cset_rename_at_175_39, TDim<uint32_t,8> const  & __eset_rename_at_175_40 );
+static inline void set_negative_e65d971bcd9eb5c1 ( Context * __context__, TDim<uint32_t,8> & __cset_rename_at_181_45 );
+static inline void set_meta_4ca7bb80700cac47 ( Context * __context__, TDim<uint32_t,8> & __cset_rename_at_187_47, int32_t __che_rename_at_187_48 );
+static inline bool is_meta_character_5210d144f518e88e ( Context * __context__, int32_t __ch_rename_at_218_52 );
+static inline bool is_set_character_b3eb8d77360f374d ( Context * __context__, int32_t __ch_rename_at_222_53 );
+static inline int32_t from_hex_34b87ad3a69093f9 ( Context * __context__, int32_t __ch_rename_at_226_54 );
+static inline char * string_from_hex_3b7c632d00a40daf ( Context * __context__, int32_t __ch1_rename_at_244_55 );
+static inline char * string_from_hex_7d459c50a54015ae ( Context * __context__, int32_t __ch1_rename_at_248_56, int32_t __ch2_rename_at_248_57 );
+static inline AutoVariant<regex::ReNode *,void *> re_char_ad3a1a9a724cb1d4 ( Context * __context__, char * const  __expr_rename_at_253_58, int32_t __offset_rename_at_253_59 );
+static inline AutoVariant<regex::ReNode *,void *> re_set_items_73cf660bb8bb0a00 ( Context * __context__, char * const  __expr_rename_at_302_66, int32_t __offset_rename_at_302_67 );
+static inline AutoVariant<regex::ReNode *,void *> re_set_a55f6e80806300ed ( Context * __context__, char * const  __expr_rename_at_404_79, int32_t __offset_rename_at_404_80 );
+static inline AutoVariant<regex::ReNode *,void *> re_any_9e5c841624efd77c ( Context * __context__, char * const  __expr_rename_at_438_84, int32_t __offset_rename_at_438_85 );
+static inline AutoVariant<regex::ReNode *,void *> re_eos_91af11e09a55593b ( Context * __context__, char * const  __expr_rename_at_450_86, int32_t __offset_rename_at_450_87 );
+static inline AutoVariant<regex::ReNode *,void *> re_group_a76956b21d051425 ( Context * __context__, char * const  __expr_rename_at_462_88, int32_t __offset_rename_at_462_89 );
+static inline AutoVariant<regex::ReNode *,void *> re_elementary_8e517f8be58bf1a6 ( Context * __context__, char * const  __expr_rename_at_482_91, int32_t __offset_rename_at_482_92 );
+static inline regex::ReNode * mk_concat_913ccfa999a26595 ( Context * __context__, regex::ReNode * __left_rename_at_510_98, regex::ReNode * __right_rename_at_510_99 );
+static inline regex::ReNode * mk_union_3fd1209b4c81276d ( Context * __context__, regex::ReNode * __left_rename_at_538_101, regex::ReNode * __right_rename_at_538_102 );
+static inline AutoVariant<regex::ReNode *,void *> re_re_57e53314b2b816e9 ( Context * __context__, char * const  __expr_rename_at_565_104, int32_t __offset_rename_at_565_105 );
+static inline AutoVariant<regex::ReNode *,void *> re_basic_15c8a30187b8f90a ( Context * __context__, char * const  __expr_rename_at_600_110, int32_t __offset_rename_at_600_111 );
+static inline regex::ReNode * re_parse_a11fbde82111aa69 ( Context * __context__, char * const  __expr_rename_at_620_114 );
+static inline void visit_top_down_4fecc3dfe95f303c ( Context * __context__, regex::ReNode * __node_rename_at_633_117, Block DAS_COMMENT((void,regex::ReNode *)) const  & __blk_rename_at_633_118 );
+static inline void re_assign_next_18621bfa0d3dbb85 ( Context * __context__, regex::Regex & __re_rename_at_649_120 );
+static inline void re_assign_groups_269827e3d8834c3a ( Context * __context__, regex::Regex & __re_rename_at_666_124 );
+static inline void re_assign_match_functions_d1123942ad08a870 ( Context * __context__, regex::Regex & __re_rename_at_681_127 );
+static inline uint8_t const  * re_match2_single_char_efd3120a5ed2dc78 ( Context * __context__, regex::Regex & __regex_rename_at_730_129, regex::ReNode * __node_rename_at_730_130, uint8_t const  * const  __str_rename_at_730_131 );
+static inline uint8_t const  * re_match2_char_563cc8699254595c ( Context * __context__, regex::Regex & __regex_rename_at_753_134, regex::ReNode * __node_rename_at_753_135, uint8_t const  * const  __str_rename_at_753_136 );
+static inline uint8_t const  * re_match2_union_483bf85dbc5196dd ( Context * __context__, regex::Regex & __regex_rename_at_779_139, regex::ReNode * __node_rename_at_779_140, uint8_t const  * const  __str_rename_at_779_141 );
+static inline uint8_t const  * re_match2_set_31b09b463a9d7b2b ( Context * __context__, regex::Regex & __regex_rename_at_797_144, regex::ReNode * __node_rename_at_797_145, uint8_t const  * const  __str_rename_at_797_146 );
+static inline uint8_t const  * re_match2_any_9b00b66687d95b62 ( Context * __context__, regex::Regex & __regex_rename_at_820_149, regex::ReNode * __node_rename_at_820_150, uint8_t const  * const  __str_rename_at_820_151 );
+static inline uint8_t const  * re_match2_concat_2bd31fc7755cdf2a ( Context * __context__, regex::Regex & __regex_rename_at_840_154, regex::ReNode * __node_rename_at_840_155, uint8_t const  * const  __str_rename_at_840_156 );
+static inline uint8_t const  * re_match2_eos_a35408df9434ba3c ( Context * __context__, regex::Regex & __regex_rename_at_857_159, regex::ReNode * __node_rename_at_857_160, uint8_t const  * const  __str_rename_at_857_161 );
+static inline uint8_t const  * re_match2_question_4acdfdc420ce399a ( Context * __context__, regex::Regex & __regex_rename_at_874_163, regex::ReNode * __node_rename_at_874_164, uint8_t const  * const  __str_rename_at_874_165 );
+static inline uint8_t const  * re_match2_plus_adb26cc707eb0c55 ( Context * __context__, regex::Regex & __regex_rename_at_893_169, regex::ReNode * __node_rename_at_893_170, uint8_t const  * const  __str_rename_at_893_171 );
+static inline uint8_t const  * re_match2_plus_set_aeb296540242ef22 ( Context * __context__, regex::Regex & __regex_rename_at_928_177, regex::ReNode * __node_rename_at_928_178, uint8_t const  * const  __str_rename_at_928_179 );
+static inline uint8_t const  * re_match2_star_bb64c06dd606906e ( Context * __context__, regex::Regex & __regex_rename_at_971_184, regex::ReNode * __node_rename_at_971_185, uint8_t const  * const  __str_rename_at_971_186 );
+static inline uint8_t const  * re_match2_group_82784eced054ba4e ( Context * __context__, regex::Regex & __regex_rename_at_1000_192, regex::ReNode * __node_rename_at_1000_193, uint8_t const  * const  __str_rename_at_1000_194 );
+static inline bool re_early_out_80d62a0fdd14cb06 ( Context * __context__, TDim<uint32_t,8> & __cset_rename_at_1020_197, regex::ReNode * const  __node_rename_at_1020_198 );
+static inline bool is_valid_87c94e9920e8a112 ( Context * __context__, regex::Regex & __re_rename_at_1063_203 );
+static inline bool regex_compile_b802a48fba17c551 ( Context * __context__, regex::Regex & __re_rename_at_1068_204, char * const  __expr_rename_at_1068_205 );
+static inline regex::Regex regex_compile_9c6bbe3f7bf967b8 ( Context * __context__, char * const  __expr_rename_at_1082_206 );
+static inline regex::Regex regex_compile_8b8cd96a70efcb1c ( Context * __context__, regex::Regex & __re_rename_at_1090_208 );
+static inline int32_t regex_match_d1084a47d6e2d53e ( Context * __context__, regex::Regex & __regex_rename_at_1098_209, char * const  __str_rename_at_1098_210, int32_t __offset_rename_at_1098_211 );
+static inline char * regex_group_f150ed72d9c6b909 ( Context * __context__, regex::Regex const  & __regex_rename_at_1117_213, int32_t __index_rename_at_1117_214, char * const  __match_rename_at_1117_215 );
+static inline void regex_foreach_7115f79e7b67800f ( Context * __context__, regex::Regex & __regex_rename_at_1124_217, char * const  __str_rename_at_1124_218, Block DAS_COMMENT((bool,range)) const  & __blk_rename_at_1124_219 );
+static inline char * regex_replace_6c020ee2b76e6419 ( Context * __context__, regex::Regex & __regex_rename_at_1172_226, char * const  __str_rename_at_1172_227, Block DAS_COMMENT((char *,char * const )) const  & __blk_rename_at_1172_228 );
+static inline void regex_debug_35a427292763c452 ( Context * __context__, regex::Regex const  & __regex_rename_at_1226_238 );
+static inline void debug_set_13e232e40e242fa0 ( Context * __context__, TDim<uint32_t,8> const  & __cset_rename_at_1243_240 );
+static inline void debug_re_f8fd4cc00f0dc78d ( Context * __context__, regex::ReNode * const  __node_rename_at_1256_242, int32_t __tab_rename_at_1256_243 );
+static inline int32_t rnd_set_character_6517e452a18c5606 ( Context * __context__, TDim<uint32_t,8> const  & __cset_rename_at_1317_245, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1317_246 );
+static inline void re_gen2_fail_a5fdf20930267896 ( Context * __context__, regex::ReNode * __node_rename_at_1325_249, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1325_250, StringBuilderWriter & __str_rename_at_1325_251 );
+static inline void re_gen2_char_e6b9f720990cc2d7 ( Context * __context__, regex::ReNode * __node_rename_at_1332_252, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1332_253, StringBuilderWriter & __str_rename_at_1332_254 );
+static inline void re_gen2_union_44153b0e184e2888 ( Context * __context__, regex::ReNode * __node_rename_at_1343_256, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1343_257, StringBuilderWriter & __str_rename_at_1343_258 );
+static inline void re_gen2_set_5483397ec36cfff0 ( Context * __context__, regex::ReNode * __node_rename_at_1354_261, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1354_262, StringBuilderWriter & __str_rename_at_1354_263 );
+static inline void re_gen2_any_200931e8e5db950 ( Context * __context__, regex::ReNode * __node_rename_at_1365_265, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1365_266, StringBuilderWriter & __str_rename_at_1365_267 );
+static inline void re_gen2_concat_bb7cd4a1d8751a6c ( Context * __context__, regex::ReNode * __node_rename_at_1378_270, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1378_271, StringBuilderWriter & __str_rename_at_1378_272 );
+static inline void re_gen2_eos_6a9fe263836b5d74 ( Context * __context__, regex::ReNode * __node_rename_at_1386_274, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1386_275, StringBuilderWriter & __str_rename_at_1386_276 );
+static inline void re_gen2_question_f2a2ead57fd4a9 ( Context * __context__, regex::ReNode * __node_rename_at_1396_278, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1396_279, StringBuilderWriter & __str_rename_at_1396_280 );
+static inline void re_gen2_plus_9fe66025caf188a9 ( Context * __context__, regex::ReNode * __node_rename_at_1414_284, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1414_285, StringBuilderWriter & __str_rename_at_1414_286 );
+static inline void re_gen2_star_5bbabd524a57385c ( Context * __context__, regex::ReNode * __node_rename_at_1433_291, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1433_292, StringBuilderWriter & __str_rename_at_1433_293 );
+static inline void re_gen2_group_cc75131bc454c003 ( Context * __context__, regex::ReNode * __node_rename_at_1452_298, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1452_299, StringBuilderWriter & __str_rename_at_1452_300 );
+static inline char * re_gen_e78126cc4b992ab9 ( Context * __context__, regex::Regex & __re_rename_at_1466_303, Sequence DAS_COMMENT((uint32_t)) & __rnd_rename_at_1466_304 );
 
 void __init_script ( Context * __context__, bool __init_shared )
 {
@@ -338,34 +338,34 @@ void __init_script ( Context * __context__, bool __init_shared )
     das_global<char *,0x39690c1b5c6d7b5a>(__context__) = ((char *) "wWsSdD");/*meta_set*/
 }
 
-inline void _FuncbuiltinTickresizeTick4811697762258667383_839271fc9974c3bd ( Context * __context__, TArray<regex::ReNode *> &  __Arr_rename_at_68_0, int32_t __newSize_rename_at_68_1 )
+static inline void _FuncbuiltinTickresizeTick4811697762258667383_839271fc9974c3bd ( Context * __context__, TArray<regex::ReNode *> &  __Arr_rename_at_68_0, int32_t __newSize_rename_at_68_1 )
 {
     builtin_array_resize(das_arg<TArray<regex::ReNode *>>::pass(__Arr_rename_at_68_0),__newSize_rename_at_68_1,8,__context__,((LineInfoArg *)(&LineInfo::g_LineInfoNULL)));
 }
 
-inline void _FuncbuiltinTickfinalizeTick13836114024949725080_93dd7ca7375a7759 ( Context * __context__, TArray<regex::ReNode *> &  __a_rename_at_1182_2 )
+static inline void _FuncbuiltinTickfinalizeTick13836114024949725080_93dd7ca7375a7759 ( Context * __context__, TArray<regex::ReNode *> &  __a_rename_at_1215_2 )
 {
     {
-        bool __need_loop_1184 = true;
+        bool __need_loop_1217 = true;
         // aV: regex::ReNode? aka TT&
-        das_iterator<TArray<regex::ReNode *>> __aV_iterator(__a_rename_at_1182_2);
-        regex::ReNode * * __aV_rename_at_1184_3;
-        __need_loop_1184 = __aV_iterator.first(__context__,(__aV_rename_at_1184_3)) && __need_loop_1184;
-        for ( ; __need_loop_1184 ; __need_loop_1184 = __aV_iterator.next(__context__,(__aV_rename_at_1184_3)) )
+        das_iterator<TArray<regex::ReNode *>> __aV_iterator(__a_rename_at_1215_2);
+        regex::ReNode * * __aV_rename_at_1217_3;
+        __need_loop_1217 = __aV_iterator.first(__context__,(__aV_rename_at_1217_3)) && __need_loop_1217;
+        for ( ; __need_loop_1217 ; __need_loop_1217 = __aV_iterator.next(__context__,(__aV_rename_at_1217_3)) )
         {
-            finalize_2e3cca8177873ef7(__context__,(*__aV_rename_at_1184_3));
+            finalize_2e3cca8177873ef7(__context__,(*__aV_rename_at_1217_3));
         }
-        __aV_iterator.close(__context__,(__aV_rename_at_1184_3));
+        __aV_iterator.close(__context__,(__aV_rename_at_1217_3));
     };
-    builtin_array_free(das_arg<TArray<regex::ReNode *>>::pass(__a_rename_at_1182_2),8,__context__,((LineInfoArg *)(&LineInfo::g_LineInfoNULL)));
+    builtin_array_free(das_arg<TArray<regex::ReNode *>>::pass(__a_rename_at_1215_2),8,__context__,((LineInfoArg *)(&LineInfo::g_LineInfoNULL)));
 }
 
-inline int32_t _FuncbuiltinTicklengthTick18150397773952384912_fcdb4107749fac2d ( Context * __context__, TDim<regex::ReNode *,2> const  &  __a_rename_at_581_4 )
+static inline int32_t _FuncbuiltinTicklengthTick18150397773952384912_fcdb4107749fac2d ( Context * __context__, TDim<regex::ReNode *,2> const  &  __a_rename_at_581_4 )
 {
     return das_auto_cast<int32_t>::cast(2);
 }
 
-inline void finalize_1b3fa79e78928d5e ( Context * __context__, regex::ReNode &  ____this_rename_at_29_5 )
+static inline void finalize_1b3fa79e78928d5e ( Context * __context__, regex::ReNode &  ____this_rename_at_29_5 )
 {
     _FuncbuiltinTickfinalizeTick13836114024949725080_93dd7ca7375a7759(__context__,das_arg<TArray<regex::ReNode *>>::pass(____this_rename_at_29_5.all));
     finalize_2e3cca8177873ef7(__context__,____this_rename_at_29_5.left);
@@ -374,18 +374,18 @@ inline void finalize_1b3fa79e78928d5e ( Context * __context__, regex::ReNode &  
     memset((void*)&(____this_rename_at_29_5), 0, TypeSize<regex::ReNode>::size);
 }
 
-inline regex::Regex & _FuncbuiltinTick_return_with_lockcheckTick2939372000839727345_182d4b6f1ba86427 ( Context * __context__, regex::Regex &  __a_rename_at_50_6 )
+static inline regex::Regex & _FuncbuiltinTick_return_with_lockcheckTick2939372000839727345_182d4b6f1ba86427 ( Context * __context__, regex::Regex &  __a_rename_at_50_6 )
 {
     das_call_interop<void>::call(&builtin_verify_locks,__context__,SimNode_AotInterop<1>(__tinfo_0,cast<regex::Regex &>::from(__a_rename_at_50_6)));
     return das_auto_cast_ref<regex::Regex &>::cast(__a_rename_at_50_6);
 }
 
-inline int32_t _FuncregexTickfrom_hexTick16446213900708532977_faa1e859112ad2ec ( Context * __context__, int32_t __ch1_rename_at_240_7, int32_t __ch2_rename_at_240_8 )
+static inline int32_t _FuncregexTickfrom_hexTick16446213900708532977_faa1e859112ad2ec ( Context * __context__, int32_t __ch1_rename_at_240_7, int32_t __ch2_rename_at_240_8 )
 {
     return das_auto_cast<int32_t>::cast((from_hex_34b87ad3a69093f9(__context__,__ch1_rename_at_240_7) * 16) + from_hex_34b87ad3a69093f9(__context__,__ch2_rename_at_240_8));
 }
 
-inline void finalize_4d9dff2c4111fea5 ( Context * __context__, AutoVariant<regex::ReNode *,void *> &  ____this_rename_at_422_9 )
+static inline void finalize_4d9dff2c4111fea5 ( Context * __context__, AutoVariant<regex::ReNode *,void *> &  ____this_rename_at_422_9 )
 {
     if ( das_get_auto_variant_field<regex::ReNode *,0,regex::ReNode *,void *>::is(____this_rename_at_422_9) )
     {
@@ -394,7 +394,7 @@ inline void finalize_4d9dff2c4111fea5 ( Context * __context__, AutoVariant<regex
     memset((void*)&(____this_rename_at_422_9), 0, TypeSize<AutoVariant<regex::ReNode *,void *>>::size);
 }
 
-inline void finalize_2e3cca8177873ef7 ( Context * __context__, regex::ReNode * & ____this_rename_at_519_10 )
+static inline void finalize_2e3cca8177873ef7 ( Context * __context__, regex::ReNode * & ____this_rename_at_519_10 )
 {
     if ( ____this_rename_at_519_10 != nullptr )
     {
@@ -404,51 +404,51 @@ inline void finalize_2e3cca8177873ef7 ( Context * __context__, regex::ReNode * &
     };
 }
 
-inline void _FuncbuiltinTickpushTick10769833213962245646_76636a7a79f1cc9 ( Context * __context__, TArray<regex::ReNode *> &  __Arr_rename_at_181_11, regex::ReNode * __value_rename_at_181_12 )
+static inline void _FuncbuiltinTickpushTick10769833213962245646_76636a7a79f1cc9 ( Context * __context__, TArray<regex::ReNode *> &  __Arr_rename_at_181_11, regex::ReNode * __value_rename_at_181_12 )
 {
     das_copy(__Arr_rename_at_181_11(builtin_array_push_back(das_arg<TArray<regex::ReNode *>>::pass(__Arr_rename_at_181_11),8,__context__,((LineInfoArg *)(&LineInfo::g_LineInfoNULL))),__context__),__value_rename_at_181_12);
 }
 
-inline TArray<regex::ReNode *> _FuncbuiltinTickto_array_moveTick3185538323411982277_d525ede85535d1d6 ( Context * __context__, TDim<regex::ReNode *,2> &  __a_rename_at_1342_13 )
+static inline TArray<regex::ReNode *> _FuncbuiltinTickto_array_moveTick3185538323411982277_d525ede85535d1d6 ( Context * __context__, TDim<regex::ReNode *,2> &  __a_rename_at_1375_13 )
 {
-    TArray<regex::ReNode *> __arr_rename_at_1344_14;das_zero(__arr_rename_at_1344_14);
-    _FuncbuiltinTickresizeTick4811697762258667383_839271fc9974c3bd(__context__,das_arg<TArray<regex::ReNode *>>::pass(__arr_rename_at_1344_14),2);
-    das_copy(das_cast<TDim<regex::ReNode *,2>>::cast(das_ref(__context__,__arr_rename_at_1344_14(0,__context__))),__a_rename_at_1342_13);
-    return /* <- */ das_auto_cast_move<TArray<regex::ReNode *>>::cast(__arr_rename_at_1344_14);
+    TArray<regex::ReNode *> __arr_rename_at_1377_14;das_zero(__arr_rename_at_1377_14);
+    _FuncbuiltinTickresizeTick4811697762258667383_839271fc9974c3bd(__context__,das_arg<TArray<regex::ReNode *>>::pass(__arr_rename_at_1377_14),2);
+    das_copy(das_cast<TDim<regex::ReNode *,2>>::cast(das_ref(__context__,__arr_rename_at_1377_14(0,__context__))),__a_rename_at_1375_13);
+    return /* <- */ das_auto_cast_move<TArray<regex::ReNode *>>::cast(__arr_rename_at_1377_14);
 }
 
-inline void _FuncbuiltinTickpushTick10769833213962245646_689721e2e03454a5 ( Context * __context__, TArray<AutoTuple<range,char *>> &  __Arr_rename_at_181_15, AutoTuple<range,char *> &  __value_rename_at_181_16 )
+static inline void _FuncbuiltinTickpushTick10769833213962245646_689721e2e03454a5 ( Context * __context__, TArray<AutoTuple<range,char *>> &  __Arr_rename_at_181_15, AutoTuple<range,char *> &  __value_rename_at_181_16 )
 {
     das_copy(__Arr_rename_at_181_15(builtin_array_push_back(das_arg<TArray<AutoTuple<range,char *>>>::pass(__Arr_rename_at_181_15),16,__context__,((LineInfoArg *)(&LineInfo::g_LineInfoNULL))),__context__),__value_rename_at_181_16);
 }
 
-inline bool _FuncbuiltinTicknextTick17450348357676149856_78a056decb3ca45d ( Context * __context__, Sequence DAS_COMMENT((uint32_t)) &  __it_rename_at_1223_17, uint32_t & __value_rename_at_1223_18 )
+static inline bool _FuncbuiltinTicknextTick17450348357676149856_78a056decb3ca45d ( Context * __context__, Sequence DAS_COMMENT((uint32_t)) &  __it_rename_at_1256_17, uint32_t & __value_rename_at_1256_18 )
 {
-    return das_auto_cast<bool>::cast(builtin_iterator_iterate(das_arg<Sequence DAS_COMMENT((uint32_t))>::pass(__it_rename_at_1223_17),das_auto_cast<void * const >::cast(das_ref(__context__,__value_rename_at_1223_18)),__context__));
+    return das_auto_cast<bool>::cast(builtin_iterator_iterate(das_arg<Sequence DAS_COMMENT((uint32_t))>::pass(__it_rename_at_1256_17),das_auto_cast<void * const >::cast(das_ref(__context__,__value_rename_at_1256_18)),__context__));
 }
 
-inline uint32_t re_gen_get_rep_limit_aa71779c47fee5b8 ( Context * __context__ )
+static inline uint32_t re_gen_get_rep_limit_aa71779c47fee5b8 ( Context * __context__ )
 {
     return das_auto_cast<uint32_t>::cast(das_global<uint32_t,0x8ce995ce57e18608>(__context__) /*re_gen_rep_limit*/);
 }
 
-inline void trace_7794f549fda55dde ( Context * __context__, char * const  __msg_rename_at_79_19, int32_t __offset_rename_at_79_20 )
+static inline void trace_7794f549fda55dde ( Context * __context__, char * const  __msg_rename_at_79_19, int32_t __offset_rename_at_79_20 )
 {
 }
 
-inline void note_7794f549fda55dde ( Context * __context__, char * const  __msg_rename_at_86_21, int32_t __offset_rename_at_86_22 )
+static inline void note_7794f549fda55dde ( Context * __context__, char * const  __msg_rename_at_86_21, int32_t __offset_rename_at_86_22 )
 {
 }
 
-inline void trace_backtrack_60bdee73e3315732 ( Context * __context__ )
+static inline void trace_backtrack_60bdee73e3315732 ( Context * __context__ )
 {
 }
 
-inline void trace_value_599ec0b97b535e0e ( Context * __context__, regex::ReNode * const  __value_rename_at_99_23 )
+static inline void trace_value_599ec0b97b535e0e ( Context * __context__, regex::ReNode * const  __value_rename_at_99_23 )
 {
 }
 
-inline AutoVariant<regex::ReNode *,void *> nada_a36e274f9f880579 ( Context * __context__ )
+static inline AutoVariant<regex::ReNode *,void *> nada_a36e274f9f880579 ( Context * __context__ )
 {
     return das_auto_cast_ref<AutoVariant<regex::ReNode *,void *>>::cast((([&]() -> AutoVariant<regex::ReNode *,void *> {
         AutoVariant<regex::ReNode *,void *> __mkv_111;
@@ -457,7 +457,7 @@ inline AutoVariant<regex::ReNode *,void *> nada_a36e274f9f880579 ( Context * __c
     })()));
 }
 
-inline AutoVariant<regex::ReNode *,void *> maybe_cb698f19184a9bc8 ( Context * __context__, regex::ReNode * __value_rename_at_114_24 )
+static inline AutoVariant<regex::ReNode *,void *> maybe_cb698f19184a9bc8 ( Context * __context__, regex::ReNode * __value_rename_at_114_24 )
 {
     return das_auto_cast_ref<AutoVariant<regex::ReNode *,void *>>::cast((([&]() -> AutoVariant<regex::ReNode *,void *> {
         AutoVariant<regex::ReNode *,void *> __mkv_116;
@@ -466,17 +466,17 @@ inline AutoVariant<regex::ReNode *,void *> maybe_cb698f19184a9bc8 ( Context * __
     })()));
 }
 
-inline bool eos_bcd93149648ad887 ( Context * __context__, char * const  __expr_rename_at_119_25, int32_t __offset_rename_at_119_26 )
+static inline bool eos_bcd93149648ad887 ( Context * __context__, char * const  __expr_rename_at_119_25, int32_t __offset_rename_at_119_26 )
 {
     return das_auto_cast<bool>::cast(__offset_rename_at_119_26 >= builtin_string_length(__expr_rename_at_119_25,__context__));
 }
 
-inline int32_t at_ac9760d67b4716d0 ( Context * __context__, char * const  __expr_rename_at_123_27, int32_t __offset_rename_at_123_28 )
+static inline int32_t at_ac9760d67b4716d0 ( Context * __context__, char * const  __expr_rename_at_123_27, int32_t __offset_rename_at_123_28 )
 {
     return das_auto_cast<int32_t>::cast(get_character_uat(__expr_rename_at_123_27,__offset_rename_at_123_28));
 }
 
-inline int32_t next_c7b14aa26d681478 ( Context * __context__, AutoVariant<regex::ReNode *,void *> const  &  __re_rename_at_142_29 )
+static inline int32_t next_c7b14aa26d681478 ( Context * __context__, AutoVariant<regex::ReNode *,void *> const  &  __re_rename_at_142_29 )
 {
     if ( !das_get_auto_variant_field<regex::ReNode *,0,regex::ReNode *,void *>::is(__re_rename_at_142_29) )
     {
@@ -486,7 +486,7 @@ inline int32_t next_c7b14aa26d681478 ( Context * __context__, AutoVariant<regex:
     return das_auto_cast<int32_t>::cast(v_extract_yi(v_cast_vec4i(das_get_auto_variant_field<regex::ReNode *,0,regex::ReNode *,void *>::as(__re_rename_at_142_29,__context__)->at)) /*y*/);
 }
 
-inline bool is_set_empty_1f052aa7f260c4eb ( Context * __context__, TDim<uint32_t,8> const  &  __cset_rename_at_150_30 )
+static inline bool is_set_empty_1f052aa7f260c4eb ( Context * __context__, TDim<uint32_t,8> const  &  __cset_rename_at_150_30 )
 {
     {
         bool __need_loop_151 = true;
@@ -506,12 +506,12 @@ inline bool is_set_empty_1f052aa7f260c4eb ( Context * __context__, TDim<uint32_t
     return das_auto_cast<bool>::cast(true);
 }
 
-inline void set_or_char_5d5313390b879abc ( Context * __context__, TDim<uint32_t,8> &  __cset_rename_at_159_32, int32_t __ch_rename_at_159_33 )
+static inline void set_or_char_5d5313390b879abc ( Context * __context__, TDim<uint32_t,8> &  __cset_rename_at_159_32, int32_t __ch_rename_at_159_33 )
 {
     __cset_rename_at_159_32((__ch_rename_at_159_33 >> 5),__context__) |= uint32_t(1 << (__ch_rename_at_159_33 & 31));
 }
 
-inline void set_or_range_40be02560bdb916d ( Context * __context__, TDim<uint32_t,8> &  __cset_rename_at_163_34, range __bits_rename_at_163_35 )
+static inline void set_or_range_40be02560bdb916d ( Context * __context__, TDim<uint32_t,8> &  __cset_rename_at_163_34, range __bits_rename_at_163_35 )
 {
     {
         bool __need_loop_164 = true;
@@ -527,7 +527,7 @@ inline void set_or_range_40be02560bdb916d ( Context * __context__, TDim<uint32_t
     };
 }
 
-inline void set_invert_4fb9b64ebf15e148 ( Context * __context__, TDim<uint32_t,8> &  __cset_rename_at_169_37 )
+static inline void set_invert_4fb9b64ebf15e148 ( Context * __context__, TDim<uint32_t,8> &  __cset_rename_at_169_37 )
 {
     {
         bool __need_loop_170 = true;
@@ -543,7 +543,7 @@ inline void set_invert_4fb9b64ebf15e148 ( Context * __context__, TDim<uint32_t,8
     };
 }
 
-inline void set_or_set_f7fe9d5d2a5b194b ( Context * __context__, TDim<uint32_t,8> &  __cset_rename_at_175_39, TDim<uint32_t,8> const  &  __eset_rename_at_175_40 )
+static inline void set_or_set_f7fe9d5d2a5b194b ( Context * __context__, TDim<uint32_t,8> &  __cset_rename_at_175_39, TDim<uint32_t,8> const  &  __eset_rename_at_175_40 )
 {
     {
         bool __need_loop_176 = true;
@@ -564,7 +564,7 @@ inline void set_or_set_f7fe9d5d2a5b194b ( Context * __context__, TDim<uint32_t,8
     };
 }
 
-inline void set_negative_e65d971bcd9eb5c1 ( Context * __context__, TDim<uint32_t,8> &  __cset_rename_at_181_45 )
+static inline void set_negative_e65d971bcd9eb5c1 ( Context * __context__, TDim<uint32_t,8> &  __cset_rename_at_181_45 )
 {
     {
         bool __need_loop_182 = true;
@@ -580,7 +580,7 @@ inline void set_negative_e65d971bcd9eb5c1 ( Context * __context__, TDim<uint32_t
     };
 }
 
-inline void set_meta_4ca7bb80700cac47 ( Context * __context__, TDim<uint32_t,8> &  __cset_rename_at_187_47, int32_t __che_rename_at_187_48 )
+static inline void set_meta_4ca7bb80700cac47 ( Context * __context__, TDim<uint32_t,8> &  __cset_rename_at_187_47, int32_t __che_rename_at_187_48 )
 {
     if ( __che_rename_at_187_48 == 119 )
     {
@@ -615,17 +615,17 @@ inline void set_meta_4ca7bb80700cac47 ( Context * __context__, TDim<uint32_t,8> 
     };
 }
 
-inline bool is_meta_character_5210d144f518e88e ( Context * __context__, int32_t __ch_rename_at_218_52 )
+static inline bool is_meta_character_5210d144f518e88e ( Context * __context__, int32_t __ch_rename_at_218_52 )
 {
     return das_auto_cast<bool>::cast(builtin_find_first_char_of(((char *) "\\+-*.()[]|^"),__ch_rename_at_218_52,__context__) != -1);
 }
 
-inline bool is_set_character_b3eb8d77360f374d ( Context * __context__, int32_t __ch_rename_at_222_53 )
+static inline bool is_set_character_b3eb8d77360f374d ( Context * __context__, int32_t __ch_rename_at_222_53 )
 {
     return das_auto_cast<bool>::cast(builtin_find_first_char_of(((char *) "wWsSdD"),__ch_rename_at_222_53,__context__) != -1);
 }
 
-inline int32_t from_hex_34b87ad3a69093f9 ( Context * __context__, int32_t __ch_rename_at_226_54 )
+static inline int32_t from_hex_34b87ad3a69093f9 ( Context * __context__, int32_t __ch_rename_at_226_54 )
 {
     if ( (__ch_rename_at_226_54 >= 48) && (__ch_rename_at_226_54 <= 57) )
     {
@@ -646,17 +646,17 @@ inline int32_t from_hex_34b87ad3a69093f9 ( Context * __context__, int32_t __ch_r
     };
 }
 
-inline char * string_from_hex_3b7c632d00a40daf ( Context * __context__, int32_t __ch1_rename_at_244_55 )
+static inline char * string_from_hex_3b7c632d00a40daf ( Context * __context__, int32_t __ch1_rename_at_244_55 )
 {
     return das_auto_cast<char *>::cast(((char * const )(to_string_char(from_hex_34b87ad3a69093f9(__context__,__ch1_rename_at_244_55),__context__,((LineInfoArg *)(&LineInfo::g_LineInfoNULL))))));
 }
 
-inline char * string_from_hex_7d459c50a54015ae ( Context * __context__, int32_t __ch1_rename_at_248_56, int32_t __ch2_rename_at_248_57 )
+static inline char * string_from_hex_7d459c50a54015ae ( Context * __context__, int32_t __ch1_rename_at_248_56, int32_t __ch2_rename_at_248_57 )
 {
     return das_auto_cast<char *>::cast(((char * const )(to_string_char(_FuncregexTickfrom_hexTick16446213900708532977_faa1e859112ad2ec(__context__,__ch1_rename_at_248_56,__ch2_rename_at_248_57),__context__,((LineInfoArg *)(&LineInfo::g_LineInfoNULL))))));
 }
 
-inline AutoVariant<regex::ReNode *,void *> re_char_ad3a1a9a724cb1d4 ( Context * __context__, char * const  __expr_rename_at_253_58, int32_t __offset_rename_at_253_59 )
+static inline AutoVariant<regex::ReNode *,void *> re_char_ad3a1a9a724cb1d4 ( Context * __context__, char * const  __expr_rename_at_253_58, int32_t __offset_rename_at_253_59 )
 {
     if ( eos_bcd93149648ad887(__context__,__expr_rename_at_253_58,__offset_rename_at_253_59) )
     {
@@ -752,7 +752,7 @@ inline AutoVariant<regex::ReNode *,void *> re_char_ad3a1a9a724cb1d4 ( Context * 
     };
 }
 
-inline AutoVariant<regex::ReNode *,void *> re_set_items_73cf660bb8bb0a00 ( Context * __context__, char * const  __expr_rename_at_302_66, int32_t __offset_rename_at_302_67 )
+static inline AutoVariant<regex::ReNode *,void *> re_set_items_73cf660bb8bb0a00 ( Context * __context__, char * const  __expr_rename_at_302_66, int32_t __offset_rename_at_302_67 )
 {
     if ( eos_bcd93149648ad887(__context__,__expr_rename_at_302_66,__offset_rename_at_302_67) )
     {
@@ -869,7 +869,7 @@ inline AutoVariant<regex::ReNode *,void *> re_set_items_73cf660bb8bb0a00 ( Conte
     };
 }
 
-inline AutoVariant<regex::ReNode *,void *> re_set_a55f6e80806300ed ( Context * __context__, char * const  __expr_rename_at_404_79, int32_t __offset_rename_at_404_80 )
+static inline AutoVariant<regex::ReNode *,void *> re_set_a55f6e80806300ed ( Context * __context__, char * const  __expr_rename_at_404_79, int32_t __offset_rename_at_404_80 )
 {
     if ( eos_bcd93149648ad887(__context__,__expr_rename_at_404_79,__offset_rename_at_404_80) )
     {
@@ -909,7 +909,7 @@ inline AutoVariant<regex::ReNode *,void *> re_set_a55f6e80806300ed ( Context * _
     };
 }
 
-inline AutoVariant<regex::ReNode *,void *> re_any_9e5c841624efd77c ( Context * __context__, char * const  __expr_rename_at_438_84, int32_t __offset_rename_at_438_85 )
+static inline AutoVariant<regex::ReNode *,void *> re_any_9e5c841624efd77c ( Context * __context__, char * const  __expr_rename_at_438_84, int32_t __offset_rename_at_438_85 )
 {
     if ( eos_bcd93149648ad887(__context__,__expr_rename_at_438_84,__offset_rename_at_438_85) )
     {
@@ -930,7 +930,7 @@ inline AutoVariant<regex::ReNode *,void *> re_any_9e5c841624efd77c ( Context * _
     };
 }
 
-inline AutoVariant<regex::ReNode *,void *> re_eos_91af11e09a55593b ( Context * __context__, char * const  __expr_rename_at_450_86, int32_t __offset_rename_at_450_87 )
+static inline AutoVariant<regex::ReNode *,void *> re_eos_91af11e09a55593b ( Context * __context__, char * const  __expr_rename_at_450_86, int32_t __offset_rename_at_450_87 )
 {
     if ( eos_bcd93149648ad887(__context__,__expr_rename_at_450_86,__offset_rename_at_450_87) )
     {
@@ -951,7 +951,7 @@ inline AutoVariant<regex::ReNode *,void *> re_eos_91af11e09a55593b ( Context * _
     };
 }
 
-inline AutoVariant<regex::ReNode *,void *> re_group_a76956b21d051425 ( Context * __context__, char * const  __expr_rename_at_462_88, int32_t __offset_rename_at_462_89 )
+static inline AutoVariant<regex::ReNode *,void *> re_group_a76956b21d051425 ( Context * __context__, char * const  __expr_rename_at_462_88, int32_t __offset_rename_at_462_89 )
 {
     if ( eos_bcd93149648ad887(__context__,__expr_rename_at_462_88,__offset_rename_at_462_89) )
     {
@@ -985,7 +985,7 @@ inline AutoVariant<regex::ReNode *,void *> re_group_a76956b21d051425 ( Context *
     };
 }
 
-inline AutoVariant<regex::ReNode *,void *> re_elementary_8e517f8be58bf1a6 ( Context * __context__, char * const  __expr_rename_at_482_91, int32_t __offset_rename_at_482_92 )
+static inline AutoVariant<regex::ReNode *,void *> re_elementary_8e517f8be58bf1a6 ( Context * __context__, char * const  __expr_rename_at_482_91, int32_t __offset_rename_at_482_92 )
 {
     if ( eos_bcd93149648ad887(__context__,__expr_rename_at_482_91,__offset_rename_at_482_92) )
     {
@@ -1025,7 +1025,7 @@ inline AutoVariant<regex::ReNode *,void *> re_elementary_8e517f8be58bf1a6 ( Cont
     };
 }
 
-inline regex::ReNode * mk_concat_913ccfa999a26595 ( Context * __context__, regex::ReNode * __left_rename_at_510_98, regex::ReNode * __right_rename_at_510_99 )
+static inline regex::ReNode * mk_concat_913ccfa999a26595 ( Context * __context__, regex::ReNode * __left_rename_at_510_98, regex::ReNode * __right_rename_at_510_99 )
 {
     if ( __left_rename_at_510_98 == nullptr )
     {
@@ -1059,7 +1059,7 @@ inline regex::ReNode * mk_concat_913ccfa999a26595 ( Context * __context__, regex
     };
 }
 
-inline regex::ReNode * mk_union_3fd1209b4c81276d ( Context * __context__, regex::ReNode * __left_rename_at_538_101, regex::ReNode * __right_rename_at_538_102 )
+static inline regex::ReNode * mk_union_3fd1209b4c81276d ( Context * __context__, regex::ReNode * __left_rename_at_538_101, regex::ReNode * __right_rename_at_538_102 )
 {
     if ( __left_rename_at_538_101->op == DAS_COMMENT(enum) regex::ReOp::Union )
     {
@@ -1105,7 +1105,7 @@ inline regex::ReNode * mk_union_3fd1209b4c81276d ( Context * __context__, regex:
     };
 }
 
-inline AutoVariant<regex::ReNode *,void *> re_re_57e53314b2b816e9 ( Context * __context__, char * const  __expr_rename_at_565_104, int32_t __offset_rename_at_565_105 )
+static inline AutoVariant<regex::ReNode *,void *> re_re_57e53314b2b816e9 ( Context * __context__, char * const  __expr_rename_at_565_104, int32_t __offset_rename_at_565_105 )
 {
     if ( eos_bcd93149648ad887(__context__,__expr_rename_at_565_104,__offset_rename_at_565_105) )
     {
@@ -1147,7 +1147,7 @@ inline AutoVariant<regex::ReNode *,void *> re_re_57e53314b2b816e9 ( Context * __
     };
 }
 
-inline AutoVariant<regex::ReNode *,void *> re_basic_15c8a30187b8f90a ( Context * __context__, char * const  __expr_rename_at_600_110, int32_t __offset_rename_at_600_111 )
+static inline AutoVariant<regex::ReNode *,void *> re_basic_15c8a30187b8f90a ( Context * __context__, char * const  __expr_rename_at_600_110, int32_t __offset_rename_at_600_111 )
 {
     if ( eos_bcd93149648ad887(__context__,__expr_rename_at_600_110,__offset_rename_at_600_111) )
     {
@@ -1195,7 +1195,7 @@ inline AutoVariant<regex::ReNode *,void *> re_basic_15c8a30187b8f90a ( Context *
     };
 }
 
-inline regex::ReNode * re_parse_a11fbde82111aa69 ( Context * __context__, char * const  __expr_rename_at_620_114 )
+static inline regex::ReNode * re_parse_a11fbde82111aa69 ( Context * __context__, char * const  __expr_rename_at_620_114 )
 {
     AutoVariant<regex::ReNode *,void *> __ore_rename_at_621_115 = re_re_57e53314b2b816e9(__context__,__expr_rename_at_620_114,0);
     if ( das_get_auto_variant_field<void *,1,regex::ReNode *,void *>::is(__ore_rename_at_621_115) )
@@ -1207,7 +1207,7 @@ inline regex::ReNode * re_parse_a11fbde82111aa69 ( Context * __context__, char *
     };
 }
 
-inline void visit_top_down_4fecc3dfe95f303c ( Context * __context__, regex::ReNode * __node_rename_at_633_117, Block DAS_COMMENT((void,regex::ReNode *)) const  &  __blk_rename_at_633_118 )
+static inline void visit_top_down_4fecc3dfe95f303c ( Context * __context__, regex::ReNode * __node_rename_at_633_117, Block DAS_COMMENT((void,regex::ReNode *)) const  &  __blk_rename_at_633_118 )
 {
     das_invoke<void>::invoke<regex::ReNode *>(__context__,nullptr,__blk_rename_at_633_118,__node_rename_at_633_117);
     {
@@ -1236,7 +1236,7 @@ inline void visit_top_down_4fecc3dfe95f303c ( Context * __context__, regex::ReNo
     };
 }
 
-inline void re_assign_next_18621bfa0d3dbb85 ( Context * __context__, regex::Regex &  __re_rename_at_649_120 ) { das_stack_prologue __prologue(__context__,128,"re_assign_next " DAS_FILE_LINE);
+static inline void re_assign_next_18621bfa0d3dbb85 ( Context * __context__, regex::Regex &  __re_rename_at_649_120 ) { das_stack_prologue __prologue(__context__,128,"re_assign_next " DAS_FILE_LINE);
 {
     int32_t __id_rename_at_650_121 = 0;
     visit_top_down_4fecc3dfe95f303c(__context__,__re_rename_at_649_120.root,das_make_block<void,regex::ReNode *>(__context__,96,0,&__func_info__8b6d6c464a360a4f,[&](regex::ReNode * __node_rename_at_651_122) -> void{
@@ -1266,7 +1266,7 @@ inline void re_assign_next_18621bfa0d3dbb85 ( Context * __context__, regex::Rege
     }));
 }}
 
-inline void re_assign_groups_269827e3d8834c3a ( Context * __context__, regex::Regex &  __re_rename_at_666_124 ) { das_stack_prologue __prologue(__context__,144,"re_assign_groups " DAS_FILE_LINE);
+static inline void re_assign_groups_269827e3d8834c3a ( Context * __context__, regex::Regex &  __re_rename_at_666_124 ) { das_stack_prologue __prologue(__context__,144,"re_assign_groups " DAS_FILE_LINE);
 {
     AutoTuple<range,char *> _temp_make_local_667_21_32; _temp_make_local_667_21_32;
     _FuncbuiltinTickpushTick10769833213962245646_689721e2e03454a5(__context__,das_arg<TArray<AutoTuple<range,char *>>>::pass(__re_rename_at_666_124.groups),das_arg<AutoTuple<range,char *>>::pass((([&]() -> AutoTuple<range,char *>& {
@@ -1289,7 +1289,7 @@ inline void re_assign_groups_269827e3d8834c3a ( Context * __context__, regex::Re
     }));
 }}
 
-inline void re_assign_match_functions_d1123942ad08a870 ( Context * __context__, regex::Regex &  __re_rename_at_681_127 ) { das_stack_prologue __prologue(__context__,96,"re_assign_match_functions " DAS_FILE_LINE);
+static inline void re_assign_match_functions_d1123942ad08a870 ( Context * __context__, regex::Regex &  __re_rename_at_681_127 ) { das_stack_prologue __prologue(__context__,96,"re_assign_match_functions " DAS_FILE_LINE);
 {
     visit_top_down_4fecc3dfe95f303c(__context__,__re_rename_at_681_127.root,das_make_block<void,regex::ReNode *>(__context__,80,0,&__func_info__8b6d6c464a360a4f,[&](regex::ReNode * __node_rename_at_682_128) -> void{
         if ( __node_rename_at_682_128->op == DAS_COMMENT(enum) regex::ReOp::Char )
@@ -1350,7 +1350,7 @@ inline void re_assign_match_functions_d1123942ad08a870 ( Context * __context__, 
     }));
 }}
 
-inline uint8_t const  * re_match2_single_char_efd3120a5ed2dc78 ( Context * __context__, regex::Regex &  __regex_rename_at_730_129, regex::ReNode * __node_rename_at_730_130, uint8_t const  * const  __str_rename_at_730_131 )
+static inline uint8_t const  * re_match2_single_char_efd3120a5ed2dc78 ( Context * __context__, regex::Regex &  __regex_rename_at_730_129, regex::ReNode * __node_rename_at_730_130, uint8_t const  * const  __str_rename_at_730_131 )
 {
     if ( das_equ_val((*(__str_rename_at_730_131)),0x0) )
     {
@@ -1368,7 +1368,7 @@ inline uint8_t const  * re_match2_single_char_efd3120a5ed2dc78 ( Context * __con
     };
 }
 
-inline uint8_t const  * re_match2_char_563cc8699254595c ( Context * __context__, regex::Regex &  __regex_rename_at_753_134, regex::ReNode * __node_rename_at_753_135, uint8_t const  * const  __str_rename_at_753_136 )
+static inline uint8_t const  * re_match2_char_563cc8699254595c ( Context * __context__, regex::Regex &  __regex_rename_at_753_134, regex::ReNode * __node_rename_at_753_135, uint8_t const  * const  __str_rename_at_753_136 )
 {
     if ( das_equ_val((*(__str_rename_at_753_136)),0x0) )
     {
@@ -1386,7 +1386,7 @@ inline uint8_t const  * re_match2_char_563cc8699254595c ( Context * __context__,
     };
 }
 
-inline uint8_t const  * re_match2_union_483bf85dbc5196dd ( Context * __context__, regex::Regex &  __regex_rename_at_779_139, regex::ReNode * __node_rename_at_779_140, uint8_t const  * const  __str_rename_at_779_141 )
+static inline uint8_t const  * re_match2_union_483bf85dbc5196dd ( Context * __context__, regex::Regex &  __regex_rename_at_779_139, regex::ReNode * __node_rename_at_779_140, uint8_t const  * const  __str_rename_at_779_141 )
 {
     if ( das_equ_val((*(__str_rename_at_779_141)),0x0) )
     {
@@ -1413,7 +1413,7 @@ inline uint8_t const  * re_match2_union_483bf85dbc5196dd ( Context * __context__
     };
 }
 
-inline uint8_t const  * re_match2_set_31b09b463a9d7b2b ( Context * __context__, regex::Regex &  __regex_rename_at_797_144, regex::ReNode * __node_rename_at_797_145, uint8_t const  * const  __str_rename_at_797_146 )
+static inline uint8_t const  * re_match2_set_31b09b463a9d7b2b ( Context * __context__, regex::Regex &  __regex_rename_at_797_144, regex::ReNode * __node_rename_at_797_145, uint8_t const  * const  __str_rename_at_797_146 )
 {
     if ( das_equ_val((*(__str_rename_at_797_146)),0x0) )
     {
@@ -1431,7 +1431,7 @@ inline uint8_t const  * re_match2_set_31b09b463a9d7b2b ( Context * __context__, 
     };
 }
 
-inline uint8_t const  * re_match2_any_9b00b66687d95b62 ( Context * __context__, regex::Regex &  __regex_rename_at_820_149, regex::ReNode * __node_rename_at_820_150, uint8_t const  * const  __str_rename_at_820_151 )
+static inline uint8_t const  * re_match2_any_9b00b66687d95b62 ( Context * __context__, regex::Regex &  __regex_rename_at_820_149, regex::ReNode * __node_rename_at_820_150, uint8_t const  * const  __str_rename_at_820_151 )
 {
     if ( das_equ_val((*(__str_rename_at_820_151)),0x0) )
     {
@@ -1444,7 +1444,7 @@ inline uint8_t const  * re_match2_any_9b00b66687d95b62 ( Context * __context__, 
     };
 }
 
-inline uint8_t const  * re_match2_concat_2bd31fc7755cdf2a ( Context * __context__, regex::Regex &  __regex_rename_at_840_154, regex::ReNode * __node_rename_at_840_155, uint8_t const  * const  __str_rename_at_840_156 )
+static inline uint8_t const  * re_match2_concat_2bd31fc7755cdf2a ( Context * __context__, regex::Regex &  __regex_rename_at_840_154, regex::ReNode * __node_rename_at_840_155, uint8_t const  * const  __str_rename_at_840_156 )
 {
     if ( das_equ_val((*(__str_rename_at_840_156)),0x0) )
     {
@@ -1462,7 +1462,7 @@ inline uint8_t const  * re_match2_concat_2bd31fc7755cdf2a ( Context * __context_
     };
 }
 
-inline uint8_t const  * re_match2_eos_a35408df9434ba3c ( Context * __context__, regex::Regex &  __regex_rename_at_857_159, regex::ReNode * __node_rename_at_857_160, uint8_t const  * const  __str_rename_at_857_161 )
+static inline uint8_t const  * re_match2_eos_a35408df9434ba3c ( Context * __context__, regex::Regex &  __regex_rename_at_857_159, regex::ReNode * __node_rename_at_857_160, uint8_t const  * const  __str_rename_at_857_161 )
 {
     if ( das_nequ_val((*(__str_rename_at_857_161)),0x0) )
     {
@@ -1474,7 +1474,7 @@ inline uint8_t const  * re_match2_eos_a35408df9434ba3c ( Context * __context__, 
     };
 }
 
-inline uint8_t const  * re_match2_question_4acdfdc420ce399a ( Context * __context__, regex::Regex &  __regex_rename_at_874_163, regex::ReNode * __node_rename_at_874_164, uint8_t const  * const  __str_rename_at_874_165 )
+static inline uint8_t const  * re_match2_question_4acdfdc420ce399a ( Context * __context__, regex::Regex &  __regex_rename_at_874_163, regex::ReNode * __node_rename_at_874_164, uint8_t const  * const  __str_rename_at_874_165 )
 {
     regex::ReNode * __nsub_rename_at_878_166 = __node_rename_at_874_164->subexpr;
     uint8_t const  * __tail_rename_at_879_167 = das_invoke_function<uint8_t const  *>::invoke<regex::Regex &,regex::ReNode *,uint8_t const  * const >(__context__,nullptr,__nsub_rename_at_878_166->fun2,das_arg<regex::Regex>::pass(__regex_rename_at_874_163),__nsub_rename_at_878_166,__str_rename_at_874_165);
@@ -1487,7 +1487,7 @@ inline uint8_t const  * re_match2_question_4acdfdc420ce399a ( Context * __contex
     return das_auto_cast<uint8_t const  *>::cast((__node2_rename_at_884_168 != nullptr) ? das_auto_cast<uint8_t const  *>::cast(das_invoke_function<uint8_t const  *>::invoke<regex::Regex &,regex::ReNode *,uint8_t const  *>(__context__,nullptr,__node2_rename_at_884_168->fun2,das_arg<regex::Regex>::pass(__regex_rename_at_874_163),__node2_rename_at_884_168,__tail_rename_at_879_167)) : das_auto_cast<uint8_t const  *>::cast(__tail_rename_at_879_167));
 }
 
-inline uint8_t const  * re_match2_plus_adb26cc707eb0c55 ( Context * __context__, regex::Regex &  __regex_rename_at_893_169, regex::ReNode * __node_rename_at_893_170, uint8_t const  * const  __str_rename_at_893_171 )
+static inline uint8_t const  * re_match2_plus_adb26cc707eb0c55 ( Context * __context__, regex::Regex &  __regex_rename_at_893_169, regex::ReNode * __node_rename_at_893_170, uint8_t const  * const  __str_rename_at_893_171 )
 {
     if ( das_equ_val((*(__str_rename_at_893_171)),0x0) )
     {
@@ -1528,7 +1528,7 @@ inline uint8_t const  * re_match2_plus_adb26cc707eb0c55 ( Context * __context__,
     };
 }
 
-inline uint8_t const  * re_match2_plus_set_aeb296540242ef22 ( Context * __context__, regex::Regex &  __regex_rename_at_928_177, regex::ReNode * __node_rename_at_928_178, uint8_t const  * const  __str_rename_at_928_179 )
+static inline uint8_t const  * re_match2_plus_set_aeb296540242ef22 ( Context * __context__, regex::Regex &  __regex_rename_at_928_177, regex::ReNode * __node_rename_at_928_178, uint8_t const  * const  __str_rename_at_928_179 )
 {
     if ( das_equ_val((*(__str_rename_at_928_179)),0x0) )
     {
@@ -1578,7 +1578,7 @@ inline uint8_t const  * re_match2_plus_set_aeb296540242ef22 ( Context * __contex
     };
 }
 
-inline uint8_t const  * re_match2_star_bb64c06dd606906e ( Context * __context__, regex::Regex &  __regex_rename_at_971_184, regex::ReNode * __node_rename_at_971_185, uint8_t const  * const  __str_rename_at_971_186 )
+static inline uint8_t const  * re_match2_star_bb64c06dd606906e ( Context * __context__, regex::Regex &  __regex_rename_at_971_184, regex::ReNode * __node_rename_at_971_185, uint8_t const  * const  __str_rename_at_971_186 )
 {
     uint8_t const  * __ofs_rename_at_975_187 = __str_rename_at_971_186;
     regex::ReNode * __node2_rename_at_976_188 = __node_rename_at_971_185->next;
@@ -1609,7 +1609,7 @@ inline uint8_t const  * re_match2_star_bb64c06dd606906e ( Context * __context__,
     };
 }
 
-inline uint8_t const  * re_match2_group_82784eced054ba4e ( Context * __context__, regex::Regex &  __regex_rename_at_1000_192, regex::ReNode * __node_rename_at_1000_193, uint8_t const  * const  __str_rename_at_1000_194 )
+static inline uint8_t const  * re_match2_group_82784eced054ba4e ( Context * __context__, regex::Regex &  __regex_rename_at_1000_192, regex::ReNode * __node_rename_at_1000_193, uint8_t const  * const  __str_rename_at_1000_194 )
 {
     if ( das_equ_val((*(__str_rename_at_1000_194)),0x0) )
     {
@@ -1627,7 +1627,7 @@ inline uint8_t const  * re_match2_group_82784eced054ba4e ( Context * __context__
     };
 }
 
-inline bool re_early_out_80d62a0fdd14cb06 ( Context * __context__, TDim<uint32_t,8> &  __cset_rename_at_1020_197, regex::ReNode * const  __node_rename_at_1020_198 )
+static inline bool re_early_out_80d62a0fdd14cb06 ( Context * __context__, TDim<uint32_t,8> &  __cset_rename_at_1020_197, regex::ReNode * const  __node_rename_at_1020_198 )
 {
     if ( __node_rename_at_1020_198->op == DAS_COMMENT(enum) regex::ReOp::Char )
     {
@@ -1695,12 +1695,12 @@ inline bool re_early_out_80d62a0fdd14cb06 ( Context * __context__, TDim<uint32_t
     };
 }
 
-inline bool is_valid_87c94e9920e8a112 ( Context * __context__, regex::Regex &  __re_rename_at_1063_203 )
+static inline bool is_valid_87c94e9920e8a112 ( Context * __context__, regex::Regex &  __re_rename_at_1063_203 )
 {
     return das_auto_cast<bool>::cast(__re_rename_at_1063_203.root != nullptr);
 }
 
-inline bool regex_compile_b802a48fba17c551 ( Context * __context__, regex::Regex &  __re_rename_at_1068_204, char * const  __expr_rename_at_1068_205 )
+static inline bool regex_compile_b802a48fba17c551 ( Context * __context__, regex::Regex &  __re_rename_at_1068_204, char * const  __expr_rename_at_1068_205 )
 {
     das_copy(__re_rename_at_1068_204.root,re_parse_a11fbde82111aa69(__context__,__expr_rename_at_1068_205));
     if ( __re_rename_at_1068_204.root != nullptr )
@@ -1714,7 +1714,7 @@ inline bool regex_compile_b802a48fba17c551 ( Context * __context__, regex::Regex
     return das_auto_cast<bool>::cast(__re_rename_at_1068_204.root != nullptr);
 }
 
-inline regex::Regex regex_compile_d14729dab5987744 ( Context * __context__, char * const  __expr_rename_at_1082_206 )
+static inline regex::Regex regex_compile_9c6bbe3f7bf967b8 ( Context * __context__, char * const  __expr_rename_at_1082_206 )
 {
     regex::Regex __re_rename_at_1083_207;das_zero(__re_rename_at_1083_207);
     if ( !regex_compile_b802a48fba17c551(__context__,das_arg<regex::Regex>::pass(__re_rename_at_1083_207),__expr_rename_at_1082_206) )
@@ -1724,7 +1724,7 @@ inline regex::Regex regex_compile_d14729dab5987744 ( Context * __context__, char
     return /* <- */ das_auto_cast_move<regex::Regex>::cast(_FuncbuiltinTick_return_with_lockcheckTick2939372000839727345_182d4b6f1ba86427(__context__,das_arg<regex::Regex>::pass(__re_rename_at_1083_207)));
 }
 
-inline regex::Regex regex_compile_8b8cd96a70efcb1c ( Context * __context__, regex::Regex &  __re_rename_at_1090_208 )
+static inline regex::Regex regex_compile_8b8cd96a70efcb1c ( Context * __context__, regex::Regex &  __re_rename_at_1090_208 )
 {
     if ( __re_rename_at_1090_208.root != nullptr )
     {
@@ -1734,7 +1734,7 @@ inline regex::Regex regex_compile_8b8cd96a70efcb1c ( Context * __context__, rege
     return /* <- */ das_auto_cast_move<regex::Regex>::cast(_FuncbuiltinTick_return_with_lockcheckTick2939372000839727345_182d4b6f1ba86427(__context__,das_arg<regex::Regex>::pass(__re_rename_at_1090_208)));
 }
 
-inline int32_t regex_match_d1084a47d6e2d53e ( Context * __context__, regex::Regex &  __regex_rename_at_1098_209, char * const  __str_rename_at_1098_210, int32_t __offset_rename_at_1098_211 )
+static inline int32_t regex_match_d1084a47d6e2d53e ( Context * __context__, regex::Regex &  __regex_rename_at_1098_209, char * const  __str_rename_at_1098_210, int32_t __offset_rename_at_1098_211 )
 {
     if ( builtin_empty(__str_rename_at_1098_210) )
     {
@@ -1746,13 +1746,13 @@ inline int32_t regex_match_d1084a47d6e2d53e ( Context * __context__, regex::Rege
     };
 }
 
-inline char * regex_group_f150ed72d9c6b909 ( Context * __context__, regex::Regex const  &  __regex_rename_at_1117_213, int32_t __index_rename_at_1117_214, char * const  __match_rename_at_1117_215 )
+static inline char * regex_group_f150ed72d9c6b909 ( Context * __context__, regex::Regex const  &  __regex_rename_at_1117_213, int32_t __index_rename_at_1117_214, char * const  __match_rename_at_1117_215 )
 {
     range __sub_range_rename_at_1119_216 = ((range)das_get_auto_tuple_field<range,0,range,char *>::get(__regex_rename_at_1117_213.groups(__index_rename_at_1117_214,__context__)));
     return das_auto_cast<char *>::cast(((char * const )(builtin_string_slice1(__match_rename_at_1117_215,v_extract_xi(v_cast_vec4i(__sub_range_rename_at_1119_216)) /*x*/,v_extract_yi(v_cast_vec4i(__sub_range_rename_at_1119_216)) /*y*/,__context__,((LineInfoArg *)(&LineInfo::g_LineInfoNULL))))));
 }
 
-inline void regex_foreach_7115f79e7b67800f ( Context * __context__, regex::Regex &  __regex_rename_at_1124_217, char * const  __str_rename_at_1124_218, Block DAS_COMMENT((bool,range)) const  &  __blk_rename_at_1124_219 )
+static inline void regex_foreach_7115f79e7b67800f ( Context * __context__, regex::Regex &  __regex_rename_at_1124_217, char * const  __str_rename_at_1124_218, Block DAS_COMMENT((bool,range)) const  &  __blk_rename_at_1124_219 )
 {
     if ( builtin_empty(__str_rename_at_1124_218) )
     {
@@ -1810,7 +1810,7 @@ inline void regex_foreach_7115f79e7b67800f ( Context * __context__, regex::Regex
     };
 }
 
-inline char * regex_replace_6c020ee2b76e6419 ( Context * __context__, regex::Regex &  __regex_rename_at_1172_226, char * const  __str_rename_at_1172_227, Block DAS_COMMENT((char *,char * const )) const  &  __blk_rename_at_1172_228 )
+static inline char * regex_replace_6c020ee2b76e6419 ( Context * __context__, regex::Regex &  __regex_rename_at_1172_226, char * const  __str_rename_at_1172_227, Block DAS_COMMENT((char *,char * const )) const  &  __blk_rename_at_1172_228 )
 {
     return das_auto_cast<char *>::cast(builtin_empty(__str_rename_at_1172_227) ? das_auto_cast<char * const >::cast(nullptr) : das_auto_cast<char * const >::cast(((char * const )(builtin_build_string_T([&](StringBuilderWriter & __writer_rename_at_1178_229) DAS_AOT_INLINE_LAMBDA -> void{
         das_copy(__regex_rename_at_1172_226.match,das_cast<uint8_t const  *>::cast(__str_rename_at_1172_227));
@@ -1862,7 +1862,7 @@ inline char * regex_replace_6c020ee2b76e6419 ( Context * __context__, regex::Reg
     },__context__,((LineInfoArg *)(&LineInfo::g_LineInfoNULL)))))));
 }
 
-inline void regex_debug_35a427292763c452 ( Context * __context__, regex::Regex const  &  __regex_rename_at_1226_238 )
+static inline void regex_debug_35a427292763c452 ( Context * __context__, regex::Regex const  &  __regex_rename_at_1226_238 )
 {
     debug_re_f8fd4cc00f0dc78d(__context__,__regex_rename_at_1226_238.root,1);
     builtin_print(((char *) "\n"),__context__,((LineInfoArg *)(&LineInfo::g_LineInfoNULL)));
@@ -1890,7 +1890,7 @@ inline void regex_debug_35a427292763c452 ( Context * __context__, regex::Regex c
     };
 }
 
-inline void debug_set_13e232e40e242fa0 ( Context * __context__, TDim<uint32_t,8> const  &  __cset_rename_at_1243_240 )
+static inline void debug_set_13e232e40e242fa0 ( Context * __context__, TDim<uint32_t,8> const  &  __cset_rename_at_1243_240 )
 {
     {
         bool __need_loop_1245 = true;
@@ -1914,7 +1914,7 @@ inline void debug_set_13e232e40e242fa0 ( Context * __context__, TDim<uint32_t,8>
     };
 }
 
-inline void debug_re_f8fd4cc00f0dc78d ( Context * __context__, regex::ReNode * const  __node_rename_at_1256_242, int32_t __tab_rename_at_1256_243 )
+static inline void debug_re_f8fd4cc00f0dc78d ( Context * __context__, regex::ReNode * const  __node_rename_at_1256_242, int32_t __tab_rename_at_1256_243 )
 {
     builtin_print(((char *) "("),__context__,((LineInfoArg *)(&LineInfo::g_LineInfoNULL)));
     if ( __node_rename_at_1256_242 != nullptr )
@@ -1996,7 +1996,7 @@ inline void debug_re_f8fd4cc00f0dc78d ( Context * __context__, regex::ReNode * c
     };
 }
 
-inline int32_t rnd_set_character_6517e452a18c5606 ( Context * __context__, TDim<uint32_t,8> const  &  __cset_rename_at_1317_245, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1317_246 )
+static inline int32_t rnd_set_character_6517e452a18c5606 ( Context * __context__, TDim<uint32_t,8> const  &  __cset_rename_at_1317_245, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1317_246 )
 {
     uint32_t __total_rename_at_1318_247 = ((uint32_t)char_set_total(__cset_rename_at_1317_245));
     uint32_t __idx_rename_at_1319_248 = 0x0u;
@@ -2005,12 +2005,12 @@ inline int32_t rnd_set_character_6517e452a18c5606 ( Context * __context__, TDim<
     return das_auto_cast<int32_t>::cast(char_set_element(int32_t(__idx_rename_at_1319_248),__cset_rename_at_1317_245));
 }
 
-inline void re_gen2_fail_a5fdf20930267896 ( Context * __context__, regex::ReNode * __node_rename_at_1325_249, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1325_250, StringBuilderWriter &  __str_rename_at_1325_251 )
+static inline void re_gen2_fail_a5fdf20930267896 ( Context * __context__, regex::ReNode * __node_rename_at_1325_249, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1325_250, StringBuilderWriter &  __str_rename_at_1325_251 )
 {
     DAS_ASSERTF((false),(((char *) "not running generated regex")));
 }
 
-inline void re_gen2_char_e6b9f720990cc2d7 ( Context * __context__, regex::ReNode * __node_rename_at_1332_252, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1332_253, StringBuilderWriter &  __str_rename_at_1332_254 )
+static inline void re_gen2_char_e6b9f720990cc2d7 ( Context * __context__, regex::ReNode * __node_rename_at_1332_252, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1332_253, StringBuilderWriter &  __str_rename_at_1332_254 )
 {
     das_call_interop<StringBuilderWriter &>::call(&builtin_write_string,__context__,SimNode_AotInterop<2>(__tinfo_22,cast<StringBuilderWriter &>::from(__str_rename_at_1332_254),cast<char *>::from(__node_rename_at_1332_252->text)));
     regex::ReNode * __node2_rename_at_1337_255 = __node_rename_at_1332_252->next;
@@ -2020,7 +2020,7 @@ inline void re_gen2_char_e6b9f720990cc2d7 ( Context * __context__, regex::ReNode
     };
 }
 
-inline void re_gen2_union_44153b0e184e2888 ( Context * __context__, regex::ReNode * __node_rename_at_1343_256, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1343_257, StringBuilderWriter &  __str_rename_at_1343_258 )
+static inline void re_gen2_union_44153b0e184e2888 ( Context * __context__, regex::ReNode * __node_rename_at_1343_256, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1343_257, StringBuilderWriter &  __str_rename_at_1343_258 )
 {
     uint32_t __nidx_rename_at_1347_259 = 0x0u;
     _FuncbuiltinTicknextTick17450348357676149856_78a056decb3ca45d(__context__,das_arg<Sequence DAS_COMMENT((uint32_t))>::pass(__rnd_rename_at_1343_257),__nidx_rename_at_1347_259);
@@ -2029,7 +2029,7 @@ inline void re_gen2_union_44153b0e184e2888 ( Context * __context__, regex::ReNod
     das_invoke_function<void>::invoke<regex::ReNode *,Sequence DAS_COMMENT((uint32_t)) &,StringBuilderWriter &>(__context__,nullptr,__sub_rename_at_1350_260->gen2,__sub_rename_at_1350_260,das_arg<Sequence DAS_COMMENT((uint32_t))>::pass(__rnd_rename_at_1343_257),das_arg<StringBuilderWriter>::pass(__str_rename_at_1343_258));
 }
 
-inline void re_gen2_set_5483397ec36cfff0 ( Context * __context__, regex::ReNode * __node_rename_at_1354_261, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1354_262, StringBuilderWriter &  __str_rename_at_1354_263 )
+static inline void re_gen2_set_5483397ec36cfff0 ( Context * __context__, regex::ReNode * __node_rename_at_1354_261, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1354_262, StringBuilderWriter &  __str_rename_at_1354_263 )
 {
     write_string_char(das_arg<StringBuilderWriter>::pass(__str_rename_at_1354_263),rnd_set_character_6517e452a18c5606(__context__,das_arg<TDim<uint32_t,8>>::pass(__node_rename_at_1354_261->cset),das_arg<Sequence DAS_COMMENT((uint32_t))>::pass(__rnd_rename_at_1354_262)));
     regex::ReNode * __node2_rename_at_1359_264 = __node_rename_at_1354_261->next;
@@ -2039,7 +2039,7 @@ inline void re_gen2_set_5483397ec36cfff0 ( Context * __context__, regex::ReNode 
     };
 }
 
-inline void re_gen2_any_200931e8e5db950 ( Context * __context__, regex::ReNode * __node_rename_at_1365_265, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1365_266, StringBuilderWriter &  __str_rename_at_1365_267 )
+static inline void re_gen2_any_200931e8e5db950 ( Context * __context__, regex::ReNode * __node_rename_at_1365_265, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1365_266, StringBuilderWriter &  __str_rename_at_1365_267 )
 {
     uint32_t __ch_rename_at_1369_268 = 0;
     _FuncbuiltinTicknextTick17450348357676149856_78a056decb3ca45d(__context__,das_arg<Sequence DAS_COMMENT((uint32_t))>::pass(__rnd_rename_at_1365_266),__ch_rename_at_1369_268);
@@ -2051,13 +2051,13 @@ inline void re_gen2_any_200931e8e5db950 ( Context * __context__, regex::ReNode *
     };
 }
 
-inline void re_gen2_concat_bb7cd4a1d8751a6c ( Context * __context__, regex::ReNode * __node_rename_at_1378_270, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1378_271, StringBuilderWriter &  __str_rename_at_1378_272 )
+static inline void re_gen2_concat_bb7cd4a1d8751a6c ( Context * __context__, regex::ReNode * __node_rename_at_1378_270, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1378_271, StringBuilderWriter &  __str_rename_at_1378_272 )
 {
     regex::ReNode * __left_rename_at_1382_273 = __node_rename_at_1378_270->left;
     das_invoke_function<void>::invoke<regex::ReNode *,Sequence DAS_COMMENT((uint32_t)) &,StringBuilderWriter &>(__context__,nullptr,__left_rename_at_1382_273->gen2,__left_rename_at_1382_273,das_arg<Sequence DAS_COMMENT((uint32_t))>::pass(__rnd_rename_at_1378_271),das_arg<StringBuilderWriter>::pass(__str_rename_at_1378_272));
 }
 
-inline void re_gen2_eos_6a9fe263836b5d74 ( Context * __context__, regex::ReNode * __node_rename_at_1386_274, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1386_275, StringBuilderWriter &  __str_rename_at_1386_276 )
+static inline void re_gen2_eos_6a9fe263836b5d74 ( Context * __context__, regex::ReNode * __node_rename_at_1386_274, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1386_275, StringBuilderWriter &  __str_rename_at_1386_276 )
 {
     regex::ReNode * __node2_rename_at_1390_277 = __node_rename_at_1386_274->next;
     if ( __node2_rename_at_1390_277 != nullptr )
@@ -2066,7 +2066,7 @@ inline void re_gen2_eos_6a9fe263836b5d74 ( Context * __context__, regex::ReNode 
     };
 }
 
-inline void re_gen2_question_f2a2ead57fd4a9 ( Context * __context__, regex::ReNode * __node_rename_at_1396_278, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1396_279, StringBuilderWriter &  __str_rename_at_1396_280 )
+static inline void re_gen2_question_f2a2ead57fd4a9 ( Context * __context__, regex::ReNode * __node_rename_at_1396_278, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1396_279, StringBuilderWriter &  __str_rename_at_1396_280 )
 {
     uint32_t __a_rename_at_1400_281 = 0x0u;
     _FuncbuiltinTicknextTick17450348357676149856_78a056decb3ca45d(__context__,das_arg<Sequence DAS_COMMENT((uint32_t))>::pass(__rnd_rename_at_1396_279),__a_rename_at_1400_281);
@@ -2085,7 +2085,7 @@ inline void re_gen2_question_f2a2ead57fd4a9 ( Context * __context__, regex::ReNo
     };
 }
 
-inline void re_gen2_plus_9fe66025caf188a9 ( Context * __context__, regex::ReNode * __node_rename_at_1414_284, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1414_285, StringBuilderWriter &  __str_rename_at_1414_286 )
+static inline void re_gen2_plus_9fe66025caf188a9 ( Context * __context__, regex::ReNode * __node_rename_at_1414_284, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1414_285, StringBuilderWriter &  __str_rename_at_1414_286 )
 {
     uint32_t __cnt_rename_at_1418_287 = 0x0u;
     _FuncbuiltinTicknextTick17450348357676149856_78a056decb3ca45d(__context__,das_arg<Sequence DAS_COMMENT((uint32_t))>::pass(__rnd_rename_at_1414_285),__cnt_rename_at_1418_287);
@@ -2113,7 +2113,7 @@ inline void re_gen2_plus_9fe66025caf188a9 ( Context * __context__, regex::ReNode
     };
 }
 
-inline void re_gen2_star_5bbabd524a57385c ( Context * __context__, regex::ReNode * __node_rename_at_1433_291, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1433_292, StringBuilderWriter &  __str_rename_at_1433_293 )
+static inline void re_gen2_star_5bbabd524a57385c ( Context * __context__, regex::ReNode * __node_rename_at_1433_291, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1433_292, StringBuilderWriter &  __str_rename_at_1433_293 )
 {
     uint32_t __cnt_rename_at_1437_294 = 0x0u;
     _FuncbuiltinTicknextTick17450348357676149856_78a056decb3ca45d(__context__,das_arg<Sequence DAS_COMMENT((uint32_t))>::pass(__rnd_rename_at_1433_292),__cnt_rename_at_1437_294);
@@ -2141,7 +2141,7 @@ inline void re_gen2_star_5bbabd524a57385c ( Context * __context__, regex::ReNode
     };
 }
 
-inline void re_gen2_group_cc75131bc454c003 ( Context * __context__, regex::ReNode * __node_rename_at_1452_298, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1452_299, StringBuilderWriter &  __str_rename_at_1452_300 )
+static inline void re_gen2_group_cc75131bc454c003 ( Context * __context__, regex::ReNode * __node_rename_at_1452_298, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1452_299, StringBuilderWriter &  __str_rename_at_1452_300 )
 {
     regex::ReNode * __nsub_rename_at_1456_301 = __node_rename_at_1452_298->subexpr;
     if ( __nsub_rename_at_1456_301 != nullptr )
@@ -2155,7 +2155,7 @@ inline void re_gen2_group_cc75131bc454c003 ( Context * __context__, regex::ReNod
     };
 }
 
-inline char * re_gen_e78126cc4b992ab9 ( Context * __context__, regex::Regex &  __re_rename_at_1466_303, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1466_304 )
+static inline char * re_gen_e78126cc4b992ab9 ( Context * __context__, regex::Regex &  __re_rename_at_1466_303, Sequence DAS_COMMENT((uint32_t)) &  __rnd_rename_at_1466_304 )
 {
     return das_auto_cast<char *>::cast(((char * const )(builtin_build_string_T([&](StringBuilderWriter & __writer_rename_at_1467_305) DAS_AOT_INLINE_LAMBDA -> void{
         das_invoke_function<void>::invoke<regex::ReNode *,Sequence DAS_COMMENT((uint32_t)) &,StringBuilderWriter &>(__context__,nullptr,__re_rename_at_1466_303.root->gen2,__re_rename_at_1466_303.root,das_arg<Sequence DAS_COMMENT((uint32_t))>::pass(__rnd_rename_at_1466_304),das_arg<StringBuilderWriter>::pass(__writer_rename_at_1467_305));
@@ -2164,269 +2164,269 @@ inline char * re_gen_e78126cc4b992ab9 ( Context * __context__, regex::Regex &  _
 
 static void registerAotFunctions ( AotLibrary & aotLib ) {
     aotLib[0xca93cf324e9d39b4] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncbuiltinTickresizeTick4811697762258667383_839271fc9974c3bd>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTickresizeTick4811697762258667383_839271fc9974c3bd);
     };
     aotLib[0x5138dd10452ae233] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncbuiltinTickfinalizeTick13836114024949725080_93dd7ca7375a7759>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTickfinalizeTick13836114024949725080_93dd7ca7375a7759);
     };
     aotLib[0xa251302bc4e8ce68] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncbuiltinTicklengthTick18150397773952384912_fcdb4107749fac2d>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTicklengthTick18150397773952384912_fcdb4107749fac2d);
     };
     aotLib[0xf176e87a2566021] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&finalize_1b3fa79e78928d5e>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&finalize_1b3fa79e78928d5e);
     };
     aotLib[0x2bd7e08861206d71] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncbuiltinTick_return_with_lockcheckTick2939372000839727345_182d4b6f1ba86427>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTick_return_with_lockcheckTick2939372000839727345_182d4b6f1ba86427);
     };
     aotLib[0x5145cf36d3c6239d] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncregexTickfrom_hexTick16446213900708532977_faa1e859112ad2ec>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncregexTickfrom_hexTick16446213900708532977_faa1e859112ad2ec);
     };
     aotLib[0x83035a1531032165] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&finalize_4d9dff2c4111fea5>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&finalize_4d9dff2c4111fea5);
     };
     aotLib[0x1161b07eafefef67] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&finalize_2e3cca8177873ef7>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&finalize_2e3cca8177873ef7);
     };
     aotLib[0x3c5a74bd28e4f38d] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncbuiltinTickpushTick10769833213962245646_76636a7a79f1cc9>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTickpushTick10769833213962245646_76636a7a79f1cc9);
     };
     aotLib[0x3876842f774c9ed8] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_AotCMRES<&_FuncbuiltinTickto_array_moveTick3185538323411982277_d525ede85535d1d6>>();
+        return ctx.code->makeAotNode<SimNode_AotCMRES>(&_FuncbuiltinTickto_array_moveTick3185538323411982277_d525ede85535d1d6);
     };
     aotLib[0x304ae8111350c8ef] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncbuiltinTickpushTick10769833213962245646_689721e2e03454a5>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTickpushTick10769833213962245646_689721e2e03454a5);
     };
     aotLib[0x11fdc599388f444d] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncbuiltinTicknextTick17450348357676149856_78a056decb3ca45d>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncbuiltinTicknextTick17450348357676149856_78a056decb3ca45d);
     };
     aotLib[0x828562d5af4c8f1a] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_gen_get_rep_limit_aa71779c47fee5b8>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_gen_get_rep_limit_aa71779c47fee5b8);
     };
     aotLib[0x7ef31621d0849bdb] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&trace_7794f549fda55dde>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&trace_7794f549fda55dde);
     };
     aotLib[0x7ef31621d0849bdb] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&note_7794f549fda55dde>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&note_7794f549fda55dde);
     };
     aotLib[0x7bfa536a1eb16ea9] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&trace_backtrack_60bdee73e3315732>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&trace_backtrack_60bdee73e3315732);
     };
     aotLib[0xb158d3f3d67fbaf] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&trace_value_599ec0b97b535e0e>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&trace_value_599ec0b97b535e0e);
     };
     aotLib[0x4b0ef1fd815d7e51] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_AotCMRES<&nada_a36e274f9f880579>>();
+        return ctx.code->makeAotNode<SimNode_AotCMRES>(&nada_a36e274f9f880579);
     };
     aotLib[0x510151b6eeb5cda0] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_AotCMRES<&maybe_cb698f19184a9bc8>>();
+        return ctx.code->makeAotNode<SimNode_AotCMRES>(&maybe_cb698f19184a9bc8);
     };
     aotLib[0x9fa23e64f694fd37] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&eos_bcd93149648ad887>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&eos_bcd93149648ad887);
     };
     aotLib[0xd412d4b95b50aa6e] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&at_ac9760d67b4716d0>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&at_ac9760d67b4716d0);
     };
     aotLib[0x21b4c055ddc7e860] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&next_c7b14aa26d681478>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&next_c7b14aa26d681478);
     };
     aotLib[0x79ecf294045c1832] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&is_set_empty_1f052aa7f260c4eb>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&is_set_empty_1f052aa7f260c4eb);
     };
     aotLib[0x33463cf95c238469] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&set_or_char_5d5313390b879abc>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&set_or_char_5d5313390b879abc);
     };
     aotLib[0x24d714df9b7b9edb] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&set_or_range_40be02560bdb916d>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&set_or_range_40be02560bdb916d);
     };
     aotLib[0x80fffd977ea41e19] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&set_invert_4fb9b64ebf15e148>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&set_invert_4fb9b64ebf15e148);
     };
     aotLib[0xb2ff9bfa5c6f4854] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&set_or_set_f7fe9d5d2a5b194b>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&set_or_set_f7fe9d5d2a5b194b);
     };
     aotLib[0x6c973866131d87e7] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&set_negative_e65d971bcd9eb5c1>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&set_negative_e65d971bcd9eb5c1);
     };
     aotLib[0x9a6d7de69ba4503f] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&set_meta_4ca7bb80700cac47>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&set_meta_4ca7bb80700cac47);
     };
     aotLib[0xc995192cd4fe44d7] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&is_meta_character_5210d144f518e88e>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&is_meta_character_5210d144f518e88e);
     };
     aotLib[0x9f216299c324b404] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&is_set_character_b3eb8d77360f374d>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&is_set_character_b3eb8d77360f374d);
     };
     aotLib[0x45a4e0926c0ed921] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&from_hex_34b87ad3a69093f9>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&from_hex_34b87ad3a69093f9);
     };
     aotLib[0x76ce386522503121] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&string_from_hex_3b7c632d00a40daf>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&string_from_hex_3b7c632d00a40daf);
     };
     aotLib[0x90f2e0c45cee8d1d] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&string_from_hex_7d459c50a54015ae>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&string_from_hex_7d459c50a54015ae);
     };
     aotLib[0xd18d795fce6cd7da] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_AotCMRES<&re_char_ad3a1a9a724cb1d4>>();
+        return ctx.code->makeAotNode<SimNode_AotCMRES>(&re_char_ad3a1a9a724cb1d4);
     };
     aotLib[0x858df1aaec5dd7e2] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_AotCMRES<&re_set_items_73cf660bb8bb0a00>>();
+        return ctx.code->makeAotNode<SimNode_AotCMRES>(&re_set_items_73cf660bb8bb0a00);
     };
     aotLib[0xf0a9102ba252aa14] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_AotCMRES<&re_set_a55f6e80806300ed>>();
+        return ctx.code->makeAotNode<SimNode_AotCMRES>(&re_set_a55f6e80806300ed);
     };
     aotLib[0xfef54bd03e3ddd5c] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_AotCMRES<&re_any_9e5c841624efd77c>>();
+        return ctx.code->makeAotNode<SimNode_AotCMRES>(&re_any_9e5c841624efd77c);
     };
     aotLib[0x895307b0e2d2f267] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_AotCMRES<&re_eos_91af11e09a55593b>>();
+        return ctx.code->makeAotNode<SimNode_AotCMRES>(&re_eos_91af11e09a55593b);
     };
     aotLib[0x41a535a032efb295] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_AotCMRES<&re_group_a76956b21d051425>>();
+        return ctx.code->makeAotNode<SimNode_AotCMRES>(&re_group_a76956b21d051425);
     };
     aotLib[0xb941aed2c9c2d7a6] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_AotCMRES<&re_elementary_8e517f8be58bf1a6>>();
+        return ctx.code->makeAotNode<SimNode_AotCMRES>(&re_elementary_8e517f8be58bf1a6);
     };
     aotLib[0xd91daee5415c5452] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&mk_concat_913ccfa999a26595>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&mk_concat_913ccfa999a26595);
     };
     aotLib[0x82bcc7424ed73c00] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&mk_union_3fd1209b4c81276d>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&mk_union_3fd1209b4c81276d);
     };
     aotLib[0xced406b5f7aa899c] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_AotCMRES<&re_re_57e53314b2b816e9>>();
+        return ctx.code->makeAotNode<SimNode_AotCMRES>(&re_re_57e53314b2b816e9);
     };
     aotLib[0xc90159b754de4a53] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_AotCMRES<&re_basic_15c8a30187b8f90a>>();
+        return ctx.code->makeAotNode<SimNode_AotCMRES>(&re_basic_15c8a30187b8f90a);
     };
     aotLib[0x1bb87473a3ea431b] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_parse_a11fbde82111aa69>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_parse_a11fbde82111aa69);
     };
     aotLib[0xa7fa09bec9c61bf6] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&visit_top_down_4fecc3dfe95f303c>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&visit_top_down_4fecc3dfe95f303c);
     };
     aotLib[0x9bcf4022f918481d] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_assign_next_18621bfa0d3dbb85>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_assign_next_18621bfa0d3dbb85);
     };
     aotLib[0xe45fcbc3ca870163] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_assign_groups_269827e3d8834c3a>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_assign_groups_269827e3d8834c3a);
     };
     aotLib[0xd563b27477c3547a] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_assign_match_functions_d1123942ad08a870>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_assign_match_functions_d1123942ad08a870);
     };
     aotLib[0xf1d002e52d7d8ef] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_match2_single_char_efd3120a5ed2dc78>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_match2_single_char_efd3120a5ed2dc78);
     };
     aotLib[0xb175b89ea6a4dc28] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_match2_char_563cc8699254595c>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_match2_char_563cc8699254595c);
     };
     aotLib[0xbb4eaa89af769478] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_match2_union_483bf85dbc5196dd>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_match2_union_483bf85dbc5196dd);
     };
     aotLib[0x4ee42d56faf1697f] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_match2_set_31b09b463a9d7b2b>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_match2_set_31b09b463a9d7b2b);
     };
     aotLib[0x202c69489fc0c65] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_match2_any_9b00b66687d95b62>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_match2_any_9b00b66687d95b62);
     };
     aotLib[0xd470e4b78750568] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_match2_concat_2bd31fc7755cdf2a>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_match2_concat_2bd31fc7755cdf2a);
     };
     aotLib[0x1c110d5d34042eae] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_match2_eos_a35408df9434ba3c>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_match2_eos_a35408df9434ba3c);
     };
     aotLib[0x3323e83dade858d] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_match2_question_4acdfdc420ce399a>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_match2_question_4acdfdc420ce399a);
     };
     aotLib[0x83e1a16da9d3db6d] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_match2_plus_adb26cc707eb0c55>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_match2_plus_adb26cc707eb0c55);
     };
     aotLib[0xc4c36ef2581ab070] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_match2_plus_set_aeb296540242ef22>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_match2_plus_set_aeb296540242ef22);
     };
     aotLib[0x423a1c803bc508e8] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_match2_star_bb64c06dd606906e>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_match2_star_bb64c06dd606906e);
     };
     aotLib[0xf4aefc80782e2e4a] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_match2_group_82784eced054ba4e>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_match2_group_82784eced054ba4e);
     };
     aotLib[0xbf6074d4a4219957] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_early_out_80d62a0fdd14cb06>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_early_out_80d62a0fdd14cb06);
     };
     aotLib[0xcf9dad636341cfbe] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&is_valid_87c94e9920e8a112>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&is_valid_87c94e9920e8a112);
     };
     aotLib[0x5012025fd3368798] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&regex_compile_b802a48fba17c551>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&regex_compile_b802a48fba17c551);
     };
-    aotLib[0x109a38b92b4ad948] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_AotCMRES<&regex_compile_d14729dab5987744>>();
+    aotLib[0x70e57f693a9ba6a1] = +[](Context & ctx) -> SimNode* {
+        return ctx.code->makeAotNode<SimNode_AotCMRES>(&regex_compile_9c6bbe3f7bf967b8);
     };
     aotLib[0xacddaf961afe165f] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_AotCMRES<&regex_compile_8b8cd96a70efcb1c>>();
+        return ctx.code->makeAotNode<SimNode_AotCMRES>(&regex_compile_8b8cd96a70efcb1c);
     };
     aotLib[0xc9db0e4c83cf82eb] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&regex_match_d1084a47d6e2d53e>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&regex_match_d1084a47d6e2d53e);
     };
     aotLib[0x22a5bb3f1de45f9a] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&regex_group_f150ed72d9c6b909>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&regex_group_f150ed72d9c6b909);
     };
     aotLib[0x6e8c5a82f6bdcd37] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&regex_foreach_7115f79e7b67800f>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&regex_foreach_7115f79e7b67800f);
     };
     aotLib[0x3c85554b3800d3c] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&regex_replace_6c020ee2b76e6419>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&regex_replace_6c020ee2b76e6419);
     };
     aotLib[0xac3beb34a20a0e94] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&regex_debug_35a427292763c452>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&regex_debug_35a427292763c452);
     };
     aotLib[0x1db4112e373f4e6] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&debug_set_13e232e40e242fa0>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&debug_set_13e232e40e242fa0);
     };
     aotLib[0x401a0f2fcc15a153] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&debug_re_f8fd4cc00f0dc78d>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&debug_re_f8fd4cc00f0dc78d);
     };
     aotLib[0x7d5fe16f6c01de1d] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&rnd_set_character_6517e452a18c5606>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&rnd_set_character_6517e452a18c5606);
     };
     aotLib[0x81d54f638e260ba5] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_gen2_fail_a5fdf20930267896>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_gen2_fail_a5fdf20930267896);
     };
     aotLib[0xa21be48addeafc5b] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_gen2_char_e6b9f720990cc2d7>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_gen2_char_e6b9f720990cc2d7);
     };
     aotLib[0xe5ca17f129619abc] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_gen2_union_44153b0e184e2888>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_gen2_union_44153b0e184e2888);
     };
     aotLib[0xfac3fb8e7bac4c7a] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_gen2_set_5483397ec36cfff0>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_gen2_set_5483397ec36cfff0);
     };
     aotLib[0xc5869664f0682804] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_gen2_any_200931e8e5db950>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_gen2_any_200931e8e5db950);
     };
     aotLib[0xf8f639c12b4d60ec] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_gen2_concat_bb7cd4a1d8751a6c>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_gen2_concat_bb7cd4a1d8751a6c);
     };
     aotLib[0x45096c6fa48cb3f2] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_gen2_eos_6a9fe263836b5d74>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_gen2_eos_6a9fe263836b5d74);
     };
     aotLib[0x254fd58ee25615f7] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_gen2_question_f2a2ead57fd4a9>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_gen2_question_f2a2ead57fd4a9);
     };
     aotLib[0x17eec7655fca795d] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_gen2_plus_9fe66025caf188a9>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_gen2_plus_9fe66025caf188a9);
     };
     aotLib[0xfbb2a99f9a013ebb] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_gen2_star_5bbabd524a57385c>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_gen2_star_5bbabd524a57385c);
     };
     aotLib[0xc4bf433f55b01416] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_gen2_group_cc75131bc454c003>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_gen2_group_cc75131bc454c003);
     };
     aotLib[0x7beeb3e353b5340a] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&re_gen_e78126cc4b992ab9>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&re_gen_e78126cc4b992ab9);
     };
     // [[ init script ]]
     aotLib[0xcdd4468ae6f1930c] = +[](Context & ctx) -> SimNode* {
-        ctx.aotInitScript = ctx.code->makeNode<AutoSimNode_Aot<&__init_script>>();
+        ctx.aotInitScript = ctx.code->makeAotNode<SimNode_Aot>(&__init_script);
         return ctx.aotInitScript;
     };
     resolveTypeInfoAnnotations();

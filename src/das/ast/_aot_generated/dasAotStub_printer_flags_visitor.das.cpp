@@ -3695,63 +3695,63 @@ static void resolveTypeInfoAnnotations()
 }
 
 
-inline void finalize_be6dc88fda742529 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & ____this_rename_at_15_0 );
-inline void _FuncSetPrinterFlagsTickpreVisitExprBlockExpression_cd888b01c2b669a7 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_16_1, smart_ptr_raw<ExprBlock> const  __block1_rename_at_16_2, smart_ptr_raw<Expression> __expr_rename_at_16_3 );
-inline void _FuncSetPrinterFlagsTickpreVisitExprNewArgument_14187e2d1c37d4a ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_20_4, smart_ptr_raw<ExprNew> const  __call_rename_at_20_5, smart_ptr_raw<Expression> __expr_rename_at_20_6, bool __last_rename_at_20_7 );
-inline void _FuncSetPrinterFlagsTickpreVisitExprCallArgument_4d8ac64d5a70b963 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_24_8, smart_ptr_raw<ExprCall> const  __casll_rename_at_24_9, smart_ptr_raw<Expression> __expr_rename_at_24_10, bool __last_rename_at_24_11 );
-inline void _FuncSetPrinterFlagsTickpreVisitExprLooksLikeCallArgument_1ea138a7252b4638 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_28_12, smart_ptr_raw<ExprLooksLikeCall> const  __call_rename_at_28_13, smart_ptr_raw<Expression> __expr_rename_at_28_14, bool __last_rename_at_28_15 );
-inline void _FuncSetPrinterFlagsTickpreVisitExprIfThenElse_d73e8f72eacd5b2 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_32_16, smart_ptr_raw<ExprIfThenElse> __expr_rename_at_32_17 );
-inline void _FuncSetPrinterFlagsTickpreVisitExprWhile_5c1d6d1641222954 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_36_18, smart_ptr_raw<ExprWhile> __expr_rename_at_36_19 );
-inline void _FuncSetPrinterFlagsTickpreVisitExprReturn_9b64916f24bbfcb7 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_40_20, smart_ptr_raw<ExprReturn> __expr_rename_at_40_21 );
-inline void _FuncSetPrinterFlagsTickpreVisitExprCopy_ee38d207a0640bed ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_46_22, smart_ptr_raw<ExprCopy> __expr_rename_at_46_23 );
-inline void _FuncSetPrinterFlagsTickpreVisitExprClone_3f3bb9e7b4ef2d6c ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_52_24, smart_ptr_raw<ExprClone> __expr_rename_at_52_25 );
-inline void _FuncSetPrinterFlagsTickpreVisitExprVar_5845319dd9b1ac5f ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_58_26, smart_ptr_raw<ExprVar> __expr_rename_at_58_27 );
-inline void _FuncSetPrinterFlagsTickpreVisitExprTypeInfo_61f129f5d7e91754 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_62_28, smart_ptr_raw<ExprTypeInfo> __expr_rename_at_62_29 );
-inline void _FuncSetPrinterFlagsTickpreVisitExprArrayComprehension_c075324e7425d9e8 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_68_30, smart_ptr_raw<ExprArrayComprehension> __expr_rename_at_68_31 );
-inline void _FuncSetPrinterFlags_0x27___finalize_eb233d467d949b66 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_15_32 );
-inline void used_flags_9469ef118a919c62 ( Context * __context__ );
-inline printer_flags_visitor::SetPrinterFlags SetPrinterFlags_a250df0e5dc6a661 ( Context * __context__ );
+static inline void finalize_be6dc88fda742529 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & ____this_rename_at_15_0 );
+static inline void _FuncSetPrinterFlagsTickpreVisitExprBlockExpression_cd888b01c2b669a7 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_16_1, smart_ptr_raw<ExprBlock> const  __block1_rename_at_16_2, smart_ptr_raw<Expression> __expr_rename_at_16_3 );
+static inline void _FuncSetPrinterFlagsTickpreVisitExprNewArgument_14187e2d1c37d4a ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_20_4, smart_ptr_raw<ExprNew> const  __call_rename_at_20_5, smart_ptr_raw<Expression> __expr_rename_at_20_6, bool __last_rename_at_20_7 );
+static inline void _FuncSetPrinterFlagsTickpreVisitExprCallArgument_4d8ac64d5a70b963 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_24_8, smart_ptr_raw<ExprCall> const  __casll_rename_at_24_9, smart_ptr_raw<Expression> __expr_rename_at_24_10, bool __last_rename_at_24_11 );
+static inline void _FuncSetPrinterFlagsTickpreVisitExprLooksLikeCallArgument_1ea138a7252b4638 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_28_12, smart_ptr_raw<ExprLooksLikeCall> const  __call_rename_at_28_13, smart_ptr_raw<Expression> __expr_rename_at_28_14, bool __last_rename_at_28_15 );
+static inline void _FuncSetPrinterFlagsTickpreVisitExprIfThenElse_d73e8f72eacd5b2 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_32_16, smart_ptr_raw<ExprIfThenElse> __expr_rename_at_32_17 );
+static inline void _FuncSetPrinterFlagsTickpreVisitExprWhile_5c1d6d1641222954 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_36_18, smart_ptr_raw<ExprWhile> __expr_rename_at_36_19 );
+static inline void _FuncSetPrinterFlagsTickpreVisitExprReturn_9b64916f24bbfcb7 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_40_20, smart_ptr_raw<ExprReturn> __expr_rename_at_40_21 );
+static inline void _FuncSetPrinterFlagsTickpreVisitExprCopy_ee38d207a0640bed ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_46_22, smart_ptr_raw<ExprCopy> __expr_rename_at_46_23 );
+static inline void _FuncSetPrinterFlagsTickpreVisitExprClone_3f3bb9e7b4ef2d6c ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_52_24, smart_ptr_raw<ExprClone> __expr_rename_at_52_25 );
+static inline void _FuncSetPrinterFlagsTickpreVisitExprVar_5845319dd9b1ac5f ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_58_26, smart_ptr_raw<ExprVar> __expr_rename_at_58_27 );
+static inline void _FuncSetPrinterFlagsTickpreVisitExprTypeInfo_61f129f5d7e91754 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_62_28, smart_ptr_raw<ExprTypeInfo> __expr_rename_at_62_29 );
+static inline void _FuncSetPrinterFlagsTickpreVisitExprArrayComprehension_c075324e7425d9e8 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_68_30, smart_ptr_raw<ExprArrayComprehension> __expr_rename_at_68_31 );
+static inline void _FuncSetPrinterFlags_0x27___finalize_eb233d467d949b66 ( Context * __context__, printer_flags_visitor::SetPrinterFlags & __self_rename_at_15_32 );
+static inline void used_flags_9469ef118a919c62 ( Context * __context__ );
+static inline printer_flags_visitor::SetPrinterFlags SetPrinterFlags_a250df0e5dc6a661 ( Context * __context__ );
 
 void __init_script ( Context * __context__, bool __init_shared )
 {
 }
 
-inline void finalize_be6dc88fda742529 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  ____this_rename_at_15_0 )
+static inline void finalize_be6dc88fda742529 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  ____this_rename_at_15_0 )
 {
     memset((void*)&(____this_rename_at_15_0), 0, TypeSize<printer_flags_visitor::SetPrinterFlags>::size);
 }
 
-inline void _FuncSetPrinterFlagsTickpreVisitExprBlockExpression_cd888b01c2b669a7 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_16_1, smart_ptr_raw<ExprBlock> const  __block1_rename_at_16_2, smart_ptr_raw<Expression> __expr_rename_at_16_3 )
+static inline void _FuncSetPrinterFlagsTickpreVisitExprBlockExpression_cd888b01c2b669a7 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_16_1, smart_ptr_raw<ExprBlock> const  __block1_rename_at_16_2, smart_ptr_raw<Expression> __expr_rename_at_16_3 )
 {
     das_copy(__expr_rename_at_16_3->printFlags /*printFlags*/,0x2u);
 }
 
-inline void _FuncSetPrinterFlagsTickpreVisitExprNewArgument_14187e2d1c37d4a ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_20_4, smart_ptr_raw<ExprNew> const  __call_rename_at_20_5, smart_ptr_raw<Expression> __expr_rename_at_20_6, bool __last_rename_at_20_7 )
+static inline void _FuncSetPrinterFlagsTickpreVisitExprNewArgument_14187e2d1c37d4a ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_20_4, smart_ptr_raw<ExprNew> const  __call_rename_at_20_5, smart_ptr_raw<Expression> __expr_rename_at_20_6, bool __last_rename_at_20_7 )
 {
     das_copy(__expr_rename_at_20_6->printFlags /*printFlags*/,0x2u);
 }
 
-inline void _FuncSetPrinterFlagsTickpreVisitExprCallArgument_4d8ac64d5a70b963 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_24_8, smart_ptr_raw<ExprCall> const  __casll_rename_at_24_9, smart_ptr_raw<Expression> __expr_rename_at_24_10, bool __last_rename_at_24_11 )
+static inline void _FuncSetPrinterFlagsTickpreVisitExprCallArgument_4d8ac64d5a70b963 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_24_8, smart_ptr_raw<ExprCall> const  __casll_rename_at_24_9, smart_ptr_raw<Expression> __expr_rename_at_24_10, bool __last_rename_at_24_11 )
 {
     das_copy(__expr_rename_at_24_10->printFlags /*printFlags*/,0x2u);
 }
 
-inline void _FuncSetPrinterFlagsTickpreVisitExprLooksLikeCallArgument_1ea138a7252b4638 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_28_12, smart_ptr_raw<ExprLooksLikeCall> const  __call_rename_at_28_13, smart_ptr_raw<Expression> __expr_rename_at_28_14, bool __last_rename_at_28_15 )
+static inline void _FuncSetPrinterFlagsTickpreVisitExprLooksLikeCallArgument_1ea138a7252b4638 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_28_12, smart_ptr_raw<ExprLooksLikeCall> const  __call_rename_at_28_13, smart_ptr_raw<Expression> __expr_rename_at_28_14, bool __last_rename_at_28_15 )
 {
     das_copy(__expr_rename_at_28_14->printFlags /*printFlags*/,0x2u);
 }
 
-inline void _FuncSetPrinterFlagsTickpreVisitExprIfThenElse_d73e8f72eacd5b2 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_32_16, smart_ptr_raw<ExprIfThenElse> __expr_rename_at_32_17 )
+static inline void _FuncSetPrinterFlagsTickpreVisitExprIfThenElse_d73e8f72eacd5b2 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_32_16, smart_ptr_raw<ExprIfThenElse> __expr_rename_at_32_17 )
 {
     das_copy(__expr_rename_at_32_17->cond /*cond*/->printFlags /*printFlags*/,0x2u);
 }
 
-inline void _FuncSetPrinterFlagsTickpreVisitExprWhile_5c1d6d1641222954 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_36_18, smart_ptr_raw<ExprWhile> __expr_rename_at_36_19 )
+static inline void _FuncSetPrinterFlagsTickpreVisitExprWhile_5c1d6d1641222954 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_36_18, smart_ptr_raw<ExprWhile> __expr_rename_at_36_19 )
 {
     das_copy(__expr_rename_at_36_19->cond /*cond*/->printFlags /*printFlags*/,0x2u);
 }
 
-inline void _FuncSetPrinterFlagsTickpreVisitExprReturn_9b64916f24bbfcb7 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_40_20, smart_ptr_raw<ExprReturn> __expr_rename_at_40_21 )
+static inline void _FuncSetPrinterFlagsTickpreVisitExprReturn_9b64916f24bbfcb7 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_40_20, smart_ptr_raw<ExprReturn> __expr_rename_at_40_21 )
 {
     if ( nequ_sptr_ptr(das_auto_cast<smart_ptr_raw<void> const >::cast(__expr_rename_at_40_21->subexpr /*subexpr*/),das_auto_cast<void * const >::cast(nullptr)) )
     {
@@ -3759,7 +3759,7 @@ inline void _FuncSetPrinterFlagsTickpreVisitExprReturn_9b64916f24bbfcb7 ( Contex
     };
 }
 
-inline void _FuncSetPrinterFlagsTickpreVisitExprCopy_ee38d207a0640bed ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_46_22, smart_ptr_raw<ExprCopy> __expr_rename_at_46_23 )
+static inline void _FuncSetPrinterFlagsTickpreVisitExprCopy_ee38d207a0640bed ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_46_22, smart_ptr_raw<ExprCopy> __expr_rename_at_46_23 )
 {
     if ( das_get_bitfield(__expr_rename_at_46_23->printFlags /*printFlags*/,1u << 0) || das_get_bitfield(__expr_rename_at_46_23->printFlags /*printFlags*/,1u << 1) )
     {
@@ -3767,7 +3767,7 @@ inline void _FuncSetPrinterFlagsTickpreVisitExprCopy_ee38d207a0640bed ( Context 
     };
 }
 
-inline void _FuncSetPrinterFlagsTickpreVisitExprClone_3f3bb9e7b4ef2d6c ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_52_24, smart_ptr_raw<ExprClone> __expr_rename_at_52_25 )
+static inline void _FuncSetPrinterFlagsTickpreVisitExprClone_3f3bb9e7b4ef2d6c ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_52_24, smart_ptr_raw<ExprClone> __expr_rename_at_52_25 )
 {
     if ( das_get_bitfield(__expr_rename_at_52_25->printFlags /*printFlags*/,1u << 0) || das_get_bitfield(__expr_rename_at_52_25->printFlags /*printFlags*/,1u << 1) )
     {
@@ -3775,12 +3775,12 @@ inline void _FuncSetPrinterFlagsTickpreVisitExprClone_3f3bb9e7b4ef2d6c ( Context
     };
 }
 
-inline void _FuncSetPrinterFlagsTickpreVisitExprVar_5845319dd9b1ac5f ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_58_26, smart_ptr_raw<ExprVar> __expr_rename_at_58_27 )
+static inline void _FuncSetPrinterFlagsTickpreVisitExprVar_5845319dd9b1ac5f ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_58_26, smart_ptr_raw<ExprVar> __expr_rename_at_58_27 )
 {
     das_copy(__expr_rename_at_58_27->printFlags /*printFlags*/,0x4u);
 }
 
-inline void _FuncSetPrinterFlagsTickpreVisitExprTypeInfo_61f129f5d7e91754 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_62_28, smart_ptr_raw<ExprTypeInfo> __expr_rename_at_62_29 )
+static inline void _FuncSetPrinterFlagsTickpreVisitExprTypeInfo_61f129f5d7e91754 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_62_28, smart_ptr_raw<ExprTypeInfo> __expr_rename_at_62_29 )
 {
     if ( nequ_sptr_ptr(das_auto_cast<smart_ptr_raw<void> const >::cast(__expr_rename_at_62_29->subexpr /*subexpr*/),das_auto_cast<void * const >::cast(nullptr)) )
     {
@@ -3788,7 +3788,7 @@ inline void _FuncSetPrinterFlagsTickpreVisitExprTypeInfo_61f129f5d7e91754 ( Cont
     };
 }
 
-inline void _FuncSetPrinterFlagsTickpreVisitExprArrayComprehension_c075324e7425d9e8 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_68_30, smart_ptr_raw<ExprArrayComprehension> __expr_rename_at_68_31 )
+static inline void _FuncSetPrinterFlagsTickpreVisitExprArrayComprehension_c075324e7425d9e8 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_68_30, smart_ptr_raw<ExprArrayComprehension> __expr_rename_at_68_31 )
 {
     das_copy(__expr_rename_at_68_31->subexpr /*subexpr*/->printFlags /*printFlags*/,0x2u);
     if ( nequ_sptr_ptr(das_auto_cast<smart_ptr_raw<void> const >::cast(__expr_rename_at_68_31->exprWhere /*exprWhere*/),das_auto_cast<void * const >::cast(nullptr)) )
@@ -3797,18 +3797,18 @@ inline void _FuncSetPrinterFlagsTickpreVisitExprArrayComprehension_c075324e7425d
     };
 }
 
-inline void _FuncSetPrinterFlags_0x27___finalize_eb233d467d949b66 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_15_32 )
+static inline void _FuncSetPrinterFlags_0x27___finalize_eb233d467d949b66 ( Context * __context__, printer_flags_visitor::SetPrinterFlags &  __self_rename_at_15_32 )
 {
     finalize_be6dc88fda742529(__context__,das_arg<printer_flags_visitor::SetPrinterFlags>::pass(__self_rename_at_15_32));
 }
 
-inline void used_flags_9469ef118a919c62 ( Context * __context__ )
+static inline void used_flags_9469ef118a919c62 ( Context * __context__ )
 {
     das_new<printer_flags_visitor::SetPrinterFlags>::make_and_init(__context__,[&]() { return SetPrinterFlags_a250df0e5dc6a661(__context__); });
     builtin_throw(((char *) "unused"),__context__,((LineInfoArg *)(&LineInfo::g_LineInfoNULL)));
 }
 
-inline printer_flags_visitor::SetPrinterFlags SetPrinterFlags_a250df0e5dc6a661 ( Context * __context__ )
+static inline printer_flags_visitor::SetPrinterFlags SetPrinterFlags_a250df0e5dc6a661 ( Context * __context__ )
 {
     return /* <- */ das_auto_cast_move<printer_flags_visitor::SetPrinterFlags>::cast((([&]() -> printer_flags_visitor::SetPrinterFlags {
         printer_flags_visitor::SetPrinterFlags __mks_15;
@@ -3833,52 +3833,52 @@ inline printer_flags_visitor::SetPrinterFlags SetPrinterFlags_a250df0e5dc6a661 (
 
 static void registerAotFunctions ( AotLibrary & aotLib ) {
     aotLib[0xa20da7cdc8a0932c] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&finalize_be6dc88fda742529>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&finalize_be6dc88fda742529);
     };
     aotLib[0x65c83baaef13a1] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncSetPrinterFlagsTickpreVisitExprBlockExpression_cd888b01c2b669a7>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprBlockExpression_cd888b01c2b669a7);
     };
     aotLib[0xe93bb450ac55a3ef] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncSetPrinterFlagsTickpreVisitExprNewArgument_14187e2d1c37d4a>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprNewArgument_14187e2d1c37d4a);
     };
     aotLib[0x400e72523d70313f] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncSetPrinterFlagsTickpreVisitExprCallArgument_4d8ac64d5a70b963>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprCallArgument_4d8ac64d5a70b963);
     };
     aotLib[0x1dc95a5634925d17] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncSetPrinterFlagsTickpreVisitExprLooksLikeCallArgument_1ea138a7252b4638>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprLooksLikeCallArgument_1ea138a7252b4638);
     };
     aotLib[0xe6adb8e07223b13b] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncSetPrinterFlagsTickpreVisitExprIfThenElse_d73e8f72eacd5b2>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprIfThenElse_d73e8f72eacd5b2);
     };
     aotLib[0x36ae84b5548d6c49] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncSetPrinterFlagsTickpreVisitExprWhile_5c1d6d1641222954>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprWhile_5c1d6d1641222954);
     };
     aotLib[0x1bc7ef545566d235] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncSetPrinterFlagsTickpreVisitExprReturn_9b64916f24bbfcb7>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprReturn_9b64916f24bbfcb7);
     };
     aotLib[0xb47722fa9deaba77] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncSetPrinterFlagsTickpreVisitExprCopy_ee38d207a0640bed>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprCopy_ee38d207a0640bed);
     };
     aotLib[0x1a3d481bd30a6850] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncSetPrinterFlagsTickpreVisitExprClone_3f3bb9e7b4ef2d6c>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprClone_3f3bb9e7b4ef2d6c);
     };
     aotLib[0x43965e7878c72776] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncSetPrinterFlagsTickpreVisitExprVar_5845319dd9b1ac5f>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprVar_5845319dd9b1ac5f);
     };
     aotLib[0x8bce4ca7016e5a3d] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncSetPrinterFlagsTickpreVisitExprTypeInfo_61f129f5d7e91754>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprTypeInfo_61f129f5d7e91754);
     };
     aotLib[0x62f6310d9c7144b0] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncSetPrinterFlagsTickpreVisitExprArrayComprehension_c075324e7425d9e8>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlagsTickpreVisitExprArrayComprehension_c075324e7425d9e8);
     };
     aotLib[0x6eca092b3da9d6ee] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncSetPrinterFlags_0x27___finalize_eb233d467d949b66>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&_FuncSetPrinterFlags_0x27___finalize_eb233d467d949b66);
     };
     aotLib[0x4c614b58a1a56a64] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&used_flags_9469ef118a919c62>>();
+        return ctx.code->makeAotNode<SimNode_Aot>(&used_flags_9469ef118a919c62);
     };
     aotLib[0xb51eb1598d4a3a3e] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_AotCMRES<&SetPrinterFlags_a250df0e5dc6a661>>();
+        return ctx.code->makeAotNode<SimNode_AotCMRES>(&SetPrinterFlags_a250df0e5dc6a661);
     };
     resolveTypeInfoAnnotations();
 }
