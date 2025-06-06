@@ -68,6 +68,15 @@ namespace das {
      * Set code, aot, aotFunction for all function in @ref functions
      */
     void FillFunction(Context &ctx, const AotLibrary &aotLib, vector<pair<uint64_t, SimFunction*>> &functions);
+
+
+    template <typename TT, auto fn>
+    static auto Alloc() -> SimNode*(*)(Context &ctx) {
+        return +[](Context & ctx) -> SimNode* {
+            return ctx.code->makeAotNode<TT>(&fn);
+        };
+    }
+
 }
 
 #endif

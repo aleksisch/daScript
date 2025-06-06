@@ -3685,12 +3685,11 @@ namespace das {
                 funInit = true;
             }
             uint64_t semH = fn->aotHash;
-            logs << "    aotLib[0x" << HEX << semH << DEC << "] = +[](Context & ctx) -> SimNode* {\n";
-            logs << "        return ctx.code->makeAotNode<SimNode_Aot";
+            logs << "    aotLib[0x" << HEX << semH << DEC << "] = Alloc<SimNode_Aot";
             if ( fn->copyOnReturn || fn->moveOnReturn ) {
                 logs << "CMRES";
             }
-            logs << ">(&" << aotFuncName(fn) << ");\n    };\n";
+            logs << ", &" << aotFuncName(fn) << ">();\n    };\n";
         }
         if ( context.totalVariables || funInit ) {
             uint64_t semH = context.getInitSemanticHash();
