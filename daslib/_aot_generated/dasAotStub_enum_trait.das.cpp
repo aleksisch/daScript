@@ -56,7 +56,7 @@
 #endif
 
 namespace das {
-namespace _anon_4562643193483458131 {
+namespace _anon_13245635964963803931 {
 
 namespace enum_trait { struct TypeInfoGetEnumLength; };
 namespace enum_trait { struct TypeInfoGetEnumNames; };
@@ -185,53 +185,53 @@ static void resolveTypeInfoAnnotations()
 }
 
 
-inline void _FuncbuiltinTickpushTick10769833213962245646_e98940bd647b096c ( Context * __context__, TArray<ast::AstTypeInfoMacro *> & __Arr_rename_at_181_0, ast::AstTypeInfoMacro * __value_rename_at_181_1 );
-inline StructInfo const  * _FuncrttiTickclass_infoTick15801393167907430156_db89bd2a6ff1ad7e ( Context * __context__, enum_trait::TypeInfoGetEnumLength const  & __cl_rename_at_116_2 );
-inline StructInfo const  * _FuncrttiTickclass_infoTick15801393167907430156_544f4e3f951187ef ( Context * __context__, enum_trait::TypeInfoGetEnumNames const  & __cl_rename_at_116_3 );
-inline range _FuncbuiltinTickiter_rangeTick1065493836214144684_7880c0bbee885dd8 ( Context * __context__, das::vector<Enumeration::EnumEntry> const  & __foo_rename_at_1283_4 );
+inline void _FuncbuiltinTickpushTick10769833213962245646_83cc55cb3e497058 ( Context * __context__, TArray<ast::AstTypeInfoMacro *> & __Arr_rename_at_181_0, ast::AstTypeInfoMacro * __value_rename_at_181_1 );
+inline StructInfo const  * _FuncrttiTickclass_infoTick15801393167907430156_e2c6fcf569088210 ( Context * __context__, enum_trait::TypeInfoGetEnumLength const  & __cl_rename_at_116_2 );
+inline StructInfo const  * _FuncrttiTickclass_infoTick15801393167907430156_454acb2c789aa890 ( Context * __context__, enum_trait::TypeInfoGetEnumNames const  & __cl_rename_at_116_3 );
+inline range _FuncbuiltinTickiter_rangeTick1065493836214144684_b450c2db748ced81 ( Context * __context__, das::vector<Enumeration::EnumEntry> const  & __foo_rename_at_1283_4 );
 
 void __init_script ( Context * __context__, bool __init_shared )
 {
 }
 
-inline void _FuncbuiltinTickpushTick10769833213962245646_e98940bd647b096c ( Context * __context__, TArray<ast::AstTypeInfoMacro *> &  __Arr_rename_at_181_0, ast::AstTypeInfoMacro * __value_rename_at_181_1 )
+inline void _FuncbuiltinTickpushTick10769833213962245646_83cc55cb3e497058 ( Context * __context__, TArray<ast::AstTypeInfoMacro *> &  __Arr_rename_at_181_0, ast::AstTypeInfoMacro * __value_rename_at_181_1 )
 {
     das_copy(__Arr_rename_at_181_0(builtin_array_push_back(das_arg<TArray<ast::AstTypeInfoMacro *>>::pass(__Arr_rename_at_181_0),8,__context__,((LineInfoArg *)(&LineInfo::g_LineInfoNULL))),__context__),__value_rename_at_181_1);
 }
 
-inline StructInfo const  * _FuncrttiTickclass_infoTick15801393167907430156_db89bd2a6ff1ad7e ( Context * __context__, enum_trait::TypeInfoGetEnumLength const  &  __cl_rename_at_116_2 )
+inline StructInfo const  * _FuncrttiTickclass_infoTick15801393167907430156_e2c6fcf569088210 ( Context * __context__, enum_trait::TypeInfoGetEnumLength const  &  __cl_rename_at_116_2 )
 {
     return das_auto_cast<StructInfo const  *>::cast(das_cast<StructInfo const  *>::cast(((das_deref(__context__,das_cast<TypeInfo const  *>::cast(__cl_rename_at_116_2.__rtti))).getStructType())));
 }
 
-inline StructInfo const  * _FuncrttiTickclass_infoTick15801393167907430156_544f4e3f951187ef ( Context * __context__, enum_trait::TypeInfoGetEnumNames const  &  __cl_rename_at_116_3 )
+inline StructInfo const  * _FuncrttiTickclass_infoTick15801393167907430156_454acb2c789aa890 ( Context * __context__, enum_trait::TypeInfoGetEnumNames const  &  __cl_rename_at_116_3 )
 {
     return das_auto_cast<StructInfo const  *>::cast(das_cast<StructInfo const  *>::cast(((das_deref(__context__,das_cast<TypeInfo const  *>::cast(__cl_rename_at_116_3.__rtti))).getStructType())));
 }
 
-inline range _FuncbuiltinTickiter_rangeTick1065493836214144684_7880c0bbee885dd8 ( Context * __context__, das::vector<Enumeration::EnumEntry> const  &  __foo_rename_at_1283_4 )
+inline range _FuncbuiltinTickiter_rangeTick1065493836214144684_b450c2db748ced81 ( Context * __context__, das::vector<Enumeration::EnumEntry> const  &  __foo_rename_at_1283_4 )
 {
     return das_auto_cast<range>::cast(mk_range(das_vector_length(__foo_rename_at_1283_4)));
 }
 
 static void registerAotFunctions ( AotLibrary & aotLib ) {
-    aotLib[0xf0e3fd00abc15718] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncbuiltinTickpushTick10769833213962245646_e98940bd647b096c>>();
+    aotLib[0x857353f57826e78d] = +[](Context & ctx) -> SimNode* {
+        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncbuiltinTickpushTick10769833213962245646_83cc55cb3e497058>>();
     };
-    aotLib[0x48e5f1e30db38e93] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncrttiTickclass_infoTick15801393167907430156_db89bd2a6ff1ad7e>>();
+    aotLib[0x9b01bdb82252d41] = +[](Context & ctx) -> SimNode* {
+        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncrttiTickclass_infoTick15801393167907430156_e2c6fcf569088210>>();
     };
-    aotLib[0x35cb746aff3af72c] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncrttiTickclass_infoTick15801393167907430156_544f4e3f951187ef>>();
+    aotLib[0x66a3f0f649b7d41b] = +[](Context & ctx) -> SimNode* {
+        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncrttiTickclass_infoTick15801393167907430156_454acb2c789aa890>>();
     };
-    aotLib[0x2ec7a324528feed3] = +[](Context & ctx) -> SimNode* {
-        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncbuiltinTickiter_rangeTick1065493836214144684_7880c0bbee885dd8>>();
+    aotLib[0xa7580aaef6c09415] = +[](Context & ctx) -> SimNode* {
+        return ctx.code->makeNode<AutoSimNode_Aot<&_FuncbuiltinTickiter_rangeTick1065493836214144684_b450c2db748ced81>>();
     };
     resolveTypeInfoAnnotations();
 }
 
-} // namespace _anon_4562643193483458131
-AotListBase impl_aot_enum_trait(_anon_4562643193483458131::registerAotFunctions);
+} // namespace _anon_13245635964963803931
+AotListBase impl_aot_enum_trait(_anon_13245635964963803931::registerAotFunctions);
 } // namespace das
 
 #if defined(_MSC_VER)
