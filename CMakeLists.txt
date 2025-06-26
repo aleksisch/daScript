@@ -959,12 +959,12 @@ if (NOT ${DAS_TOOLS_DISABLED})
         ADD_DEPENDENCIES(${target_name} ${library_name} libDaScriptTest ${DAS_MODULES_LIBS})
         SETUP_CPP11(${target_name})
         SETUP_LTO(${target_name})
-        INSTALL(TARGETS ${target_name}
-                RUNTIME DESTINATION ${DAS_INSTALL_BINDIR}
-        )
     ENDMACRO()
 
     SETUP_COMPILER_BINARY(daslang libDaScriptStage0)
+    INSTALL(TARGETS daslang
+            RUNTIME DESTINATION ${DAS_INSTALL_BINDIR}
+    )
     set_property(TARGET daslang PROPERTY GENERATED TRUE)
     SETUP_COMPILER_BINARY(daslang-dev libDaScript)
 
@@ -980,10 +980,6 @@ if (NOT ${DAS_TOOLS_DISABLED})
 
     SETUP_CPP11(das-fmt)
     SETUP_LTO(das-fmt)
-
-    INSTALL(TARGETS das-fmt
-        RUNTIME DESTINATION ${DAS_INSTALL_BINDIR}
-    )
 
     #IF(APPLE)
     #  add_executable(daslangOsx MACOSX_BUNDLE ${DAS_DASCRIPT_MAIN_SRC})
