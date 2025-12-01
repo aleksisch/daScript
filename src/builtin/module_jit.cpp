@@ -14,6 +14,9 @@
 #include "module_builtin_rtti.h"
 #include "module_builtin_ast.h"
 
+#include "lld/Common/Driver.h"
+#include "lld/Common/CommonLinkerContext.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <inttypes.h>
@@ -395,9 +398,8 @@ extern "C" {
 
 #if (defined(_MSC_VER) || defined(__linux__) || defined(__APPLE__)) && !defined(_GAMING_XBOX) && !defined(_DURANGO)
     void create_shared_library ( const char * objFilePath, const char * libraryName, [[maybe_unused]] const char * jitModuleObj ) {
-        char cmd[1024];
-
-        #if defined(_WIN32) || defined(_WIN64)
+        // todo: use static mutex? LLVM linker is single threaded.
+        #if defined(_WIN32) || defined(_WIN64) || defined(__APPLE__)
         if (!check_file_present(jitModuleObj)) {
             LOG(LogLevel::error) << "File '" << jitModuleObj << "' , containing daScript library, does not exist\n";
             return;
@@ -409,50 +411,30 @@ extern "C" {
         }
 
         #if defined(_WIN32) || defined(_WIN64)
-            auto result = fmt::format_to(cmd, FMT_STRING("clang-cl {} {} msvcrt.lib -link -DLL -OUT:{} 2>&1"), objFilePath, jitModuleObj, libraryName);
+        auto linker_fn = lld::mingw::link;
+        const auto out = string("-OUT:") + libraryName;
+        const char* arr_ref[] = {"clang-cl", objFilePath, jitModuleObj, "msvcrt.lib", "-link", , "-DLL", out.c_str()};
         #elif defined(__APPLE__)
-            auto result = fmt::format_to(cmd, FMT_STRING("clang -shared -o {} {} 2>&1"), libraryName, objFilePath);
+        auto linker_fn = lld::macho::link;
+        const char* arr_ref[] = {"ld.lld", "-shared", "-o", libraryName, objFilePath, jitModuleObj};
         #else
-            auto result = fmt::format_to(cmd, FMT_STRING("gcc -shared -o {} {} 2>&1"), libraryName, objFilePath);
+        auto linker_fn = lld::elf::link;
+        const char* arr_ref[] = {"ld.lld", "-shared", "-o", libraryName, objFilePath};
         #endif
-            *result = '\0';
 
-#if defined(_WIN32) || defined(_WIN64)
-    #define popen _popen
-    #define pclose _pclose
-#endif
-
-        FILE * fp = popen(cmd, "r");
-        if ( fp == NULL ) {
-            LOG(LogLevel::error) << "Failed to run command '" << cmd << "'\n";
-            return;
-        }
-
-        static constexpr int MAX_OUTPUT_SIZE = 16 * 1024;
-
-        char buffer[1024], output[MAX_OUTPUT_SIZE];
-        output[0] = '\0';
-
-        size_t output_length = 0;
-
-        // Read the output a line at a time and accumulate it
-        while (fgets(buffer, sizeof(buffer), fp) != NULL) {
-            size_t buffer_length = strlen(buffer);
-            if (output_length + buffer_length < MAX_OUTPUT_SIZE) {
-                strcat(output, buffer);
-                output_length += buffer_length;
-            } else {
-                strncat(output, buffer, MAX_OUTPUT_SIZE - output_length - 1);
-                break;
-            }
-        }
-
-        if ( int status = pclose(fp); status != 0 ) {
-            LOG(LogLevel::error) << "Failed to make shared library " << libraryName << ", command '" << cmd << "'\n";
-            printf("Output:\n%s", output);
+        string p_out;
+        string p_err;
+        auto linker_out = llvm::raw_string_ostream(p_out);
+        auto linker_err = llvm::raw_string_ostream(p_err);
+        auto is_ok = linker_fn(arr_ref, linker_out, linker_err, false, false);
+        if ( !is_ok ) {
+            LOG(LogLevel::error) << "Internal linker error. stderr:'" << linker_err.str() << "' stdout: '" << linker_out.str() << "'\n";
+        } else if (!p_err.empty()) {
+            LOG(LogLevel::error) << "Failed to make shared library " << libraryName << ": '" << linker_err.str() << "'\n";
         } else {
             LOG(LogLevel::debug) << "Library " << libraryName << " made - ok\n";
         }
+        lld::CommonLinkerContext::destroy();
     }
 #else
     void create_shared_library ( const char * , const char * , const char *  ) { }

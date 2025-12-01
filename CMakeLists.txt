@@ -810,6 +810,13 @@ ENDMACRO()
 
 SETUP_LIBDASCRIPT(libDaScript)
 
+find_package(LLD REQUIRED CONFIG)
+target_include_directories(libDaScript PRIVATE ${LLD_INCLUDE_DIRS})
+target_link_libraries(libDaScript PRIVATE
+    # todo: we shouldn't depend on llvm libs statically.
+    lldCommon lldELF
+)
+
 if(NOT ${DAS_AOT_EXAMPLES_DISABLED})
 
     if(${DAS_TOOLS_DISABLED})
