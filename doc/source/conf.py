@@ -215,6 +215,7 @@ htmlhelp_basename = 'daslang_doc'
 
 latex_elements = {
 'extrapackages': r'''
+\usepackage[utf8]{inputenc}
 \usepackage{textgreek}
 \usepackage{newunicodechar}
 ''',
