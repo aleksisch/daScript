@@ -37,6 +37,7 @@ enum class JitMode {
     Executable,
 };
 static JitMode jitEnabled = JitMode::None; // Disabled by default.
+static string jitOutPath = ""; // Empty, JIT module will choose default.
 
 static bool version2syntax = true;
 static bool gen2MakeSyntax = false;
@@ -385,6 +386,7 @@ bool compile_and_run ( const string & fn, const string & mainFnName, bool output
             default: break;
         }
         policies.jit_module = getDasRoot() + "/daslib/just_in_time.das";
+        policies.jit_output_path = jitOutPath;
         policies.dll_search_paths.emplace_back(getDasRoot() + "/lib");
     } else if (aotEnabled) {
         policies.aot = false;
@@ -602,6 +604,14 @@ int MAIN_FUNC_NAME ( int argc, char * argv[] ) {
                 gen2MakeSyntax = true;
             } else if ( cmd=="jit") {
                 jitEnabled = JitMode::Direct;
+            } else if ( cmd=="output") {
+                if ( i+1 > argc ) {
+                    printf("output requires argument\n");
+                    print_help();
+                    return -1;
+                }
+                jitOutPath = argv[i+1];
+                i += 1;
             } else if ( cmd=="exe") {
                 jitEnabled = JitMode::Executable;
                 dryRun = true;
