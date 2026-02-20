@@ -958,20 +958,37 @@ class LlvmJitVisitor : AstVisitor {
         return expr
     }
 
-// ExprStringBuilder
+// ExprStringBuilder — SimNode-free implementation using embedded TypeInfo* IR constants
     def override visitExprStringBuilder(expr : smart_ptr<ExprStringBuilder>) : ExpressionPtr {
         var args = build_array_of_arguments(expr.elements)
         var func = LLVMGetNamedFunction(g_mod, expr.stringBuilderFlags.isTempString ? FN_JIT_STRING_BUILDER_TEMP : FN_JIT_STRING_BUILDER)
         assert(func != null)
-        let NODE_PTR = make_interop_node(*jit_context, get_ptr(expr))
-        if (NODE_PTR == null) {
-            failed_E(expr, "missing interop function node pointer for String Builder")
+        // Evaluate all elements into a stack vec4f[] array
+        // Build a global array of TypeInfo* for each element
+        let nArgs = length(expr.elements) |> uint()
+        let void_ptr = types.LLVMVoidPtrType()
+        var types_arr_ptr : LLVMOpaqueValue?
+        if (nArgs > 0u) {
+            var tinfo_vals : array<LLVMValueRef>
+            for (elem in expr.elements) {
+                let tinfo = make_type_info_structure(*jit_context, elem._type)
+                let tinfo_global = create_type_info_global(tinfo)
+                tinfo_vals |> push <| unsafe(reinterpret<LLVMValueRef>(tinfo_global))
+            }
+            let arr_ty = LLVMArrayType(void_ptr, nArgs)
+            var ti_arr = LLVMAddGlobal(g_mod, arr_ty, "string_node_{expr.at.line:d}")
+            set_private_linkage(ti_arr)
+            ti_arr |> LLVMSetInitializer <| LLVMConstArray(void_ptr, unsafe(addr(tinfo_vals[0])), nArgs)
+            types_arr_ptr = ti_arr
+        } else {
+            types_arr_ptr = LLVMConstPointerNull(void_ptr)
         }
-        let global_var = save_address_global(uid.get_string_builder(expr), NODE_PTR)
         var params <- array<LLVMOpaqueValue?>(
             get_context_param(),
-            global_var, // Node *
-            args                                                   // args
+            types.ConstI32(nArgs |> uint64()),
+            types_arr_ptr,
+            get_line_info_ptr(expr.at),
+            args
         )
         var typ = g_fn_types[FN_JIT_STRING_BUILDER]
         setE(expr, LLVMBuildCall2(g_builder, typ, func, params, "string_builder"))
@@ -3751,7 +3768,8 @@ class LlvmJitVisitor : AstVisitor {
         } elif (info.basicType == Type.tStructure) {
             var t = create_struct_global_pointer(info.structType)
             initValues[0] = t
-        } elif (info.basicType == Type.tEnumeration || info.basicType == Type.tEnumeration8 || info.basicType == Type.tEnumeration16) {
+        } elif (info.basicType == Type.tEnumeration || info.basicType == Type.tEnumeration8 ||
+                info.basicType == Type.tEnumeration16 || info.basicType == Type.tEnumeration64) {
             initValues[0] = create_enum_global_pointer(info.enumType)
         } elif (info.basicType == Type.tPointer || info.basicType == Type.tArray) {
             initValues[1] = create_type_info_global(info.firstType)
@@ -3769,6 +3787,24 @@ class LlvmJitVisitor : AstVisitor {
             initValues[1] = create_type_info_global(info.firstType)
             initValues[3] = aa
             initValues[4] = an
+        } elif (info.basicType == Type.tBitfield || info.basicType == Type.tBitfield8 ||
+                info.basicType == Type.tBitfield16 || info.basicType == Type.tBitfield64) {
+            var an = create_argnames_array(info.argNames, info.argNames == null ? 0u : info.argCount)
+            initValues[4] = an
+        } else {
+            // Check it's primitive type.
+        }
+        // Fill dim pointer (slot 5) — needed for fixed-size arrays like int[3].
+        if (info.dimSize > 0u) {
+            var dim_vals : array<LLVMValueRef>
+            for (i in range(info.dimSize)) {
+                dim_vals |> push <| types.ConstI32(unsafe(info.dim[i]) |> uint64())
+            }
+            let dim_arr_ty = LLVMArrayType(types.t_int32, info.dimSize)
+            var dim_global = LLVMAddGlobal(g_mod, dim_arr_ty, "dim")
+            set_private_linkage(dim_global)
+            dim_global |> LLVMSetInitializer <| LLVMConstArray(types.t_int32, unsafe(addr(dim_vals[0])), info.dimSize)
+            initValues[5] = dim_global
         }
         return <- initValues
     }
@@ -5892,14 +5928,6 @@ class ResolveExternVisitor : AstVisitor {
                 dll.set_glob_address(uid.get_delete_type(firstT), delete_handle_ptr)
             }
         }
-    }
-
-    def override preVisitExprStringBuilder(expr : smart_ptr<ExprStringBuilder>) {
-        let NODE_PTR = make_interop_node(*jit_context, get_ptr(expr))
-        if (NODE_PTR == null) {
-            failed_E(expr, "missing interop function node pointer for string builder at {get_mangled_name(thisFunc)}")
-        }
-        dll.set_glob_address(uid.get_string_builder(expr), NODE_PTR)
     }
 
     def override preVisitExprAddr(expr : smart_ptr<ExprAddr>) {

@@ -158,10 +158,6 @@ class public UidNodes {
         return get_base(get_ptr(expr), "call_{get_mangled_name(expr.func)}")
     }
 
-    def get_string_builder(expr : smart_ptr<ExprStringBuilder>) {
-        return get_base(get_ptr(expr), "string_builder")
-    }
-
     def public get_block_name_ptr(blk : ExprBlock?) : DllName {
         return get_base(blk, "block_{get_mangled_name(blk)}")
     }

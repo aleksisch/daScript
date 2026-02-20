@@ -84,36 +84,31 @@ extern "C" {
         return context->callWithCopyOnReturn(fn, args, cmres, nullptr);
     }
 
-    DAS_API char * jit_string_builder ( Context & context, SimNode_CallBase * call, vec4f * args ) {
+    // SimNode-free variants — TypeInfo** is embedded as LLVM IR constants, no SimNode needed.
+    char * jit_string_builder ( Context & context, int32_t nArgs, TypeInfo ** types, LineInfoArg * at, vec4f * args ) {
         StringBuilderWriter writer;
         DebugDataWalker<StringBuilderWriter> walker(writer, PrintFlags::string_builder);
-        for ( int i=0, is=call->nArguments; i!=is; ++i ) {
-            walker.walk(args[i], call->types[i]);
-        }
+        for ( int i = 0; i < nArgs; ++i )
+            walker.walk(args[i], types[i]);
         auto length = writer.tellp();
-        if ( length ) {
-            return context.allocateString(writer.c_str(), uint32_t(length),&call->debugInfo);
-        } else {
-            return nullptr;
-        }
+        if ( length )
+            return context.allocateString(writer.c_str(), uint32_t(length), at);
+        return nullptr;
     }
 
-    DAS_API char * jit_string_builder_temp ( Context & context, SimNode_CallBase * call, vec4f * args ) {
+    char * jit_string_builder_temp ( Context & context, int32_t nArgs, TypeInfo ** types, LineInfoArg * at, vec4f * args ) {
         StringBuilderWriter writer;
         DebugDataWalker<StringBuilderWriter> walker(writer, PrintFlags::string_builder);
-        for ( int i=0, is=call->nArguments; i!=is; ++i ) {
-            walker.walk(args[i], call->types[i]);
-        }
+        for ( int i = 0; i < nArgs; ++i )
+            walker.walk(args[i], types[i]);
         auto length = writer.tellp();
         if ( length ) {
-            auto str = context.allocateTempString(writer.c_str(), uint32_t(length),&call->debugInfo);
-            context.freeTempString(str,&call->debugInfo);
+            auto str = context.allocateTempString(writer.c_str(), uint32_t(length), at);
+            context.freeTempString(str, at);
             return str;
-        } else {
-            return nullptr;
         }
+        return nullptr;
     }
-
 
     DAS_API void * jit_get_global_mnh ( uint64_t mnh, Context & context ) {
         return context.globals + context.globalOffsetByMangledName(mnh);
@@ -585,9 +580,6 @@ extern "C" {
             addExtern<DAS_BIND_FUN(das_make_interop_node)>(*this, lib,  "make_interop_node",
                 SideEffects::none, "das_make_interop_node")
                     ->args({"ctx","call","context","at"});
-            addExtern<DAS_BIND_FUN(das_sb_make_interop_node)>(*this, lib,  "make_interop_node",
-                SideEffects::none, "das_sb_make_interop_node")
-                    ->args({"ctx","builder","context","at"});
             addExtern<DAS_BIND_FUN(das_get_jit_new)>(*this, lib,  "get_jit_new",
                 SideEffects::none, "das_get_jit_new")
                     ->args({"type","context","at"});

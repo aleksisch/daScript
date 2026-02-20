@@ -332,20 +332,18 @@ def public init_jit(cg_opt_level : uint) {
     LLVMAddGlobalMapping(g_engine, jit_invoke_block_with_cmres, get_jit_invoke_block_with_cmres())
     LLVMAddAttributeToFunctionArgumentRange(jit_invoke_block_with_cmres, urange(0, 4), nocapture)
     LLVMAddAttributesToFunction(jit_invoke_block_with_cmres, fixed_array(nounwind, willreturn))
-    // jit_string_builder ( context *, node *, args * )
+    // jit_string_builder ( context *, int32 nArgs, TypeInfo ** types, LineInfoArg * at, vec4f * args )
     var jit_string_builder = LLVMAddFunctionWithType(g_mod, FN_JIT_STRING_BUILDER,
         LLVMFunctionType(g_prim_t.get_type_string(),
-            fixed_array<LLVMTypeRef>(g_prim_t.LLVMVoidPtrType(), g_prim_t.LLVMVoidPtrType(), LLVMPointerType(g_prim_t.LLVMFloat4Type(), 0u))))
+            fixed_array<LLVMTypeRef>(g_prim_t.LLVMVoidPtrType(), g_prim_t.t_int32, g_prim_t.LLVMVoidPtrType(), g_prim_t.LLVMVoidPtrType(), LLVMPointerType(g_prim_t.LLVMFloat4Type(), 0u))))
     LLVMAddGlobalMapping(g_engine, jit_string_builder, get_jit_string_builder())
     LLVMAddAttributesToFunction(jit_string_builder, fixed_array(nounwind, willreturn))
-    LLVMAddAttributeToFunctionArgumentRange(jit_string_builder, urange(0, 3), nocapture)
-    // jit_string_builder_temp ( context *, node *, args * )
+    // jit_string_builder_temp ( context *, int32 nArgs, TypeInfo ** types, LineInfoArg * at, vec4f * args )
     var jit_string_builder_temp = LLVMAddFunctionWithType(g_mod, FN_JIT_STRING_BUILDER_TEMP,
         LLVMFunctionType(g_prim_t.get_type_string(),
-            fixed_array<LLVMTypeRef>(g_prim_t.LLVMVoidPtrType(), g_prim_t.LLVMVoidPtrType(), LLVMPointerType(g_prim_t.LLVMFloat4Type(), 0u))))
+            fixed_array<LLVMTypeRef>(g_prim_t.LLVMVoidPtrType(), g_prim_t.t_int32, g_prim_t.LLVMVoidPtrType(), g_prim_t.LLVMVoidPtrType(), LLVMPointerType(g_prim_t.LLVMFloat4Type(), 0u))))
     LLVMAddGlobalMapping(g_engine, jit_string_builder_temp, get_jit_string_builder_temp())
     LLVMAddAttributesToFunction(jit_string_builder_temp, fixed_array(nounwind, willreturn))
-    LLVMAddAttributeToFunctionArgumentRange(jit_string_builder_temp, urange(0, 3), nocapture)
     // void * jit_get_global_mnh ( uint64_t mnh, context * )
     var jit_get_global_mnh = LLVMAddFunctionWithType(g_mod, FN_JIT_GET_GLOBAL_MNH,
         LLVMFunctionType(g_prim_t.LLVMVoidPtrType(),

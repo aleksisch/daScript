@@ -650,24 +650,6 @@ namespace das {
         return ctx.thisHelper->makeTypeInfo(nullptr, ptr);
     }
 
-    void * das_sb_make_interop_node ( Context & ctx, ExprStringBuilder * call, Context * context, LineInfoArg * at ) {
-        if ( !call ) context->throw_error_at(at, "expecting string builder");
-        if ( !ctx.thisHelper ) context->throw_error_at(at, "missing debug info helper. get_aot_interop_node can only be called in the SimulateMacro");
-        auto node = ctx.code->makeNode<SimNode_AotInteropBase>();
-        node->debugInfo = call->at;
-        node->nArguments = (int) call->elements.size();
-        node->argumentValues = nullptr;
-        if ( node->nArguments ) {
-            node->types = (TypeInfo **) ctx.code->allocate(node->nArguments * sizeof(TypeInfo*));
-            for ( int i=0, is=node->nArguments; i!=is; ++i ) {
-                node->types[i] = ctx.thisHelper->makeTypeInfo(nullptr, call->elements[i]->type);
-            }
-        } else {
-            node->types = nullptr;
-        }
-        return node;
-    }
-
     void das_comp_log ( const char * text, Context * context, LineInfoArg * at ) {
         if ( !text ) return;
         if ( !daScriptEnvironment::getBound() || !(daScriptEnvironment::getBound()->g_compilerLog )) {
