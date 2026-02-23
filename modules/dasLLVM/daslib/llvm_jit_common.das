@@ -498,6 +498,26 @@ def public init_jit(cg_opt_level : uint) {
     var jit_iterator_next = LLVMAddFunctionWithType(g_mod, FN_JIT_ITERATOR_NEXT,
         LLVMFunctionType(g_prim_t.t_int1,
             fixed_array<LLVMTypeRef>(LLVMPointerType(g_t_sequence, 0u), g_prim_t.LLVMVoidPtrType(), g_prim_t.LLVMVoidPtrType(), g_prim_t.LLVMVoidPtrType())))
+    let simnode_interop_type = LLVMFunctionType(g_prim_t.LLVMVoidPtrType(),
+        fixed_array<LLVMTypeRef>(
+            g_prim_t.LLVMVoidPtrType(), // context
+            g_prim_t.t_int32,
+            g_prim_t.LLVMVoidPtrType() // argv
+        )
+    )
+    var jit_simnode_interop = LLVMAddFunctionWithType(
+        g_mod, "jit_simnode_interop", simnode_interop_type
+    )
+    LLVMAddGlobalMapping(g_engine, jit_simnode_interop, get_jit_simnode_interop())
+    let simnode_free_interop_type = LLVMFunctionType(g_prim_t.t_void,
+        fixed_array<LLVMTypeRef>(
+            g_prim_t.LLVMVoidPtrType(), // Node
+        )
+    )
+    var jit_free_simnode_interop = LLVMAddFunctionWithType(
+        g_mod, "jit_free_simnode_interop", simnode_free_interop_type
+    )
+    LLVMAddGlobalMapping(g_engine, jit_free_simnode_interop, get_jit_free_simnode_interop())
     LLVMAddGlobalMapping(g_engine, jit_iterator_next, get_jit_iterator_next())
     LLVMAddAttributesToFunction(jit_iterator_next, fixed_array(nounwind, willreturn))
     LLVMAddAttributeToFunctionArgumentRange(jit_iterator_next, urange(0, 4), nocapture)

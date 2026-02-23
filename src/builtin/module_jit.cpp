@@ -8,11 +8,13 @@
 #include "daScript/ast/ast_handle.h"              // addConstant
 #include "daScript/ast/ast_interop.h"             // addExtern
 
+#include "daScript/simulate/aot.h"
 #include "daScript/simulate/aot_builtin_jit.h"
 #include "daScript/simulate/aot_builtin.h"
 #include "daScript/simulate/debug_info.h"
 #include "daScript/simulate/debug_print.h"
 #include "daScript/simulate/hash.h"               // stringLength
+#include "daScript/simulate/heap.h"
 #include "daScript/simulate/simulate.h"
 #include "daScript/simulate/simulate_visit_op.h"
 
@@ -23,6 +25,7 @@
 #include "module_builtin_rtti.h"
 #include "module_builtin_ast.h"
 
+#include <memory>
 #include <stdlib.h>
 #include <stdio.h>
 #include <inttypes.h>
@@ -187,11 +190,58 @@ extern "C" {
             CodeOfPolicies policies;
             policies.debugger = false;
             context.setup(totalVariables, globalStringHeapSize, policies, {});
-
+            context.globalsSize = 32000;
+            for (int i = 0; i < totalVariables; i++) {
+                globalVariables[i] = GlobalVariable{};
+            }
             context.allocateGlobalsAndShared();
+            memset(context.globals, 0, context.globalsSize);
+            // Lock check is not supported yet in executable.
+            // Although it could be in the same way we support
+            // string formatting.
+            context.skipLockChecks = true;
+
             // Instead of copying everything like in standalone contexts
             // Let's add only things we really need.
             // And apparently now we need nothing.
+        }
+
+        void allocFunctions ( uint64_t count ) {
+            functions = (SimFunction *) code->allocate(count * sizeof(SimFunction));
+            memset(functions, 0, count * sizeof(SimFunction));
+            totalFunctions = (int) count;
+            tabMnLookup = make_shared<das_hash_map<uint64_t,SimFunction *>>();
+            tabGMnLookup = make_shared<das_hash_map<uint64_t,uint32_t>>();
+        }
+
+        void *registerJitFunction ( uint64_t index, const char * name, const char * mangledName,
+                                   uint64_t mnh, uint32_t stackSize, void * fnPtr,
+                                   bool cmres, bool fastcall, bool pinvoke ) {
+            DAS_ASSERT(index < (uint64_t) totalFunctions);
+            auto & fn = functions[index];
+            fn.name = code->allocateName(name);
+            fn.mangledName = code->allocateName(mangledName);
+            fn.mangledNameHash = mnh;
+            fn.stackSize = stackSize;
+            fn.flags = 0;
+            fn.cmres = cmres;
+            fn.fastcall = fastcall;
+            fn.pinvoke = pinvoke;
+            fn.jit = true;
+            fn.debugInfo = nullptr;
+            auto node = code->makeNode<SimNode_Jit>(LineInfo{}, (JitFunction) fnPtr);
+            fn.code = node;
+            (*tabMnLookup)[mnh] = &fn;
+            return &fn;
+        }
+
+        void registerJitGlobalVariable(uint64_t mnh, size_t offset) {
+            (*tabGMnLookup)[mnh] = offset;
+        }
+
+        void initFunctionAddr ( uint64_t index, void * globPtr ) {
+            DAS_ASSERT(index < (uint64_t) totalFunctions);
+            *((SimFunction **) globPtr) = &functions[index];
         }
     };
 
@@ -203,32 +253,78 @@ extern "C" {
                                                   bool pinvoke) {
         // return nullptr;
         Context *context = new JitContext(totalVariables, totalFunctions, globalStringHeapSize, pinvoke);
+        static_cast<JitContext *>(context)->allocFunctions(totalFunctions);
         return context;
+    }
+
+    DAS_API void *jit_register_standalone_function ( Context * ctx, uint64_t index,
+                                             const char * name, const char * mangledName,
+                                             uint64_t mnh, uint32_t stackSize,
+                                             void * fnPtr,
+                                             bool cmres, bool fastcall, bool pinvoke ) {
+        return static_cast<JitContext *>(ctx)->registerJitFunction(index, name, mangledName, mnh, stackSize,
+                                                            fnPtr, cmres, fastcall, pinvoke);
+    }
+
+    DAS_API void jit_register_standalone_variable ( Context * ctx, uint64_t mangledNameHash, uint64_t offset ) {
+        static_cast<JitContext *>(ctx)->registerJitGlobalVariable(mangledNameHash, offset);
+    }
+
+    DAS_API void jit_init_function_addr ( Context * ctx, uint64_t index, void * globPtr ) {
+        static_cast<JitContext *>(ctx)->initFunctionAddr(index, globPtr);
     }
 
     DAS_API void jit_init_extern_function ( const char * moduleName,
                                             const char * funcMangledName,
                                             void ** dllGlobal ) {
+        bool found = false;
         Module::foreach([&](Module * module) -> bool {
             if ( module->name != moduleName ) return true;
             auto fn = module->findFunction(funcMangledName);
             if ( fn && fn->builtIn ) {
                 *dllGlobal = static_cast<BuiltInFunction *>(fn.get())->getBuiltinAddress();
+                found = true;
                 return false;
             }
             return true;
         });
+        if (!found) {
+            DAS_FATAL_ERROR("Failed to find %s in module %s.", funcMangledName, moduleName);
+        }
     }
 
     DAS_API void jit_trap() {
         DAS_FATAL_ERROR("FATAL: Unresolved dynamic function call in compiled code. This indicates a missing JIT symbol. Disable `strict` mode or remove this call.\n");
     }
 
+    DAS_API void jit_set_command_line_arguments( int argc, char * argv[] ) {
+        setCommandLineArguments(argc, argv);
+    }
+
+    DAS_API void jit_simnode_interop(void *ptr, int argCount, TypeInfo **types) {
+        auto res = new(ptr) SimNode_AotInteropBase();
+        res->argumentValues = nullptr;
+        res->nArguments = argCount;
+        res->types = types;
+    }
+    DAS_API void jit_free_simnode_interop(SimNode_AotInteropBase *ptr) {
+        ptr->~SimNode_AotInteropBase();
+    }
+
     DAS_API void *das_get_jit_init_extern_function() {
         return (void *) &jit_init_extern_function;
     }
 
+    DAS_API void *das_get_jit_simnode_interop() {
+        return (void *) &jit_simnode_interop;
+    }
+
+    DAS_API void *das_get_jit_free_simnode_interop() {
+        return (void *) &jit_free_simnode_interop;
+    }
+
     DAS_API void * jit_get_global_mnh ( uint64_t mnh, Context & context ) {
+        printf("%d\n", context.globalOffsetByMangledName(mnh));
         return context.globals + context.globalOffsetByMangledName(mnh);
     }
 
@@ -475,6 +571,15 @@ extern "C" {
         JIT_TABLE_FUNCTION(&jit_table_find);
     }
 
+
+    uint64_t das_get_global_variable_offset( const Context * ctx, int id ) {
+        return ctx->getGlobalVariable(id).offset;
+    }
+
+    uint64_t das_get_global_variable_mnh( const Context * ctx, int id ) {
+        return ctx->getGlobalVariable(id).mangledNameHash;
+    }
+
     extern "C" {
         void * get_jit_table_find ( int32_t baseType, Context * context, LineInfoArg * at ) {
             return das_get_jit_table_find(baseType, context, at);
@@ -634,6 +739,11 @@ extern "C" {
         context->invoke(block, args, nullptr, at);
     }
 
+    int jit_simnode_interop_size() {
+        return sizeof(SimNode_AotInteropBase);
+    }
+
+
     class Module_Jit : public Module {
     public:
         Module_Jit() : Module("jit") {
@@ -670,6 +780,10 @@ extern "C" {
                 SideEffects::none, "das_get_jit_string_builder_temp");
             addExtern<DAS_BIND_FUN(das_get_jit_init_extern_function)>(*this, lib, "get_jit_init_extern_function",
                 SideEffects::none, "get_jit_init_extern_function");
+            addExtern<DAS_BIND_FUN(das_get_jit_free_simnode_interop)>(*this, lib, "get_jit_free_simnode_interop",
+                SideEffects::none, "das_get_jit_free_simnode_interop");
+            addExtern<DAS_BIND_FUN(das_get_jit_simnode_interop)>(*this, lib, "get_jit_simnode_interop",
+                SideEffects::none, "das_get_jit_simnode_interop");
             addExtern<DAS_BIND_FUN(das_get_jit_get_global_mnh)>(*this, lib, "get_jit_get_global_mnh",
                 SideEffects::none, "das_get_jit_get_global_mnh");
             addExtern<DAS_BIND_FUN(das_get_jit_get_shared_mnh)>(*this, lib, "get_jit_get_shared_mnh",
@@ -692,6 +806,10 @@ extern "C" {
                 SideEffects::none, "das_get_jit_table_erase");
             addExtern<DAS_BIND_FUN(das_get_jit_table_find)>(*this, lib, "get_jit_table_find",
                 SideEffects::none, "das_get_jit_table_find");
+            addExtern<DAS_BIND_FUN(das_get_global_variable_offset)>(*this, lib, "get_global_variable_offset",
+                SideEffects::none, "das_get_global_variable_offset");
+            addExtern<DAS_BIND_FUN(das_get_global_variable_mnh)>(*this, lib, "get_global_variable_mnh",
+                SideEffects::none, "das_get_global_variable_mnh");
             addExtern<DAS_BIND_FUN(das_get_jit_str_cmp)>(*this, lib, "get_jit_str_cmp",
                 SideEffects::none, "das_get_jit_str_cmp");
             addExtern<DAS_BIND_FUN(das_get_jit_str_cat)>(*this, lib, "get_jit_str_cat",
@@ -755,6 +873,8 @@ extern "C" {
             addExtern<DAS_BIND_FUN(jit_set_jit_state)>(*this, lib,  "set_jit_state",
                 SideEffects::worstDefault, "jit_set_jit_state")
                     ->args({"context","shared_lib","llvm_ee","llvm_ctx"});
+            addExtern<DAS_BIND_FUN(jit_simnode_interop_size)>(*this, lib,  "simnode_interop_size",
+                SideEffects::worstDefault, "simnode_interop_size");
             addExtern<DAS_BIND_FUN(jit_get_jit_state)>(*this, lib,  "get_jit_state",
                 SideEffects::worstDefault, "jit_get_jit_state")
                     ->args({"block","context","at"});
@@ -774,3 +894,15 @@ extern "C" {
 }
 
 REGISTER_MODULE_IN_NAMESPACE(Module_Jit,das);
+
+static void init() {
+    NEED_ALL_DEFAULT_MODULES;
+    NEED_MODULE(Module_UriParser);
+    NEED_MODULE(Module_JobQue);
+}
+
+extern "C" {
+DAS_API void jit_initialize_modules () {
+    init();
+}
+}
