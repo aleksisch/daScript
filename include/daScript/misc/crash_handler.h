@@ -206,6 +206,7 @@ namespace das {
                     (unsigned long long)ep->ExceptionRecord->ExceptionInformation[1]);
         }
         print_stack_trace(ep->ContextRecord);
+        fprintf(stderr, "\nThis is a daslang bug. Please report at https://github.com/GaijinEntertainment/daScript/issues with the trace above.\n");
         fflush(stderr);
         _exit(3);
         return EXCEPTION_EXECUTE_HANDLER;  // unreachable
@@ -346,6 +347,9 @@ namespace das {
         }
 
         print_backtrace_frames(fpPCs, fpFrames, fpCount);
+
+        fprintf(stderr, "\nThis is a daslang bug. Please report at https://github.com/GaijinEntertainment/daScript/issues with the trace above.\n");
+        fflush(stderr);
 
         signal(sig, SIG_DFL);
         raise(sig);
