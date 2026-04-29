@@ -1139,7 +1139,9 @@ def clone(var args; var nargs : array<auto(TT)?>) {
     for (narg in nargs) {
         _::push(args, narg)
     }
-    delete nargs
+    unsafe {
+        delete nargs
+    }
 }
 
 [unsafe_outside_of_for, nodiscard]

@@ -710,7 +710,6 @@ def public strudel_play(cmd_fn : function<(cmd : string) : void> = @@strudel_noo
             g_tracks[i] = null
         }
     }
-    delete g_tracks
     if (total_samples > 0ul) {
         let SPEED = total_time / double(total_samples)
         let SPEED_OF_LIGHT = 1000.lf / 48000.lf
@@ -822,9 +821,6 @@ def public strudel_shutdown() {
             g_tracks[i] = null
         }
     }
-    delete g_tracks
-    delete g_track_pcm
-    delete g_master_pcm
     g_sid = 0ul
     // release SF2 soundfont (finalizer recursively frees instruments/presets/zones)
     if (g_sf2 != null) {

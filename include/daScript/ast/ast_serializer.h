@@ -116,6 +116,7 @@ namespace das {
         vector<tuple<string, uint64_t, ProgramPtr, Module*>> parsedModules;
     // tracking for shared modules
         das_hash_set<Module *>                      writingReadyModules;
+        das_hash_map<string, Module*>               readingReadyModules;
         bool                                        ignoreEmptyExternal = false;
         void tag   ( const char * name, uint32_t hash );
 #if DAS_SERIALIZE_DTAG

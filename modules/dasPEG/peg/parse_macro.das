@@ -154,7 +154,7 @@ def into_rule_(var expr : ExpressionPtr) : Rule_? {
         var as_expr <- expr as ExprAsVariant
         var subrule = ((expr as ExprAsVariant).value as ExprCall).arguments[0] |> into_rule_
         subrule.name := as_expr.name
-        var inscope t <- Rule(option <- subrule)
+        var t <- Rule(option <- subrule)
         return <- new Rule_(rule <- t, name = as_expr.name |> string())
     } elif (expr is ExprAsVariant && ((expr as ExprAsVariant).value is ExprPtr2Ref)) {
         var as_expr <- expr as ExprAsVariant
@@ -277,7 +277,7 @@ def transform(var rule : MacroRule) : Definition {
 
     // Transform array<ExprCall?> into an array of Rules
 
-    var inscope alternatives : array<Alternative>
+    var alternatives : array<Alternative>
 
     for (alt in rule.alternatives) {
         {// creates scope for inscope
@@ -371,9 +371,9 @@ class ParseMacro : AstCallMacro {
 
         // Transform
 
-        var inscope gram : array<Definition>
+        var gram : array<Definition>
 
-        var inscope gen <- ParserGenerator(id = times_invoked++)
+        var gen <- ParserGenerator(id = times_invoked++)
 
         for (mrule in rules_) {
             gram |> emplace(mrule |> transform)
