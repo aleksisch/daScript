@@ -20,29 +20,17 @@ let private llvm_c_headers <- array<string>(
     "ErrorHandling.h",
     "ExecutionEngine.h",
     "ExternC.h",
-    "Initialization.h",
     "IRReader.h",
     "Linker.h",
     "LLJIT.h",
-    "lto.h",
     "Object.h",
     "Orc.h",
     "OrcEE.h",
-    "Remarks.h",
     "Support.h",
     "Target.h",
     "TargetMachine.h",
     "Types.h",
-// transforms
-    "AggressiveInstCombine.h",
-    "Coroutines.h",
-    "InstCombine.h",
-    "IPO.h",
     "PassBuilder.h",
-    "PassManagerBuilder.h",
-    "Scalar.h",
-    "Utils.h",
-    "Vectorize.h",
 // def version
     "abi-breaking.h",
     "AsmParsers.def",
@@ -146,7 +134,11 @@ class LlvmGenDinamic : DasGenBind {
         let function_name = string(clang_getCursorSpelling(c))
         if (function_name == "LLVMInitializeCore" || // Defined twice in LLVM C API
             function_name |> starts_with("LLVMInitializeAll") || // It's static macro function, implemented on das manually
-            function_name |> starts_with("LLVMInitializeNative") // It's static macro function, implemented on das manually
+            function_name |> starts_with("LLVMInitializeNative") || // It's static macro function, implemented on das manually
+            // Removed in LLVM 17 (opaque pointers became mandatory); header still ships
+            // an inline shim in some distros so the function symbol may show up at parse
+            // time even though LLVM.dll does not export it.
+            function_name == "LLVMContextSetOpaquePointers"
             ) {
             return true
         }
@@ -167,24 +159,36 @@ class LlvmGenDinamic : DasGenBind {
         return false
     }
     def override output_dasbind(function_name : string) {
-        fprint(func_decl_file, "[extern(cdecl, name=\"{function_name}\", linux_library=\"libLLVM.so\", windows_library=\"LLVM-C\")]\n")
+        // Match the project-wide prebuilt naming: a single LLVM.dll blob lives
+        // in lib/ regardless of host platform (ELF .so on Linux, .dylib on macOS,
+        // .dll on Windows — all renamed to LLVM.dll). The daslang dlopen path
+        // strips the `.dll` for ELF/Mach-O loaders.
+        fprint(func_decl_file, "[extern(cdecl, name=\"{function_name}\", library=\"LLVM.dll\")]\n")
     }
 }
 
 [export]
 def main {
     let is_dynamic = true
-    let clang_i = "C:/Work/win64/include"
+    // Path to the `llvm-c/` C include tree. Override with env LLVM_C_INCLUDE
+    // (e.g. /usr/lib/llvm-22/include on Debian/Ubuntu). The Windows default is
+    // kept for historical reasons.
+    let clang_i = (has_env_variable("LLVM_C_INCLUDE")
+        ? get_env_variable("LLVM_C_INCLUDE")
+        : "C:/Work/win64/include")
     let pfn = "cb_dasLLVM.h"
     let pfp = "{get_das_root()}/modules/dasLLVM/src/"
-    let args <- array<string>(
-        "-xc++-header",
-        "-std=c++1z",
-        "-I{get_full_file_name(pfp)}",
-        "-I{clang_i}",
-        "-DWIN32",
-        "-DCINDEX_EXPORTS"
-    )
+    var args : array<string>
+    args |> push("-xc++-header")
+    args |> push("-std=c++1z")
+    args |> push("-I{get_full_file_name(pfp)}")
+    args |> push("-I{clang_i}")
+    // -DWIN32 only needed when parsing on Windows where some llvm-c headers gate
+    // declarations on it. Skip on POSIX to avoid steering header pickups wrong.
+    if (has_env_variable("OS") || has_env_variable("WINDIR")) {
+        args |> push("-DWIN32")
+    }
+    args |> push("-DCINDEX_EXPORTS")
     if (is_dynamic) {
         // generate
         let output_name = "{get_das_root()}/modules/dasLLVM/bindings/llvm_func.das"
