@@ -138,7 +138,16 @@ class LlvmGenDinamic : DasGenBind {
             // Removed in LLVM 17 (opaque pointers became mandatory); header still ships
             // an inline shim in some distros so the function symbol may show up at parse
             // time even though LLVM.dll does not export it.
-            function_name == "LLVMContextSetOpaquePointers"
+            function_name == "LLVMContextSetOpaquePointers" ||
+            // Per-target disassembler / asm-parser initializers are not used by
+            // daslib and are not uniformly exported by prebuilt LLVM shared libs
+            // across platforms (the Windows build of LLVM.dll, in particular,
+            // omits Disassembler symbols for M68k/VE/Xtensa/XCore/Sparc/SystemZ
+            // and AsmParser for several targets). daslib's manual
+            // LLVMInitializeAll* expansions only need TargetInfo/Target/TargetMC/AsmPrinter
+            // per target, so dropping Disassembler/AsmParser bindings is safe.
+            (function_name |> starts_with("LLVMInitialize") && function_name |> ends_with("Disassembler")) ||
+            (function_name |> starts_with("LLVMInitialize") && function_name |> ends_with("AsmParser"))
             ) {
             return true
         }
