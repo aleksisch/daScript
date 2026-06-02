@@ -1416,7 +1416,7 @@ namespace das {
     // in a prior pass now succeeds and may unblock others. Keep iterating while a
     // pass loads at least one; stop when a pass makes no progress (remaining
     // entries have genuinely-missing .so files — left silent, matching Quiet).
-    void retry_pending_dynamic_modules() {
+    DAS_API void retry_pending_dynamic_modules() {
         bool progress = true;
         while (progress && !g_pending_dynamic_modules.empty()) {
             progress = false;
