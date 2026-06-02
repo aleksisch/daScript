@@ -1684,15 +1684,14 @@ namespace das
         void inferLint(TextWriter & logs);
         void checkSideEffects();
         void foldUnsafe();
-        bool optimizationRefFolding(int32_t round);
-        bool optimizationConstFolding(int32_t round);
-        bool optimizationBlockFolding(int32_t round);
-        bool optimizationCondFolding(int32_t round);
-        bool optimizationUnused(TextWriter & logs, int32_t round);
+        DAS_API bool optimizationRefFolding(int32_t round);
+        DAS_API bool optimizationConstFolding(int32_t round);
+        DAS_API bool optimizationBlockFolding(int32_t round);
+        DAS_API bool optimizationCondFolding(int32_t round);
+        DAS_API bool optimizationUnused(TextWriter & logs, int32_t round);
         void buildAccessFlags(TextWriter & logs);
         bool verifyAndFoldContracts();
         void validateAst();
-        void optimize(TextWriter & logs, ModuleGroup & libGroup);
         bool inScopePodAnalysis(TextWriter & logs);
         void markSymbolUse(bool builtInSym, bool forceAll, bool initThis, Module * macroModule, TextWriter * logs = nullptr);
         void markModuleSymbolUse(TextWriter * logs = nullptr);
@@ -1810,6 +1809,9 @@ namespace das
         TextWriter & logs, ModuleGroup & libGroup, CodeOfPolicies policies = CodeOfPolicies() );
     DAS_CC_API ProgramPtr compileDaScriptSerialize ( const string & fileName, const FileAccessPtr & access,
         TextWriter & logs, ModuleGroup & libGroup, CodeOfPolicies policies = CodeOfPolicies() );
+
+    // optimization pass (compiler lib); runs after type inference
+    void optimizeProgram ( Program * program, TextWriter & logs, ModuleGroup & libGroup );
 
     // collect script prerequisits
     DAS_API bool getPrerequisits ( const string & fileName,

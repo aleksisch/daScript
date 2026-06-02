@@ -1091,6 +1091,7 @@ SET(LIBDASCRIPT_COMPILER_SRC
     ${PARSER_SRC}
     ${DASCRIPT_FMT_SRC}
     src/ast/ast_parse.cpp
+    src/ast/ast_optimize.cpp
     src/ast/dyn_modules.cpp
     src/misc/lexer_alloc_track.cpp
     src/misc/daScriptC.cpp

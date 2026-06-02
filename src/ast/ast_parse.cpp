@@ -851,7 +851,7 @@ namespace das {
                 if (!program->failed()) {
                     if (program->getOptimize()) {
                         callCompilationCallback(moduleName, fileName, "optimize");
-                        program->optimize(logs,libGroup);
+                        optimizeProgram(program.get(),logs,libGroup);
                     } else {
                         program->buildAccessFlags(logs);
                     }
