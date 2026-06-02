@@ -3633,7 +3633,7 @@ namespace das
         else return (char)('a'+(Ch-10));
     }
 
-    string aotSuffixNameEx ( const string & funcName, const char * suffix ) {
+    DAS_API string aotSuffixNameEx ( const string & funcName, const char * suffix ) {
         string name;
         bool prefix = false;
         for ( char ch : funcName ) {

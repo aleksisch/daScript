@@ -24,5 +24,5 @@ namespace das::format {
      * Run formatter on following files
      * @return 0 if everything is fine
      */
-    DAS_API int run(FormatOptions opt, const vector<string> &files);
+    DAS_CC_API int run(FormatOptions opt, const vector<string> &files);
 };
