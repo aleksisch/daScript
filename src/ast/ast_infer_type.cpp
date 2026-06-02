@@ -5926,16 +5926,16 @@ namespace das {
 
     // try infer, if failed - no macros
     // run macros til any of them does work, then reinfer and restart (i.e. infer after each macro)
-    void Program::inferTypes(TextWriter &logs, ModuleGroup &libGroup) {
-        newLambdaIndex = 1;
+    void inferTypes(Program * program, TextWriter &logs, ModuleGroup &libGroup) {
+        program->newLambdaIndex = 1;
         // inferPassesUsed is NOT reset here — parseDaScript resets it once per module
         // before the restartInfer: loop, so multiple inferTypes legs accumulate properly.
-        inferTypesDirty(logs, false);
+        inferTypesDirty(program, logs, false);
         bool anyMacrosDidWork = false;
         bool anyMacrosFailedToInfer = false;
         int pass = 0;
-        int32_t maxInferPasses = options.getIntOption("max_infer_passes", policies.max_infer_passes);
-        if (failed())
+        int32_t maxInferPasses = program->options.getIntOption("max_infer_passes", program->policies.max_infer_passes);
+        if (program->failed())
             goto failed_to_infer;
         do {
             if (pass++ >= maxInferPasses)
@@ -5943,19 +5943,19 @@ namespace das {
             anyMacrosDidWork = false;
             anyMacrosFailedToInfer = false;
             auto modMacro = [&](Module *mod) -> bool { // we run all macros for each module
-                if (thisModule->isVisibleDirectly(mod) && mod != thisModule.get()) {
+                if (program->thisModule->isVisibleDirectly(mod) && mod != program->thisModule.get()) {
                     for (const auto &pm : mod->macros) {
-                        bool anyWork = pm->apply(this, thisModule.get());
-                        if (failed()) { // if macro failed, we report it, and we are done
-                            error("macro '" + mod->name + "::" + pm->name + "' failed", "", "", LineInfo(), CompilationError::runtime_macro);
+                        bool anyWork = pm->apply(program, program->thisModule.get());
+                        if (program->failed()) { // if macro failed, we report it, and we are done
+                            program->error("macro '" + mod->name + "::" + pm->name + "' failed", "", "", LineInfo(), CompilationError::runtime_macro);
                             return false;
                         }
                         if (anyWork) { // if macro did anything, we done
-                            reportingInferErrors = true;
-                            inferTypesDirty(logs, true);
-                            reportingInferErrors = false;
-                            if (failed()) { // if it failed to infer types after, we report it
-                                error("macro '" + mod->name + "::" + pm->name + "' failed to infer", "", "", LineInfo(), CompilationError::runtime_macro_infer);
+                            program->reportingInferErrors = true;
+                            inferTypesDirty(program, logs, true);
+                            program->reportingInferErrors = false;
+                            if (program->failed()) { // if it failed to infer types after, we report it
+                                program->error("macro '" + mod->name + "::" + pm->name + "' failed to infer", "", "", LineInfo(), CompilationError::runtime_macro_infer);
                                 anyMacrosFailedToInfer = true;
                                 return false;
                             }
@@ -5967,68 +5967,68 @@ namespace das {
                 return true;
             };
             Module::foreach (modMacro);
-            if (failed())
+            if (program->failed())
                 break;
             if (anyMacrosDidWork)
                 continue;
-            if (relocatePotentiallyUninitialized(logs)) {
+            if (program->relocatePotentiallyUninitialized(logs)) {
                 anyMacrosDidWork = true;
-                reportingInferErrors = true;
-                inferTypesDirty(logs, true);
-                reportingInferErrors = false;
-                if (failed()) {
-                    error("internal compiler error: variable relocation infer to fail", "", "", LineInfo(), CompilationError::internal_relocate_infer);
+                program->reportingInferErrors = true;
+                inferTypesDirty(program, logs, true);
+                program->reportingInferErrors = false;
+                if (program->failed()) {
+                    program->error("internal compiler error: variable relocation infer to fail", "", "", LineInfo(), CompilationError::internal_relocate_infer);
                 }
                 continue;
             }
             libGroup.foreach (modMacro, "*");
-            if (inScopePodAnalysis(logs)) {
+            if (program->inScopePodAnalysis(logs)) {
                 anyMacrosDidWork = true;
-                reportingInferErrors = true;
-                inferTypesDirty(logs, true);
-                reportingInferErrors = false;
-                if (failed()) {
-                    error("internal compiler error: pod analysis infer to fail", "", "", LineInfo(), CompilationError::internal_pod_analysis_infer);
+                program->reportingInferErrors = true;
+                inferTypesDirty(program, logs, true);
+                program->reportingInferErrors = false;
+                if (program->failed()) {
+                    program->error("internal compiler error: pod analysis infer to fail", "", "", LineInfo(), CompilationError::internal_pod_analysis_infer);
                 }
                 continue;
             }
-        } while (!failed() && anyMacrosDidWork);
+        } while (!program->failed() && anyMacrosDidWork);
     failed_to_infer:;
-        if (failed() && !anyMacrosFailedToInfer && !macroException) {
-            reportingInferErrors = true;
-            inferTypesDirty(logs, true);
-            reportingInferErrors = false;
+        if (program->failed() && !anyMacrosFailedToInfer && !program->macroException) {
+            program->reportingInferErrors = true;
+            inferTypesDirty(program, logs, true);
+            program->reportingInferErrors = false;
         }
         if (pass >= maxInferPasses) {
-            error("type inference exceeded maximum allowed number of passes (" + to_string(maxInferPasses) + ")\n"
+            program->error("type inference exceeded maximum allowed number of passes (" + to_string(maxInferPasses) + ")\n"
                                                                                                              "this is likely due to a macro continuously being applied",
                   "", "",
                   LineInfo(), CompilationError::exceeds_infer_passes);
         }
     }
 
-    void Program::inferTypesDirty(TextWriter &logs, bool verbose) {
+    void inferTypesDirty(Program * program, TextWriter &logs, bool verbose) {
         int pass = 0;
-        int32_t maxInferPasses = options.getIntOption("max_infer_passes", policies.max_infer_passes);
-        bool logInferPasses = options.getBoolOption("log_infer_passes", false);
+        int32_t maxInferPasses = program->options.getIntOption("max_infer_passes", program->policies.max_infer_passes);
+        bool logInferPasses = program->options.getBoolOption("log_infer_passes", false);
         if (logInferPasses) {
             logs << "INITIAL CODE:\n"
-                 << *this;
+                 << *program;
         }
         for (pass = 0; pass < maxInferPasses; ++pass) {
-            if (macroException)
+            if (program->macroException)
                 break;
-            inferPassesUsed++;   // count each body invocation; avoids undercount when loop breaks early (pass is 0-based)
-            failToCompile = false;
-            errors.clear();
-            InferTypes context(this, &logs);
+            program->inferPassesUsed++;   // count each body invocation; avoids undercount when loop breaks early (pass is 0-based)
+            program->failToCompile = false;
+            program->errors.clear();
+            InferTypes context(program, &logs);
             context.verbose = verbose || logInferPasses;
-            visit(context);
+            program->visit(context);
             for (auto efn : context.extraFunctions) {
-                addFunction(efn);
+                program->addFunction(efn);
             }
             vector<tuple<Function *, uint64_t, uint64_t>> refreshFunctions;
-            thisModule->functions.foreach_with_hash([&](auto fn, uint64_t hash) {
+            program->thisModule->functions.foreach_with_hash([&](auto fn, uint64_t hash) {
                 auto mnh = fn->getMangledNameHash();
                 if ( hash != mnh ) {
                     refreshFunctions.emplace_back(make_tuple(fn, hash, mnh));
@@ -6036,28 +6036,28 @@ namespace das {
                     fn->notInferred();
                 } });
             for (auto rfn : refreshFunctions) {
-                if (!thisModule->functions.refresh_key(get<1>(rfn), get<2>(rfn))) {
-                    error("internal compiler error: failed to refresh '" + get<0>(rfn)->getMangledName() + "'", "", "", get<0>(rfn)->at, CompilationError::internal_function_refresh);
+                if (!program->thisModule->functions.refresh_key(get<1>(rfn), get<2>(rfn))) {
+                    program->error("internal compiler error: failed to refresh '" + get<0>(rfn)->getMangledName() + "'", "", "", get<0>(rfn)->at, CompilationError::internal_function_refresh);
                     goto failedIt;
                 }
             }
             bool anyMacrosDidWork = false;
             auto modMacro = [&](Module *mod) -> bool {
-                if (thisModule->isVisibleDirectly(mod) && mod != thisModule.get()) {
+                if (program->thisModule->isVisibleDirectly(mod) && mod != program->thisModule.get()) {
                     for (const auto &pm : mod->inferMacros) {
-                        anyMacrosDidWork |= pm->apply(this, thisModule.get());
+                        anyMacrosDidWork |= pm->apply(program, program->thisModule.get());
                     }
                 }
                 return true;
             };
             Module::foreach (modMacro);
-            library.foreach (modMacro, "*");
-            inferLint(logs);
+            program->library.foreach (modMacro, "*");
+            program->inferLint(logs);
             if (logInferPasses) {
                 logs << "PASS " << pass << ":\n"
-                     << *this;
-                sort(errors.begin(), errors.end());
-                for (auto &err : errors) {
+                     << *program;
+                sort(program->errors.begin(), program->errors.end());
+                for (auto &err : program->errors) {
                     logs << reportError(err.at, err.what, err.extra, err.fixme, err.cerr);
                 }
             }
@@ -6068,7 +6068,7 @@ namespace das {
         }
     failedIt:;
         if (pass == maxInferPasses) {
-            error("type inference exceeded maximum allowed number of passes (" + to_string(maxInferPasses) + ")\n"
+            program->error("type inference exceeded maximum allowed number of passes (" + to_string(maxInferPasses) + ")\n"
                                                                                                              "this is likely due to a loop in the type system",
                   "", "",
                   LineInfo(), CompilationError::exceeds_infer_passes);

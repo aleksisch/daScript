@@ -1679,8 +1679,6 @@ namespace das
         bool patchAnnotations();
         void fixupAnnotations();
         void normalizeOptionTypes ();
-        DAS_CC_API void inferTypes(TextWriter & logs, ModuleGroup & libGroup);
-        DAS_CC_API void inferTypesDirty(TextWriter & logs, bool verbose);
         bool relocatePotentiallyUninitialized(TextWriter & logs);
         void lint (TextWriter & logs, ModuleGroup & libGroup );
         void inferLint(TextWriter & logs);
