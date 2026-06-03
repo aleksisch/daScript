@@ -248,7 +248,7 @@ void tutorial() {
             + "/tutorials/integration/cpp/16_sandbox.das_project";
 
         auto fAccess = make_smart<FsFileAccess>(projectPath,
-                                                make_smart<FsFileAccess>());
+                                                make_smart<Program>());
 
         CodeOfPolicies policies;
         // The .das_project handles module/unsafe/option restrictions,
@@ -268,7 +268,7 @@ void tutorial() {
         // Try a script that uses unsafe — blocked by module_allowed_unsafe()
         {
             auto fAccess = make_smart<FsFileAccess>(projectPath,
-                                                    make_smart<FsFileAccess>());
+                                                    make_smart<Program>());
             fAccess->setFileInfo("unsafe_test.das",
                 make_unique<TextFileInfo>(UNSAFE_SCRIPT,
                                          uint32_t(strlen(UNSAFE_SCRIPT)),
@@ -282,7 +282,7 @@ void tutorial() {
         tout << "\n";
         {
             auto fAccess = make_smart<FsFileAccess>(projectPath,
-                                                    make_smart<FsFileAccess>());
+                                                    make_smart<Program>());
             fAccess->setFileInfo("blocked_test.das",
                 make_unique<TextFileInfo>(BLOCKED_MODULE_SCRIPT,
                                          uint32_t(strlen(BLOCKED_MODULE_SCRIPT)),

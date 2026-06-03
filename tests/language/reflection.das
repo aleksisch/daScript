@@ -1,5 +1,5 @@
 options gen2
-require daslib/rtti
+require daslib/ast
 require strings
 require daslib/strings_boost
 require dastest/testing_boost public
