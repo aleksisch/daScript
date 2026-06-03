@@ -1116,7 +1116,7 @@ namespace das
         verifyAll = 0xffffffff
     };
 
-    bool isValidBuiltinName ( const string & name, bool canPunkt = false );
+    DAS_API bool isValidBuiltinName ( const string & name, bool canPunkt = false );
 
     class DAS_API Module {
     public:
@@ -1684,11 +1684,11 @@ namespace das
         void inferLint(TextWriter & logs);
         void checkSideEffects();
         void foldUnsafe();
-        DAS_API bool optimizationRefFolding(int32_t round);
-        DAS_API bool optimizationConstFolding(int32_t round);
-        DAS_API bool optimizationBlockFolding(int32_t round);
-        DAS_API bool optimizationCondFolding(int32_t round);
-        DAS_API bool optimizationUnused(TextWriter & logs, int32_t round);
+        bool optimizationRefFolding(int32_t round);
+        bool optimizationConstFolding(int32_t round);
+        bool optimizationBlockFolding(int32_t round);
+        bool optimizationCondFolding(int32_t round);
+        bool optimizationUnused(TextWriter & logs, int32_t round);
         void buildAccessFlags(TextWriter & logs);
         bool verifyAndFoldContracts();
         void validateAst();

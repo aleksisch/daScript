@@ -1246,7 +1246,7 @@ namespace das {
         }
     } g_verifyOptionsOnStartup;
 
-    vector<pair<string,Type>> getCodeOfPolicyOptions();
+    DAS_API vector<pair<string,Type>> getCodeOfPolicyOptions();
 
     void Program::lint ( TextWriter & /*logs*/, ModuleGroup & libGroup ) {
         if (!options.getBoolOption("lint", !policies.no_lint)) {
