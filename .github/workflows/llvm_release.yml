@@ -8,6 +8,30 @@ on:
         required: true
         default: "22.1.5"
 
+env:
+  # daslang needs the C-API only; llvm_targets.das initializes exactly these 4 targets
+  LLVM_COMMON_FLAGS: >-
+    -DCMAKE_BUILD_TYPE=Release
+    -DLLVM_ENABLE_ASSERTIONS=OFF
+    -DLLVM_ENABLE_Z3_SOLVER=OFF
+    -DLLVM_TARGETS_TO_BUILD=X86;AArch64;ARM;WebAssembly
+    -DLLVM_ENABLE_ZLIB=OFF
+    -DLLVM_ENABLE_ZSTD=OFF
+    -DLLVM_ENABLE_LIBXML2=OFF
+    -DLLVM_ENABLE_CURL=OFF
+    -DLLVM_ENABLE_LIBEDIT=OFF
+    -DLLVM_ENABLE_HTTPLIB=OFF
+    -DLLVM_ENABLE_FFI=OFF
+    -DLLVM_ENABLE_LIBPFM=OFF
+    -DLLVM_ENABLE_BINDINGS=OFF
+    -DLLVM_ENABLE_BACKTRACES=OFF
+    -DLLVM_ENABLE_CRASH_OVERRIDES=OFF
+    -DLLVM_ENABLE_UNWIND_TABLES=OFF
+    -DLLVM_INCLUDE_TESTS=OFF
+    -DLLVM_INCLUDE_EXAMPLES=OFF
+    -DLLVM_INCLUDE_BENCHMARKS=OFF
+    -DLLVM_INCLUDE_DOCS=OFF
+
 jobs:
   build:
     name: ${{ matrix.name }}
@@ -26,15 +50,12 @@ jobs:
           - name: win64
             os: windows-2022
     steps:
+      # git clone, not the source tarball: tar on Windows fails to extract
+      # symlinks under clang/test and llvm/utils/mlgo-utils; git stores them
+      # as plain files when core.symlinks=false
       - name: fetch llvm sources
         shell: bash
-        run: |
-          set -euxo pipefail
-          ver=${{ inputs.llvm_version }}
-          curl -fsSL -o llvm-project.src.tar.xz \
-            https://github.com/llvm/llvm-project/releases/download/llvmorg-$ver/llvm-project-$ver.src.tar.xz
-          tar xf llvm-project.src.tar.xz
-          mv llvm-project-$ver.src llvm-project
+        run: git clone --depth 1 --branch llvmorg-${{ inputs.llvm_version }} https://github.com/llvm/llvm-project.git llvm-project
 
       - name: build LLVM (Linux)
         if: startsWith(matrix.os, 'ubuntu')
@@ -43,23 +64,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ninja-build lld
           cmake -S llvm-project/llvm -B build -G Ninja \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DLLVM_ENABLE_ASSERTIONS=OFF \
-            -DLLVM_ENABLE_Z3_SOLVER=OFF \
-            -DLLVM_TARGETS_TO_BUILD="X86;AArch64;ARM;WebAssembly" \
-            -DLLVM_ENABLE_ZLIB=OFF \
-            -DLLVM_ENABLE_ZSTD=OFF \
-            -DLLVM_ENABLE_LIBXML2=OFF \
-            -DLLVM_ENABLE_CURL=OFF \
-            -DLLVM_ENABLE_LIBEDIT=OFF \
-            -DLLVM_ENABLE_HTTPLIB=OFF \
-            -DLLVM_ENABLE_FFI=OFF \
-            -DLLVM_ENABLE_LIBPFM=OFF \
-            -DLLVM_ENABLE_BINDINGS=OFF \
-            -DLLVM_INCLUDE_TESTS=OFF \
-            -DLLVM_INCLUDE_EXAMPLES=OFF \
-            -DLLVM_INCLUDE_BENCHMARKS=OFF \
-            -DLLVM_INCLUDE_DOCS=OFF \
+            $LLVM_COMMON_FLAGS \
             -DLLVM_USE_LINKER=lld \
             -DLLVM_BUILD_LLVM_DYLIB=ON
           ninja -C build LLVM
@@ -73,23 +78,7 @@ jobs:
           set -euxo pipefail
           brew install ninja
           cmake -S llvm-project/llvm -B build -G Ninja \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DLLVM_ENABLE_ASSERTIONS=OFF \
-            -DLLVM_ENABLE_Z3_SOLVER=OFF \
-            -DLLVM_TARGETS_TO_BUILD="X86;AArch64;ARM;WebAssembly" \
-            -DLLVM_ENABLE_ZLIB=OFF \
-            -DLLVM_ENABLE_ZSTD=OFF \
-            -DLLVM_ENABLE_LIBXML2=OFF \
-            -DLLVM_ENABLE_CURL=OFF \
-            -DLLVM_ENABLE_LIBEDIT=OFF \
-            -DLLVM_ENABLE_HTTPLIB=OFF \
-            -DLLVM_ENABLE_FFI=OFF \
-            -DLLVM_ENABLE_LIBPFM=OFF \
-            -DLLVM_ENABLE_BINDINGS=OFF \
-            -DLLVM_INCLUDE_TESTS=OFF \
-            -DLLVM_INCLUDE_EXAMPLES=OFF \
-            -DLLVM_INCLUDE_BENCHMARKS=OFF \
-            -DLLVM_INCLUDE_DOCS=OFF \
+            $LLVM_COMMON_FLAGS \
             -DLLVM_BUILD_LLVM_DYLIB=ON
           ninja -C build LLVM
           cp build/lib/libLLVM.dylib LLVM.dll
@@ -105,23 +94,7 @@ jobs:
           set -euxo pipefail
           choco install -y ninja
           cmake -S llvm-project/llvm -B build -G Ninja \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DLLVM_ENABLE_ASSERTIONS=OFF \
-            -DLLVM_ENABLE_Z3_SOLVER=OFF \
-            -DLLVM_TARGETS_TO_BUILD="X86;AArch64;ARM;WebAssembly" \
-            -DLLVM_ENABLE_ZLIB=OFF \
-            -DLLVM_ENABLE_ZSTD=OFF \
-            -DLLVM_ENABLE_LIBXML2=OFF \
-            -DLLVM_ENABLE_CURL=OFF \
-            -DLLVM_ENABLE_LIBEDIT=OFF \
-            -DLLVM_ENABLE_HTTPLIB=OFF \
-            -DLLVM_ENABLE_FFI=OFF \
-            -DLLVM_ENABLE_LIBPFM=OFF \
-            -DLLVM_ENABLE_BINDINGS=OFF \
-            -DLLVM_INCLUDE_TESTS=OFF \
-            -DLLVM_INCLUDE_EXAMPLES=OFF \
-            -DLLVM_INCLUDE_BENCHMARKS=OFF \
-            -DLLVM_INCLUDE_DOCS=OFF \
+            $LLVM_COMMON_FLAGS \
             -DLLVM_BUILD_LLVM_C_DYLIB=ON \
             -DLLVM_ENABLE_PROJECTS=clang
           ninja -C build LLVM-C clang
