@@ -3680,7 +3680,9 @@ block a test opens around the engine without calling `setup_dasllama_jobque_()` 
 built in-test, against a scalar reference written in the file - the zero and blank first inputs, the symbol cap, the shapes
 (joint off pred, two layers in both gate orders, a predictor off the float4 lattice), the TDT duration table and the plain
 RNN-T, the one-lane step against the team publish, the layer-count refusal and the pool's narrowing; `PLOG_BAR`'s control a
-net with one joint row mutated landing outside it. The device-seat cells (`rnnt_seat_skip`: skip on a build or box with no
+net with one joint row mutated landing outside it. `test_rnnt_stream_continue` decodes four nets in three chunks, each going on
+from the last chunk's state, to the one-call decode - a chunk ending on the symbol cap carrying its last token's step, a TDT
+duration running past a chunk's end - with chunks that each start the predictor over decoding apart the control. The device-seat cells (`rnnt_seat_skip`: skip on a build or box with no
 device transducer seat) decode the same nets as a GPU-flavored image carries them (`make_dev`: the halves and slab baked
 by `rnnt_bake`, the net reading them as its planes, `dev_only` set) - `test_rnnt_baked_cpu` holds the same baked form on the CPU loop
 to the scalar reference, model-free - on the build's seat
@@ -3813,6 +3815,11 @@ parakeet, the middle three quarters of the bytes zeroed (`zero_planes`) encoding
 carrier cell skips without the
 Q4_K_M GGUF (the F32 cells without the F32 GGUF or the v3 f32 bin), the encode cells without jfk.wav, and the two kq twins as
 their homes' twins do;
+the Nemotron streaming carrier (`nemotron-3.5-asr-streaming-0.6b.q8_0.gguf`): `test_nemotron_stream_jfk` (the q8 lane's
+stream of jfk at a 320 ms chunk holding jfk's word floor, the tokens and their frames the same fed whole, in 100 ms pieces and
+in 37-sample pieces, a stream started over halfway decoding apart the control) and `test_nemotron_stream_prompts` (a prompt
+for every locale the carrier lists, none for an unknown one and no stream started on it, jfk's word floor at each lookahead
+0, 3, 6 and 13), both skipping without the carrier and the jfk cells without jfk.wav;
 `test_vulkan_short_clips` (gemma4a E2B, canary and parakeet v2, each lane's CPU image and
 its Vulkan-flavored image minted in memory: clips of 320 to 1600 samples - a few mel frames, under the device fronts' old
 four-frame floor and past it - each one device encode with no decline on the Vulkan image, the row count the CPU image's

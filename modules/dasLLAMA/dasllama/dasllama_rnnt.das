@@ -61,6 +61,9 @@ struct RnntNet {
     jw : PlaneU16 = PlaneU16()     //!< ... the joint net's columns as halves, the layout of `RnntState.joint_wt`
 }
 
+let private RNNT_STEP_JOINT = -1      //!< a blank step: the predictor stands, the joint reads it at a new frame
+let private RNNT_STEP_ZERO = -2       //!< a predictor step on a zero input
+
 //! The decoder's per-session state: the LSTM's h/c, the projected prediction, the halves the session lays
 //! once a weight plane, and the joint's logit row.
 struct RnntState {
@@ -76,13 +79,13 @@ struct RnntState {
     joint_wt_key : uint64     //!< the weight plane `joint_wt` was laid from (0 = none)
     @scratch dec_stages : array<int3>   //!< a decode step's stage list, int3(range_begin, range_end, num_chunks)
     logits : array<float>
+    carry : int = RNNT_STEP_JOINT   //!< the step a stream's next chunk opens on: the token whose predictor step the chunk's end cut off, else the joint alone
+    skip : int64                    //!< the frames a stream's next chunk skips: a duration past the chunk's end
 }
 
 let RNNT_JOINT_BLOCK = 256l   //!< the logits a lane's block of the joint table covers: its columns sit back to back, so a lane walks its block forward
 let private RNNT_LSE_CUT = 32.0       //!< a logit this far under the row's maximum is left out of the log-sum; the bound is in the media architecture doc's transducer decode step section
 let private RNNT_GATE_CHUNKS = 4      //!< a layer's gate math is a few microseconds whole: more chunks than this cost more in claims than they split
-let private RNNT_STEP_JOINT = -1      //!< a blank step: the predictor stands, the joint reads it at a new frame
-let private RNNT_STEP_ZERO = -2       //!< a predictor step on a zero input
 
 //! A joint row's logits: the tokens', then the durations'.
 def rnnt_n_logits(net : RnntNet) : int64 => net.n_tokens + length(net.durations)
@@ -393,18 +396,32 @@ def private rnnt_token(lp : float const?; best, bdur, dur : int; t : int64; n_to
 //! token of a plain RNN-T, stays on the frame up to `max_symbols`. Tokens land in `toks`, cleared first.
 [arch(at="../ARCHITECTURE_MEDIA_ASR.md#rnnt-decode-step")]
 def rnnt_greedy(net : RnntNet; var s : RnntState; encp : array<float>; n_frames : int64; @scratch var toks : array<RnntToken>) {
+    rnnt_greedy(net, s, encp, n_frames, toks, true)
+}
+
+//! The greedy decode over `n_frames` rows of `encp`; `fresh` starts the predictor over, else it goes on from the state the
+//! last call left.
+[arch(at="../ARCHITECTURE_MEDIA_ASR_STREAM.md#rnnt-stream-continue")]
+def rnnt_greedy(net : RnntNet; var s : RnntState; encp : array<float>; n_frames : int64; @scratch var toks : array<RnntToken>; fresh : bool) {
     toks |> clear()
     let n_logits = rnnt_n_logits(net)
     let n_tok_logits = int(net.n_tokens)
     let n_dur = int(length(net.durations))
-    rnnt_reset(net, s)
+    let start = fresh || empty(s.h)
+    if (start) {
+        rnnt_reset(net, s)
+        s.carry = net.zero_start ? RNNT_STEP_ZERO : net.blank_id
+        s.skip = 0l
+    }
     let pool = dispatch_lanes_narrow(rnnt_step_lanes(net))
 
-    var t = 0l
+    var t = min(s.skip, n_frames)
+    s.skip -= t
     var emitted = 0
     var ts = ref_time_ticks()
-    if (n_frames > 0l) {
-        rnnt_step(net, s, encp, net.zero_start ? RNNT_STEP_ZERO : net.blank_id, 0l)
+    if (t < n_frames) {
+        rnnt_step(net, s, encp, s.carry, t)
+        s.carry = RNNT_STEP_JOINT
     }
     asr_prof_add(net.prof_step, ts)
     while (t < n_frames) {
@@ -429,6 +446,8 @@ def rnnt_greedy(net : RnntNet; var s : RnntState; encp : array<float>; n_frames 
                 ts = ref_time_ticks()
                 rnnt_step(net, s, encp, RNNT_STEP_JOINT, t)
                 asr_prof_add(net.prof_joint, ts)
+            } else {
+                s.skip = t - n_frames
             }
             continue
         }
@@ -449,6 +468,9 @@ def rnnt_greedy(net : RnntNet; var s : RnntState; encp : array<float>; n_frames 
             ts = ref_time_ticks()
             rnnt_step(net, s, encp, best, t)
             asr_prof_add(net.prof_step, ts)
+        } else {
+            s.carry = best
+            s.skip = t - n_frames
         }
     }
     dispatch_lanes_restore(pool)

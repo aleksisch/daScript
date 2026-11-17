@@ -1623,6 +1623,7 @@ struct FcCpuForm {
     biased : bool = true      //!< parakeet's GEMMs carry no bias
     tap_major : bool = true   //!< depthwise taps [k][d], or canary's channel-major [d][k]
     conv_ln : bool            //!< gigaam: the biased depthwise conv, then a LayerNorm and the SiLU; else the BatchNorm folded into the depthwise, fused with the SiLU
+    causal : bool             //!< the conv_ln form's depthwise conv reads only the past (`ARCHITECTURE_MEDIA_ASR_STREAM.md#fc-stream-block`)
     dw_taps : PlaneU16 = PlaneU16()   //!< the conv_ln form's taps as the carrier's f16 halfwords, the layer offsets indexing it; empty: the taps are f32 in ``blob``
     vec4 : bool = true        //!< the float4 GLU and k9 depthwise; canary keeps the scalar sigmoid forms
     prof : FcCpuProf
@@ -1640,6 +1641,13 @@ struct FcRelPos {
 //! the rotary form: the rope from ``st.rope_cos``/``st.rope_sin`` over the attention's normed input rows, then `attention_bidir`
 struct FcRotary {
     rope : bool = true
+}
+
+//! the streaming rel-pos form: block `layer`'s window of `n_cached` rows, capped at `cap`
+struct FcStreamPos {
+    layer : int64
+    n_cached : int64
+    cap : int64
 }
 
 def private fc_scan(form : FcCpuForm; tag : string; l : int64; x : array<float>; n : int64) {
@@ -1842,6 +1850,84 @@ def private fc_attention_cpu(m : auto(MT); var st : auto(ST); form : FcCpuForm; 
     asr_prof_add(form.prof.heads, tp)
 }
 
+//! The streaming rel-pos attention into ``st.ao``
+[arch(at = "../ARCHITECTURE_MEDIA_ASR_STREAM.md#fc-stream-block")]
+def private fc_attention_cpu(m : auto(MT); var st : auto(ST); form : FcCpuForm; lo : auto(LO); pos : FcStreamPos; tt : int64) {
+    static_if (!typeinfo has_field<kvc_k>(st)) {
+        panic("dasLLAMA tower: the streaming attention keeps its keys and values in the state's `kvc_k` / `kvc_v`")
+    } else {
+        let d = form.d
+        let n_head = form.n_head
+        let dh = d / n_head
+        let nc = pos.n_cached
+        let nl = nc + tt
+        let ww = 2l * nl - 1l
+        layernorm_batch(st.xb, st.x, m.blob, lo.nat_w, lo.nat_b, d, tt, m.eps)
+        tower_requant(m, lo.q_w, st.xb, d, tt, st.xqi, st.xsi, st.xbsi)
+        tower_mm(m, st.qq, lo.q_w, st.xb, st.xqi, st.xsi, st.xbsi, d, d, tt)
+        tower_mm(m, st.kk, lo.k_w, st.xb, st.xqi, st.xsi, st.xbsi, d, d, tt)
+        tower_mm(m, st.vv, lo.v_w, st.xb, st.xqi, st.xsi, st.xbsi, d, d, tt)
+        ensure_length(st.posl, ww * d)
+        static_if (typeinfo has_field<posbs>(st)) {
+            tower_mm(m, st.posl, lo.pos_w, st.pos_emb, st.posq, st.poss, st.posbs, d, d, ww)
+        } else {
+            tower_mm(m, st.posl, lo.pos_w, st.pos_emb, st.posq, st.poss, d, d, ww)
+        }
+        let base = pos.layer * pos.cap * d
+        ensure_length(st.kall, nl * d)
+        ensure_length(st.vall, nl * d)
+        ensure_length(st.sc, n_head * nl)
+        let scale = 1.0 / sqrt(float(dh))
+        unsafe {
+            copy_floats(addr(st.kall[0]), addr<float const?>(st.kvc_k[base]), nc * d)
+            copy_floats(addr(st.vall[0]), addr<float const?>(st.kvc_v[base]), nc * d)
+            copy_floats(addr(st.kall[nc * d]), addr<float const?>(st.kk[0]), tt * d)
+            copy_floats(addr(st.vall[nc * d]), addr<float const?>(st.vv[0]), tt * d)
+            let qqp = addr<float const?>(st.qq[0])
+            let kap = addr<float const?>(st.kall[0])
+            let vap = addr<float const?>(st.vall[0])
+            let plp = addr<float const?>(st.posl[0])
+            var scp = addr(st.sc[0])
+            var aop = addr(st.ao[0])
+            let bup = plane_at(m.blob, lo.bias_u)
+            let bvp = plane_at(m.blob, lo.bias_v)
+            maybe_parallel_for(0, int(n_head), int(n_head)) $(hb, he) {
+                unsafe {
+                    for (hi in range64(int64(hb), int64(he))) {
+                        let hoff = hi * dh
+                        var sp = scp + hi * nl
+                        for (q in range64(tt)) {
+                            let qp = qqp + q * d + hoff
+                            for (k in range64(nl)) {
+                                let kp = kap + k * d + hoff
+                                let pp = plp + (tt - 1l - q + k) * d + hoff
+                                var a = 0.0
+                                var b = 0.0
+                                for (j in range64(dh)) {
+                                    a += (qp[j] + bup[hoff + j]) * kp[j]
+                                    b += (qp[j] + bvp[hoff + j]) * pp[j]
+                                }
+                                sp[k] = (a + b) * scale
+                            }
+                            softmax(sp, nl)
+                            for (j in range64(dh)) {
+                                var acc = 0.0
+                                for (k in range64(nl)) {
+                                    acc += sp[k] * vap[k * d + hoff + j]
+                                }
+                                aop[q * d + hoff + j] = acc
+                            }
+                        }
+                    }
+                }
+            }
+            let keep = min(pos.cap, nl)
+            copy_floats(addr(st.kvc_k[base]), addr<float const?>(st.kall[(nl - keep) * d]), keep * d)
+            copy_floats(addr(st.kvc_v[base]), addr<float const?>(st.vall[(nl - keep) * d]), keep * d)
+        }
+    }
+}
+
 //! The rotary attention: the rope over a copy of the normed rows feeds q and k (one q8 requant of the roped rows), v reads
 //! the unroped rows, then `attention_bidir` into ``st.ao``.
 [arch(at="../ARCHITECTURE_MEDIA_ASR.md#gigaam-rotary-input")]
@@ -2027,15 +2113,68 @@ def private fc_dw_bn_silu_rows(var o : array<float>; g : array<float>; blob : Pl
     }
 }
 
+//! The causal depthwise conv: row `t` of `o` is the bias (none where `b_off` is negative) plus the taps over `g` rows `t` to `t + k - 1`
+[arch(at = "../ARCHITECTURE_MEDIA_ASR_STREAM.md#fc-stream-block")]
+def private fc_dw_causal_rows(var o : array<float>; g : array<float>; blob : PlaneF; w_off, b_off, d, tt, k : int64) {
+    unsafe {
+        var op = addr(o[0])
+        let gp = addr<float const?>(g[0])
+        let wp = plane_at(blob, w_off)
+        let bp = b_off >= 0l ? plane_at(blob, b_off) : null
+        maybe_parallel_for(0, int(tt), lanes_for_work(tt * d * k, 0)) $(rb, re) {
+            unsafe {
+                for (t in range64(int64(rb), int64(re))) {
+                    var orow = op + t * d
+                    if (bp != null) {
+                        copy_floats(orow, bp, d)
+                    } else {
+                        for (c in range64(d)) {
+                            orow[c] = 0.0
+                        }
+                    }
+                    for (tap in range64(k)) {
+                        let grow = gp + (t + tap) * d
+                        let wrow = wp + tap * d
+                        for (c in range64(d)) {
+                            orow[c] += wrow[c] * grow[c]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 //! The conv module: LayerNorm, pw1, GLU, the depthwise conv and its norm, the SiLU, pw2, onto the residual stream.
-def private fc_conv_module_cpu(m : auto(MT); var st : auto(ST); form : FcCpuForm; lo : auto(LO); tt : int64) {
+def private fc_conv_module_cpu(m : auto(MT); var st : auto(ST); form : FcCpuForm; lo : auto(LO); l, tt : int64) {
     let d = form.d
     layernorm_batch(st.xb, st.x, m.blob, lo.ncv_w, lo.ncv_b, d, tt, m.eps)
     tower_mm_rq(m, st.h, lo.pw1_w, st.xb, st.xqi, st.xsi, st.xbsi, d, 2l * d, tt)
     if (form.biased) {
         add_bias_rows(st.h, m.blob, lo.pw1_b, 2l * d, tt)
     }
-    if (form.conv_ln) {
+    if (form.causal) {
+        static_if (!typeinfo has_field<cvc>(st)) {
+            panic("dasLLAMA tower: the causal conv keeps its past rows in the state's `cvc`")
+        } else {
+            let kp = form.nk - 1l
+            let base = l * kp * d
+            ensure_length(st.gbuf, (kp + tt) * d)
+            unsafe {
+                copy_floats(addr(st.gbuf[0]), addr<float const?>(st.cvc[base]), kp * d)
+            }
+            fc_glu_rows(st.xb, st.h, d, tt, form.vec4)
+            unsafe {
+                copy_floats(addr(st.gbuf[kp * d]), addr<float const?>(st.xb[0]), tt * d)
+            }
+            fc_dw_causal_rows(st.ao, st.gbuf, m.blob, lo.dw_w, lo.dw_b, d, tt, form.nk)
+            unsafe {
+                copy_floats(addr(st.cvc[base]), addr<float const?>(st.gbuf[tt * d]), kp * d)
+            }
+            layernorm_batch(st.xb, st.ao, m.blob, lo.bn_w, lo.bn_b, d, tt, m.eps)
+            silu4_batch(st.xb, d, tt)
+        }
+    } elif (form.conv_ln) {
         fc_glu_rows(st.xb, st.h, d, tt, form.vec4)
         if (form.dw_taps.n > 0l) {
             static_if (typeinfo has_field<dw_wide>(st)) {
@@ -2079,7 +2218,7 @@ def fc_block_cpu(m : auto(MT); var st : auto(ST); form : FcCpuForm; pos : auto(P
     fc_scan(form, "attn", l, st.x, tt * d)
     asr_prof_add(form.prof.attn_out, tp)
     tp = ref_time_ticks()
-    fc_conv_module_cpu(m, st, form, lo, tt)
+    fc_conv_module_cpu(m, st, form, lo, l, tt)
     fc_scan(form, "conv", l, st.x, tt * d)
     asr_prof_add(form.prof.conv, tp)
     tp = ref_time_ticks()

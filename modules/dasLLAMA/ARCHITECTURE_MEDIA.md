@@ -80,6 +80,8 @@ carriers name, and no TTS family file (`dasllama_kitten`, `dasllama_kokoro`, `da
   decode loop, and its quirks; the transducer families (parakeet, gigaam's RNN-T head) delegate the decode loop to
   `dasllama_rnnt.das`. Shared tower pieces go up into `dasllama_tower`, not sideways between families.
   `dasllama_gigaam.das` is GigaAM v3 (Russian, one-file GGUF): the rotary Conformer encoder with its CTC or RNN-T head.
+  `dasllama_parakeet.das` also serves NVIDIA's streaming variant, Nemotron ASR, and its stream
+  (`ARCHITECTURE_MEDIA_ASR_STREAM.md#nemotron-stream`).
 - **`dasllama_rnnt.das`** - the transducer home: the LSTM prediction network, the joint and the
   greedy loop, serving parakeet's TDT (duration logits) and GigaAM's RNN-T (none) alike, the
   device hook its `rnnt_decode` asks first (the ASR-decoder drivers fill it), and the device

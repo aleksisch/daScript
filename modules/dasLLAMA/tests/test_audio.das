@@ -1216,6 +1216,92 @@ def test_parakeet_gguf_facade(tst : T?) {
     }
 }
 
+def private nemotron_gguf() : string => path_join(models_dir(), "nemotron-3.5-asr-streaming-0.6b.q8_0.gguf")
+
+//! `samples` streamed in `lang` at `lookahead`, fed `piece` samples at a time; `restart_at` > 0 starts the stream over at that
+//! sample. The tokens as id@frame.
+def private nm_stream_tokens(m : ParakeetModel; samples : array<float>; lang : string; lookahead, piece, restart_at : int64) : string {
+    var ns = NemotronStream()
+    nemotron_stream_start(m, ns, lang, lookahead)
+    var part : array<float>
+    var at = 0l
+    let n = long_length(samples)
+    while (at < n) {
+        if (restart_at > 0l && at == restart_at) {
+            nemotron_stream_start(m, ns, lang, lookahead)
+        }
+        let e = min(at + piece, restart_at > at ? restart_at : n)
+        part |> resize(e - at)
+        for (i in range64(e - at)) {
+            part[i] = samples[at + i]
+        }
+        nemotron_stream_feed(m, ns, part, e == n)
+        at = e
+    }
+    return build_string() $(var w) {
+        for (x in ns.out) {
+            w |> write("{x.id}@{x.frame} ")
+        }
+    }
+}
+
+[test(description = "Nemotron's streaming GGUF on the q8 lane holds jfk's word floor, and decodes the same tokens at the same frames whether the clip is fed whole, in 100 ms pieces or in 37-sample pieces; a stream started over halfway decodes apart (the control)"),
+  arch(at = "../ARCHITECTURE_MEDIA_ASR_STREAM.md#nemotron-stream")]
+def test_nemotron_stream_jfk(tst : T?) {
+    let path = nemotron_gguf()
+    return if (!model_available(tst, path))
+    tst |> run("jfk streamed in English at a 320 ms chunk") @(t : T?) {
+        let samples <- load_audio_16k_mono(asr_clip("jfk.wav"))
+        if (empty(samples)) {
+            t |> skip("jfk.wav not present")
+            return
+        }
+        with_dasllama_jobque_() {
+            var inscope m <- load_nemotron_model(path)
+            t |> success(m.nemotron && m.q8 && m.n_durations == 0l, "the carrier loads as the streaming variant on the q8 lane, a plain RNN-T head")
+            var ns = NemotronStream()
+            nemotron_stream_start(m, ns, "en-US", 3l)
+            nemotron_stream_feed(m, ns, samples, true)
+            jfk_words_floor(t, "nemotron q8, one feed", nemotron_text(m, ns.out))
+            let whole = nm_stream_tokens(m, samples, "en-US", 3l, long_length(samples), 0l)
+            t |> equal(nm_stream_tokens(m, samples, "en-US", 3l, 1600l, 0l), whole, "100 ms pieces decode the one feed's tokens")
+            t |> equal(nm_stream_tokens(m, samples, "en-US", 3l, 37l, 0l), whole, "37-sample pieces decode the one feed's tokens")
+            t |> success(nm_stream_tokens(m, samples, "en-US", 3l, 1600l, long_length(samples) / 2l) != whole,
+                "a stream started over halfway decodes apart (the control)")
+        }
+    }
+}
+
+[test(description = "Nemotron's streaming GGUF names a prompt for each of its locales and none for an unknown one, whose stream does not start; each lookahead of 0, 3, 6 and 13 frames holds jfk's word floor")]
+def test_nemotron_stream_prompts(tst : T?) {
+    let path = nemotron_gguf()
+    return if (!model_available(tst, path))
+    tst |> run("the language prompts and the lookaheads") @(t : T?) {
+        with_dasllama_jobque_() {
+            var inscope m <- load_nemotron_model(path)
+            t |> success(!empty(m.prompts), "the carrier lists its prompts")
+            for (p in m.prompts) {
+                let locale = slice(p, 0, find(p, ":"))
+                t |> success(nemotron_prompt_id(m, locale) >= 0, "'{locale}' names a prompt")
+            }
+            var ns = NemotronStream()
+            t |> success(!nemotron_stream_start(m, ns, "xx-XX", 3l), "an unknown locale starts no stream")
+            t |> equal(nemotron_prompt_id(m, "xx-XX"), -1, "an unknown locale names no prompt")
+            let samples <- load_audio_16k_mono(asr_clip("jfk.wav"))
+            if (empty(samples)) {
+                t |> skip("jfk.wav not present")
+                return
+            }
+            for (la in fixed_array(0l, 3l, 6l, 13l)) {
+                var s = NemotronStream()
+                t |> success(nemotron_stream_start(m, s, "en-US", la), "the stream starts at lookahead {la}")
+                nemotron_stream_feed(m, s, samples, true)
+                jfk_words_floor(t, "nemotron q8, lookahead {la}", nemotron_text(m, s.out))
+            }
+        }
+    }
+}
+
 [test(description = "The Q4_K_M Parakeet GGUF on the discrete home serves its front and every block from the kq lane's device planes within the three-way bar on jfk, a k4 tile counted, and zeroed seats exceed the bar"), arch(at = "../ARCHITECTURE_MEDIA_ASR.md#parakeet-kq-seats")]
 def test_parakeet_kq_discrete_twin(tst : T?) {
     tst |> run("parakeet-TDT 0.6B v3 Q4_K_M: the discrete home's chain on the kq lane vs the CPU kq chain on jfk, the dequantized chain the reference") @(t : T?) {

@@ -410,6 +410,73 @@ def test_rnnt_symbol_cap(t : T?) {
     }
 }
 
+//! A stream's decode: its tokens, the frames counted from the first chunk's start, and whether a chunk's end cut off a
+//! token's predictor step or a duration
+struct private Chunked {
+    toks : array<RnntToken>
+    carried : bool
+    skipped : bool
+}
+
+//! `f`'s frames decoded in chunks of `sizes` frames, each call going on from the state the last left unless `fresh`
+def private chunked_greedy(f : Fixture; sizes : array<int64>; fresh : bool) : Chunked {
+    let jd = f.net.joint_dim
+    var s = RnntState()
+    var r : Chunked
+    var part : array<RnntToken>
+    var rows : array<float>
+    var at = 0l
+    for (n, i in sizes, count()) {
+        rows |> resize(n * jd)
+        for (k in range64(n * jd)) {
+            rows[k] = f.enc[at * jd + k]
+        }
+        rnnt_greedy(f.net, s, rows, n, part, fresh || i == 0)
+        r.toks |> reserve(length(r.toks) + length(part))
+        for (x in part) {
+            var y = x
+            y.frame += at
+            r.toks |> push(y)
+        }
+        r.carried = r.carried || s.carry >= 0
+        r.skipped = r.skipped || s.skip > 0l
+        at += n
+    }
+    return <- r
+}
+
+[test(description = "A transducer decoded in three chunks, each going on from the state the last left, emits the one-call decode's ids, frames and log-probs - a chunk ending on the symbol cap, a TDT duration past a chunk's end; on the two nets the predictor steers, chunks that each start it over decode apart"),
+  arch(at = "../ARCHITECTURE_MEDIA_ASR_STREAM.md#rnnt-stream-continue")]
+def test_rnnt_stream_continue(t : T?) {
+    t |> run("a stream's chunks decode as the whole clip does") @(t : T?) {
+        with_dasllama_jobque_() {
+            let specs = fixed_array(NetSpec(seed = 1u), NetSpec(seed = 7u, nl = 2l, zero_start = false, torch_gates = false, two_biases = false),
+                NetSpec(seed = 3u, tok0_bias = 40.0, max_symbols = 3), NetSpec(seed = 9u, n_dur = 4, blank_bias = -1.0))
+            for (spec, i in specs, count()) {
+                var f <- build(spec)
+                var inscope whole <- engine_greedy(f)
+                var inscope chunked <- chunked_greedy(f, [5l, 4l, 3l], false)
+                var inscope restarted <- chunked_greedy(f, [5l, 4l, 3l], true)
+                t |> success(!empty(whole), "seed {spec.seed}: the net emits tokens")
+                t |> equal(token_list(chunked.toks), token_list(whole), "seed {spec.seed}: id@frame+duration")
+                rnnt_tokens_match(t, "test_rnnt: chunked seed {spec.seed}", chunked.toks, whole, PLOG_BAR)
+                if (i < 2 && token_list(restarted.toks) == token_list(whole)) {
+                    check_exceeds(t, "seed {spec.seed}: a restarted predictor decodes apart", plogs_of(restarted.toks), plogs_of(whole),
+                        Bar(abs_floor = PLOG_BAR))
+                }
+                if (i == 2) {
+                    t |> success(chunked.carried, "the capped net: a chunk ends on the cap, its last token's step carried over")
+                } elif (i == 3) {
+                    t |> success(chunked.skipped, "the TDT net: a duration runs past a chunk's end")
+                }
+                unsafe {
+                    delete f
+                }
+            }
+        }
+    }
+}
+
 [test(description = "The RNN-T decoder matches the scalar reference with joint width differing from predictor width, on two-layer stacks in torch and i f o g gate orders, and on a predictor width off the float4 lattice")]
 def test_rnnt_shapes(t : T?) {
     t |> run("joint_dim != pred_dim") @(t : T?) {

@@ -94,6 +94,15 @@ struct ParakeetModel {
     n_max_tokens : int64
     eps : float = 1e-5
     blank_id : int
+    nemotron : bool          //!< NVIDIA's cache-aware streaming variant (`ARCHITECTURE_MEDIA_ASR_STREAM.md#nemotron-carrier`)
+    attn_left : int64        //!< ... the rows a block's attention window keeps
+    n_prompts : int64        //!< ... the language prompt's one-hot width
+    prompt_inter : int64     //!< ... the prompt projector's hidden width
+    prompt_w1 : int64        //!< ... [prompt_inter][n_state + n_prompts] in ``blob``
+    prompt_b1 : int64
+    prompt_w2 : int64        //!< ... [n_state][prompt_inter]
+    prompt_b2 : int64
+    prompts : array<string>  //!< ... "<locale>:<index>"
     durations : PlaneI32 = PlaneI32()
     filters : PlaneF = PlaneF()     // [n_mel][n_fb]
     window : PlaneF = PlaneF()      // STFT window from the file
@@ -163,7 +172,7 @@ def finalize(var t : ParakeetModel) {
 // the tripwire: serialize_image_meta(ParakeetModel) covers 42 fields (vocab rides the meta
 // blob — string arrays can't be raw planes); fft (rebuilt at load) + image_map + image_bytes
 // are deliberate skips.
-let private PARAKEET_META_FIELDS = 42 + 3
+let private PARAKEET_META_FIELDS = 51 + 3
 
 // every meta-carried ParakeetModel field, explicitly, both directions (see dasllama_image)
 def private serialize_image_meta(var arch : Archive; var t : ParakeetModel) {
@@ -183,6 +192,15 @@ def private serialize_image_meta(var arch : Archive; var t : ParakeetModel) {
     arch |> serialize_raw(t.n_max_tokens)
     arch |> serialize_raw(t.eps)
     arch |> serialize_raw(t.blank_id)
+    arch |> serialize_raw(t.nemotron)
+    arch |> serialize_raw(t.attn_left)
+    arch |> serialize_raw(t.n_prompts)
+    arch |> serialize_raw(t.prompt_inter)
+    arch |> serialize_raw(t.prompt_w1)
+    arch |> serialize_raw(t.prompt_b1)
+    arch |> serialize_raw(t.prompt_w2)
+    arch |> serialize_raw(t.prompt_b2)
+    serialize_strings(arch, t.prompts)
     serialize_strings(arch, t.vocab)
     arch |> serialize_raw(t.c0_w)
     arch |> serialize_raw(t.c0_b)
@@ -334,8 +352,7 @@ def private pk_repack_all(var st : ParakeetStaging) {
     let d = st.e.n_state
     let ff = 4l * d
     let nch = st.e.n_sub_ch
-    let w3 = conv_s2_out(conv_s2_out(conv_s2_out(st.e.n_mel)))
-    let feat = w3 * nch                       // pre_w input dim (encode's xf row width)
+    let feat = pk_front_width(st.e) * nch     // pre_w input dim (encode's xf row width)
     pk_repack(st, st.e.c3_w, nch, nch)
     pk_repack(st, st.e.c6_w, nch, nch)
     pk_repack(st, st.e.pre_w, feat, d)
@@ -409,6 +426,12 @@ struct ParakeetState {
     xqi : array<int8>
     xsi : array<float>
     xbsi : array<int>   //!< the Q8_K image's per-16 sums (the kq lane's; empty on the others)
+    kvc_k : array<float>   //!< the streaming variant's window (`ARCHITECTURE_MEDIA_ASR_STREAM.md#fc-stream-block`)
+    kvc_v : array<float>
+    cvc : array<float>
+    kall : array<float>
+    vall : array<float>
+    gbuf : array<float>
     // decode
     encp : array<float>
     @scratch toks : array<ParakeetToken>
@@ -459,6 +482,7 @@ let private PK_WHO = "dasLLAMA parakeet"
 //! tensors answer to the bin's names through `pk_gguf_name`
 struct private PkSource {
     gguf : bool
+    nemo : bool   //!< a GGUF under NeMo's own tensor names, read as they are
     recs : table<string; PkTensorRec>
     meta : GGUFMeta = GGUFMeta()
 }
@@ -476,7 +500,7 @@ def private pk_gguf_name(name : string) : string => replace_multiple(name, [
 def private pk_read(src : PkSource; b : array<uint8> | #; name : string;
                     var dst : array<float>; dst_off, n : int64) {
     if (src.gguf) {
-        let gname = pk_gguf_name(name)
+        let gname = src.nemo ? name : pk_gguf_name(name)
         gguf_expect_elems(src.meta, gname, n, PK_WHO)
         gguf_read_tensor_f32(src.meta, b, gname, dst, dst_off, n)
         return
@@ -593,11 +617,81 @@ def private pk_bin_header(var st : ParakeetStaging; var src : PkSource; bytes : 
 
 let private PK_GGUF = "stt.parakeet"
 
+let NEMOTRON_ARCH = "asr"   //! `general.architecture` of NVIDIA's NeMo GGUF carrier
+
+//! The front's output width over the mel bins
+[arch(at = "../ARCHITECTURE_MEDIA_ASR_STREAM.md#nemotron-carrier")]
+def private pk_front_width(m : ParakeetModel) : int64 {
+    return m.n_mel / m.subsampling if (!m.nemotron)
+    var w = m.n_mel
+    for (_ in range(3)) {
+        w = w / 2l + 1l
+    }
+    return w
+}
+
+[arch(at = "../ARCHITECTURE_MEDIA_ASR_STREAM.md#nemotron-carrier")]
+def private pk_nemo_header(var st : ParakeetStaging; var src : PkSource; bytes : array<uint8>#; path : string) {
+    src.nemo = true
+    let head = gguf_str_or(src.meta, bytes, "asr.head_type", "")
+    if (head != "rnnt" || !gguf_bool_or(src.meta, bytes, "asr.encoder.cache_supported", false)) {
+        panic("{PK_WHO}: '{path}' is a '{head}' NeMo carrier - the loader serves the cache-aware RNN-T one (Nemotron ASR streaming)")
+    }
+    for (key, want in fixed_array("asr.encoder.conv_norm", "asr.encoder.conv_context", "asr.encoder.att_context_style", "asr.preprocessor.normalize"),
+            fixed_array("layer_norm", "causal", "chunked_limited", "NA")) {
+        let have = gguf_str_or(src.meta, bytes, key, "")
+        if (have != want) {
+            panic("{PK_WHO}: '{path}' sets {key} = '{have}' - the streaming chain runs '{want}'")
+        }
+    }
+    for (key in fixed_array("asr.encoder.use_bias", "asr.encoder.xscaling")) {
+        if (gguf_bool_or(src.meta, bytes, key, false)) {
+            panic("{PK_WHO}: '{path}' sets '{key}' - the chain runs the family's bias-free, unscaled encoder")
+        }
+    }
+    st.e.nemotron = true
+    st.e.n_vocab = gguf_int(src.meta, bytes, "asr.rnnt.vocab_size") - 1l   // the carrier counts the blank
+    st.e.n_state = gguf_int(src.meta, bytes, "asr.encoder.d_model")
+    st.e.n_head = gguf_int(src.meta, bytes, "asr.encoder.n_heads")
+    st.e.n_layer = gguf_int(src.meta, bytes, "asr.encoder.n_layers")
+    st.e.subsampling = gguf_int(src.meta, bytes, "asr.encoder.subsampling_factor")
+    st.e.n_sub_ch = gguf_int(src.meta, bytes, "asr.encoder.subsampling_conv_channels")
+    st.e.n_conv_kernel = gguf_int(src.meta, bytes, "asr.encoder.conv_kernel_size")
+    st.e.n_pred_dim = gguf_int(src.meta, bytes, "asr.rnnt.pred_hidden")
+    st.e.n_pred_layers = gguf_int(src.meta, bytes, "asr.rnnt.pred_num_layers")
+    st.e.n_max_tokens = gguf_int(src.meta, bytes, "asr.rnnt.max_symbols_per_step")
+    st.e.n_mel = gguf_int(src.meta, bytes, "asr.preprocessor.features")
+    st.e.n_fft = gguf_int(src.meta, bytes, "asr.preprocessor.n_fft")
+    st.e.attn_left = gguf_int(src.meta, bytes, "asr.encoder.train_left_ctx")
+    st.e.n_prompts = gguf_int(src.meta, bytes, "asr.rnnt.num_prompts")
+    st.e.prompt_inter = src.meta.tensors[gguf_need_tensor(src.meta, "prompt_kernel.0.bias", PK_WHO)].n_elem
+    st.e.prompts <- gguf_str_array(src.meta, bytes, "asr.rnnt.prompt_dictionary")
+    if (gguf_int(src.meta, bytes, "asr.encoder.d_ff") != 4l * st.e.n_state || st.e.subsampling != 8l
+            || gguf_int(src.meta, bytes, "asr.rnnt.joint_dim") != st.e.n_pred_dim) {
+        panic("{PK_WHO}: '{path}' has a shape the chain does not run: an FF four times the model width, an 8x front, a joint as wide as the predictor")
+    }
+    if (gguf_int(src.meta, bytes, "asr.preprocessor.sample_rate") != AUDIO_SAMPLE_RATE) {
+        panic("{PK_WHO}: '{path}' asks a front end at another sample rate than {AUDIO_SAMPLE_RATE} Hz")
+    }
+    let n_bins = st.e.n_fft / 2l + 1l
+    st.filters |> resize(st.e.n_mel * n_bins)
+    gguf_read_tensor_f32(src.meta, bytes, "preprocessor.fb", st.filters, 0l, st.e.n_mel * n_bins)
+    st.window <- build_hann_window(int64(gguf_f32(src.meta, bytes, "asr.preprocessor.window_size") * float(AUDIO_SAMPLE_RATE) + 0.5), false)
+    st.e.vocab <- gguf_str_array(src.meta, bytes, "asr.tokenizer.vocab")
+    if (long_length(st.e.vocab) != st.e.n_vocab) {
+        panic("{PK_WHO}: '{path}' lists {long_length(st.e.vocab)} tokens, the joint {st.e.n_vocab} and the blank")
+    }
+}
+
 [arch(at = "../ARCHITECTURE_MEDIA_ASR.md#parakeet-gguf")]
 def private pk_gguf_header(var st : ParakeetStaging; var src : PkSource; bytes : array<uint8>#; path : string) {
     src.gguf = true
     src.meta <- parse_gguf_meta(bytes)
     let arch = gguf_str_or(src.meta, bytes, "general.architecture", "")
+    if (arch == NEMOTRON_ARCH) {
+        pk_nemo_header(st, src, bytes, path)
+        return
+    }
     if (arch != PARAKEET_ARCH) {
         panic("{PK_WHO}: '{path}' is a '{arch}' GGUF, not a {PARAKEET_ARCH} carrier")
     }
@@ -651,6 +745,18 @@ def private pk_gguf_header(var st : ParakeetStaging; var src : PkSource; bytes :
 //! one predictor layer's weights and gate bias into `dst` at `ih`, `hh` and `b`, each container's rows as stored
 [arch(at = "../ARCHITECTURE_MEDIA_ASR.md#parakeet-gguf")]
 def private pk_read_lstm(src : PkSource; b : array<uint8>#; var dst : array<float>; pd, l, ih, hh, bias : int64) {
+    if (src.nemo) {
+        pk_read(src, b, "decoder.prediction.dec_rnn.lstm.ih_l{l}.weight", dst, ih, 4l * pd * pd)
+        pk_read(src, b, "decoder.prediction.dec_rnn.lstm.hh_l{l}.weight", dst, hh, 4l * pd * pd)
+        pk_read(src, b, "decoder.prediction.dec_rnn.lstm.ih_l{l}.bias", dst, bias, 4l * pd)
+        var inscope b2 : array<float>
+        b2 |> resize(4l * pd)
+        pk_read(src, b, "decoder.prediction.dec_rnn.lstm.hh_l{l}.bias", b2, 0l, 4l * pd)
+        for (i in range64(4l * pd)) {
+            dst[bias + i] += b2[i]
+        }
+        return
+    }
     if (!src.gguf) {
         pk_read(src, b, "decoder.prediction.dec_rnn.lstm.weight_ih_l{l}", dst, ih, 4l * pd * pd)
         pk_read(src, b, "decoder.prediction.dec_rnn.lstm.weight_hh_l{l}", dst, hh, 4l * pd * pd)
@@ -698,7 +804,9 @@ def private pk_bake_decoder(var st : ParakeetStaging; src : PkSource; b : array<
     pk_read(src, b, "joint.enc.bias", raw, enc_b, pd)
     unsafe {
         plane_bind(net.blob, addr<uint8 const?>(raw[0]), 0l, at * 4l)
-        plane_bind(net.durations, addr<uint8 const?>(st.durations[0]), 0l, st.e.n_durations * 4l)
+        if (st.e.n_durations > 0l) {
+            plane_bind(net.durations, addr<uint8 const?>(st.durations[0]), 0l, st.e.n_durations * 4l)
+        }
     }
     var inscope baked <- rnnt_bake(net, enc_b)
     plane_release(net.blob)
@@ -969,7 +1077,7 @@ def stage_parakeet_model(path : string; q8, f16, kq : bool) : ParakeetStaging {
         st.e.c5_b = ao; ao += nch; bo += nch
         st.e.c6_w = bo; bo += nch * nch; ao += g * nch * nch
         st.e.c6_b = ao; ao += nch; bo += nch
-        let feat = (st.e.n_mel / st.e.subsampling) * nch
+        let feat = pk_front_width(st.e) * nch
         st.e.pre_w = bo; bo += d * feat; ao += g * d * feat
         st.e.pre_b = ao; ao += d; bo += d
         st.e.layers_off = bo
@@ -984,6 +1092,13 @@ def stage_parakeet_model(path : string; q8, f16, kq : bool) : ParakeetStaging {
         st.e.dec_slab = ao; ao += dec.wf_floats
         st.e.joint_enc_w = gj == 1l ? ao : bo; bo += pd * d; ao += gj * pd * d
         st.e.joint_enc_b = st.e.dec_slab + dec.jeb
+        if (st.e.nemotron) {
+            let pi = st.e.prompt_inter
+            st.e.prompt_w1 = ao; ao += pi * (d + st.e.n_prompts)
+            st.e.prompt_b1 = ao; ao += pi
+            st.e.prompt_w2 = ao; ao += d * pi
+            st.e.prompt_b2 = ao; ao += d
+        }
         // exact allocations: reserve defeats the array allocator's pow2 rounding, which on the
         // 0.6b f32 bin would back 2.4 GiB of blob floats with a 4 GiB allocation
         st.blob |> reserve(ao)
@@ -1040,9 +1155,11 @@ def stage_parakeet_model(path : string; q8, f16, kq : bool) : ParakeetStaging {
             pk_conv_tap_major(st.blob, lo.dw_w, d, st.e.n_conv_kernel)   // [d][k] -> [k][d] for the f4 row core
             pk_read(src, bytes, "encoder.layers.{l}.conv.batch_norm.weight", st.blob, lo.bn_w, d)
             pk_read(src, bytes, "encoder.layers.{l}.conv.batch_norm.bias", st.blob, lo.bn_b, d)
-            pk_read(src, bytes, "encoder.layers.{l}.conv.batch_norm.running_mean", st.blob, lo.bn_mean, d)
-            pk_read(src, bytes, "encoder.layers.{l}.conv.batch_norm.running_var", st.blob, lo.bn_var, d)
-            pk_fold_bn(st.blob, lo.bn_w, lo.bn_b, lo.bn_mean, lo.bn_var, d)
+            if (!st.e.nemotron) {
+                pk_read(src, bytes, "encoder.layers.{l}.conv.batch_norm.running_mean", st.blob, lo.bn_mean, d)
+                pk_read(src, bytes, "encoder.layers.{l}.conv.batch_norm.running_var", st.blob, lo.bn_var, d)
+                pk_fold_bn(st.blob, lo.bn_w, lo.bn_b, lo.bn_mean, lo.bn_var, d)
+            }
             pk_read_gemm(src, bytes, "encoder.layers.{l}.conv.pointwise_conv2.weight", st, wscratch, lo.pw2_w, d * d)
             pk_read(src, bytes, "encoder.layers.{l}.norm_feed_forward2.weight", st.blob, lo.nf2_w, d)
             pk_read(src, bytes, "encoder.layers.{l}.norm_feed_forward2.bias", st.blob, lo.nf2_b, d)
@@ -1057,6 +1174,13 @@ def stage_parakeet_model(path : string; q8, f16, kq : bool) : ParakeetStaging {
             pk_read_gemm(src, bytes, "joint.enc.weight", st, wscratch, st.e.joint_enc_w, st.e.n_pred_dim * d)
         }
         pk_bake_decoder(st, src, bytes)
+        if (st.e.nemotron) {
+            let pi = st.e.prompt_inter
+            pk_read(src, bytes, "prompt_kernel.0.weight", st.blob, st.e.prompt_w1, pi * (d + st.e.n_prompts))
+            pk_read(src, bytes, "prompt_kernel.0.bias", st.blob, st.e.prompt_b1, pi)
+            pk_read(src, bytes, "prompt_kernel.2.weight", st.blob, st.e.prompt_w2, d * pi)
+            pk_read(src, bytes, "prompt_kernel.2.bias", st.blob, st.e.prompt_b2, d)
+        }
         delete wscratch
     }
     fclose(f)
@@ -1641,4 +1765,445 @@ def parakeet_transcribe(m : ParakeetModel; var st : ParakeetState; samples : arr
     }
     blk |> invoke(seg)
     return 1
+}
+
+// ===== the streaming variant (Nemotron) =====
+
+let private NM_HOP = 160l        //! the mel hop at 16 kHz
+let private NM_PAD = 256l        //! the centered STFT's pad: half the 512-point frame
+let private NM_PREEMPH = 0.97
+let private NM_LOG_GUARD = 5.960464477539063e-08lf   //! 2^-24, NeMo's log zero guard
+
+//! One stream's state over a loaded Nemotron model (`ParakeetModel.nemotron`).
+struct NemotronStream {
+    st : ParakeetState = ParakeetState()
+    chunk : int64                  //! encoder frames a chunk: the lookahead + 1
+    pbias : array<float>           //! the prompt projector's first bias with the language's one-hot column folded in
+    pre : array<float>             //! pre-emphasized samples from stream sample `pre_base` on
+    pre_base : int64
+    n_in : int64                   //! samples fed
+    last : float                   //! the last raw sample fed, the pre-emphasis's carry
+    mel_next : int64               //! the next mel frame
+    f0 : array<float>              //! the front's input rows: mel frames [t][n_mel] from row `f0_base` on
+    f0_base : int64
+    f0_n : int64                   //! ... the rows so far
+    o0 : int64                     //! the next row conv 0 emits
+    f1 : array<float>              //! conv 0's rows [t][w1][nch]
+    f1_base : int64
+    f1_n : int64
+    o1 : int64
+    f2 : array<float>              //! the first separable stage's rows [t][w2][nch]
+    f2_base : int64
+    f2_n : int64
+    o2 : int64
+    feat : array<float>            //! the front's output rows not yet encoded [t][w3 nch]
+    feat_n : int64
+    n_cached : int64               //! the rows each block's window holds
+    frames : int64                 //! encoder frames decoded
+    dec : RnntState = RnntState()
+    fresh : bool = true            //! the predictor starts over at the next chunk
+    out : array<RnntToken>         //! tokens decoded and not taken yet, `frame` counted from the stream's start
+    @scratch toks : array<RnntToken>
+    proj : array<float>
+    h1 : array<float>
+    y : array<float>
+    yd : array<float>
+}
+
+//! The prompt index the carrier gives `lang` (a locale like "de-DE", a language like "de", or "auto"), -1 when it has none.
+def nemotron_prompt_id(m : ParakeetModel; lang : string) : int {
+    for (p in m.prompts) {
+        let colon = find(p, ":")
+        continue if (colon < 0)
+        if (slice(p, 0, colon) == lang) {
+            return to_int(slice(p, colon + 1))
+        }
+    }
+    return -1
+}
+
+//! Start a stream in `lang` with `lookahead` frames of right context; false when the carrier has no prompt for `lang`
+[arch(at = "../ARCHITECTURE_MEDIA_ASR_STREAM.md#nemotron-stream")]
+def nemotron_stream_start(m : ParakeetModel; var ns : NemotronStream; lang : string; lookahead : int64) : bool {
+    let pid = nemotron_prompt_id(m, lang)
+    return false if (pid < 0 || !m.nemotron)
+    let d = m.n_state
+    let pi = m.prompt_inter
+    ns.chunk = lookahead + 1l
+    ns.pbias |> resize(pi)
+    for (i in range64(pi)) {
+        ns.pbias[i] = m.blob[m.prompt_b1 + i] + m.blob[m.prompt_w1 + i * (d + m.n_prompts) + d + int64(pid)]
+    }
+    ns.pre |> clear()
+    ns.pre_base = 0l
+    ns.n_in = 0l
+    ns.last = 0.0
+    ns.mel_next = 0l
+    ns.f0 |> clear()
+    ns.f1 |> clear()
+    ns.f2 |> clear()
+    ns.f0_base = 0l
+    ns.f0_n = 0l
+    ns.o0 = 0l
+    ns.f1_base = 0l
+    ns.f1_n = 0l
+    ns.o1 = 0l
+    ns.f2_base = 0l
+    ns.f2_n = 0l
+    ns.o2 = 0l
+    ns.feat |> clear()
+    ns.feat_n = 0l
+    ns.n_cached = 0l
+    ns.frames = 0l
+    ns.fresh = true
+    ns.out |> clear()
+    let kp = m.n_conv_kernel - 1l
+    ns.st.kvc_k |> resize(m.n_layer * m.attn_left * d)
+    ns.st.kvc_v |> resize(m.n_layer * m.attn_left * d)
+    ns.st.cvc |> resize(m.n_layer * kp * d)
+    for (i in range64(m.n_layer * kp * d)) {
+        ns.st.cvc[i] = 0.0
+    }
+    return true
+}
+
+// ===== audio to mel =====
+
+//! mel frame `i` into `row`: the 400-sample Hann window centered on sample `i * hop` (zeros outside the stream), the
+//! 512-point power spectrum, the carrier's filterbank, log
+def private nm_mel_frame(m : ParakeetModel; ns : NemotronStream; i : int64; var row : float?) {
+    let n_fft = m.n_fft
+    let n_bins = n_fft / 2l + 1l
+    let wsz = length(m.window)
+    let wpad = (n_fft - wsz) / 2l
+    var frame : float[1024]
+    unsafe {
+        var fp = addr(frame[0])
+        for (j in range64(n_fft * 2l)) {
+            fp[j] = 0.0
+        }
+        let wnd = plane_at(m.window, 0l)
+        for (j in range64(wsz)) {
+            let si = i * NM_HOP - NM_PAD + wpad + j
+            if (si >= ns.pre_base && si < ns.n_in) {
+                fp[(wpad + j) * 2l] = wnd[j] * ns.pre[si - ns.pre_base]
+            }
+        }
+        fft_pow2_run(n_fft, addr<int const?>(m.fft.rev[0]), addr<float const?>(m.fft.tw[0]), fp)
+        for (k in range64(n_bins)) {
+            fp[k] = fp[2l * k] * fp[2l * k] + fp[2l * k + 1l] * fp[2l * k + 1l]
+        }
+        let flt = plane_at(m.filters, 0l)
+        for (jm in range64(m.n_mel)) {
+            row[jm] = float(log(double(dot(flt + jm * n_bins, fp, n_bins)) + NM_LOG_GUARD))
+        }
+    }
+}
+
+//! the pre-emphasized samples of `pcm`, then every mel frame they complete (with `flush` the stream's last frames too, the
+//! samples past its end zeros) onto the front's input rows
+def private nm_audio(m : ParakeetModel; var ns : NemotronStream; pcm : array<float> | #; flush : bool) {
+    ns.pre |> reserve(length(ns.pre) + length(pcm))
+    for (x in pcm) {
+        ns.pre |> push(ns.n_in == 0l ? x : x - NM_PREEMPH * ns.last)
+        ns.last = x
+        ns.n_in++
+    }
+    let half = (m.n_fft - int64(length(m.window))) / 2l - NM_PAD + int64(length(m.window))   // the window's reach past its center
+    let last_frame = flush ? ns.n_in / NM_HOP : (ns.n_in < half ? -1l : (ns.n_in - half) / NM_HOP)
+    while (ns.mel_next <= last_frame) {
+        ns.f0 |> resize((ns.f0_n - ns.f0_base + 1l) * m.n_mel)
+        let row = (ns.f0_n - ns.f0_base) * m.n_mel
+        if (ns.mel_next < ns.n_in / NM_HOP || !flush) {
+            unsafe {
+                nm_mel_frame(m, ns, ns.mel_next, addr(ns.f0[row]))
+            }
+        } else {   // past the audio's end: an invalid frame, which the model reads as zeros
+            for (k in range64(m.n_mel)) {
+                ns.f0[row + k] = 0.0
+            }
+        }
+        ns.f0_n++
+        ns.mel_next++
+    }
+    let keep_from = max(ns.pre_base, ns.mel_next * NM_HOP - NM_PAD)   // the next frame's window starts past this
+    if (keep_from > ns.pre_base) {
+        let drop = min(keep_from - ns.pre_base, long_length(ns.pre))
+        ns.pre |> erase(0l, drop)
+        ns.pre_base += drop
+    }
+}
+
+// ===== the causal front =====
+
+//! the rows a stride-2 conv emits next: row `j` reads input rows 2j-2 to 2j, so it waits for row 2j - at the stream's end
+//! the one row past the input is the right pad's zero
+def private nm_ready(next, n_rows : int64; flush : bool) : int64 {
+    let last = flush ? n_rows : n_rows - 1l
+    return last < 0l ? 0l : max(0l, last / 2l + 1l - next)
+}
+
+//! drop the rows below `keep` from a stage's input rows of `width` floats
+def private nm_trim(var rows : array<float>; var base : int64&; keep, width : int64) {
+    if (keep > base) {
+        let drop = min(keep - base, long_length(rows) / width)
+        rows |> erase(0l, drop * width)
+        base += drop
+    }
+}
+
+//! conv 0 over `n` new rows from row `o0`: 1 channel to `nch`, k3 stride 2 on time and the mel bins (bins padded 2, 1), ReLU
+def private nm_conv0(m : ParakeetModel; var ns : NemotronStream; n : int64) {
+    let nch = m.n_sub_ch
+    let wi = m.n_mel
+    let wo = wi / 2l + 1l
+    let at = ns.f1_n - ns.f1_base
+    ns.f1 |> resize((at + n) * wo * nch)
+    unsafe {
+        let wp = plane_at(m.blob, m.c0_w)
+        let bp = plane_at(m.blob, m.c0_b)
+        let ip = addr<float const?>(ns.f0[0])
+        var op = addr(ns.f1[at * wo * nch])
+        let o0 = ns.o0
+        let base = ns.f0_base
+        let rows = ns.f0_n
+        maybe_parallel_for(0, int(n * wo), lanes_for_work(n * wo * nch * 9l, 0)) $(rb, re) {
+            unsafe {
+                for (p in range64(int64(rb), int64(re))) {
+                    let j = o0 + p / wo
+                    let ow = p % wo
+                    var orow = op + p * nch
+                    copy_floats(orow, bp, nch)
+                    for (kt in range64(3l)) {
+                        let r = 2l * j - 2l + kt
+                        continue if (r < 0l || r >= rows)
+                        let irow = ip + (r - base) * wi
+                        for (kf in range64(3l)) {
+                            let f = 2l * ow - 2l + kf
+                            continue if (f < 0l || f >= wi)
+                            let v = irow[f]
+                            let wrow = wp + (kt * 3l + kf) * nch
+                            for (c in range64(nch)) {
+                                orow[c] += wrow[c] * v
+                            }
+                        }
+                    }
+                    for (c in range64(nch)) {
+                        orow[c] = max(orow[c], 0.0)
+                    }
+                }
+            }
+        }
+    }
+    ns.f1_n += n
+    ns.o0 += n
+}
+
+//! a separable stage over `n` rows from `next`: the depthwise k3 stride-2 conv (`dw_w`, `dw_b`), then the pointwise
+//! channel mix (`pw_w`, `pw_b`) and ReLU, into ``ns.y`` [n][wo][nch]
+def private nm_separable(m : ParakeetModel; var ns : NemotronStream; src : array<float>; base, rows, next, n, wi : int64;
+                         dw_w, dw_b, pw_w, pw_b : int64) {
+    let nch = m.n_sub_ch
+    let wo = wi / 2l + 1l
+    ensure_length(ns.yd, n * wo * nch)
+    unsafe {
+        let wp = plane_at(m.blob, dw_w)
+        let bp = plane_at(m.blob, dw_b)
+        let ip = addr<float const?>(src[0])
+        var op = addr(ns.yd[0])
+        maybe_parallel_for(0, int(n * wo), lanes_for_work(n * wo * nch * 9l, 0)) $(rb, re) {
+            unsafe {
+                for (p in range64(int64(rb), int64(re))) {
+                    let j = next + p / wo
+                    let ow = p % wo
+                    var orow = op + p * nch
+                    copy_floats(orow, bp, nch)
+                    for (kt in range64(3l)) {
+                        let r = 2l * j - 2l + kt
+                        continue if (r < 0l || r >= rows)
+                        for (kf in range64(3l)) {
+                            let f = 2l * ow - 2l + kf
+                            continue if (f < 0l || f >= wi)
+                            let irow = ip + ((r - base) * wi + f) * nch
+                            let wrow = wp + (kt * 3l + kf) * nch
+                            for (c in range64(nch)) {
+                                orow[c] += wrow[c] * irow[c]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    ensure_length(ns.y, n * wo * nch)
+    tower_mm_rq(m, ns.y, pw_w, ns.yd, ns.st.xqi, ns.st.xsi, ns.st.xbsi, nch, nch, n * wo)
+    add_bias_rows(ns.y, m.blob, pw_b, nch, n * wo)
+    for (i in range64(n * wo * nch)) {
+        ns.y[i] = max(ns.y[i], 0.0)
+    }
+}
+
+//! the front over every row its inputs complete: conv 0, the two separable stages, then the last stage's rows as feature
+//! rows [t][c w3 + w] behind the ones waiting for the encoder
+def private nm_front(m : ParakeetModel; var ns : NemotronStream; flush : bool) {
+    let nch = m.n_sub_ch
+    let w0 = m.n_mel
+    let w1 = w0 / 2l + 1l
+    let w2 = w1 / 2l + 1l
+    let w3 = w2 / 2l + 1l
+    let n0 = ns.f0_n > 0l ? nm_ready(ns.o0, ns.f0_n, flush) : 0l
+    if (n0 > 0l) {
+        nm_conv0(m, ns, n0)
+        nm_trim(ns.f0, ns.f0_base, 2l * ns.o0 - 2l, w0)
+    }
+    let n1 = nm_ready(ns.o1, ns.f1_n, flush)
+    if (n1 > 0l) {
+        nm_separable(m, ns, ns.f1, ns.f1_base, ns.f1_n, ns.o1, n1, w1, m.c2_w, m.c2_b, m.c3_w, m.c3_b)
+        let at = ns.f2_n - ns.f2_base
+        ns.f2 |> resize((at + n1) * w2 * nch)
+        for (i in range64(n1 * w2 * nch)) {
+            ns.f2[at * w2 * nch + i] = ns.y[i]
+        }
+        ns.f2_n += n1
+        ns.o1 += n1
+        nm_trim(ns.f1, ns.f1_base, 2l * ns.o1 - 2l, w1 * nch)
+    }
+    let n2 = nm_ready(ns.o2, ns.f2_n, flush)
+    if (n2 > 0l) {
+        nm_separable(m, ns, ns.f2, ns.f2_base, ns.f2_n, ns.o2, n2, w2, m.c5_w, m.c5_b, m.c6_w, m.c6_b)
+        let feat = w3 * nch
+        ns.feat |> resize((ns.feat_n + n2) * feat)
+        for (t in range64(n2)) {
+            for (w in range64(w3)) {
+                for (c in range64(nch)) {
+                    ns.feat[(ns.feat_n + t) * feat + c * w3 + w] = ns.y[(t * w3 + w) * nch + c]
+                }
+            }
+        }
+        ns.feat_n += n2
+        ns.o2 += n2
+        nm_trim(ns.f2, ns.f2_base, 2l * ns.o2 - 2l, w2 * nch)
+    }
+}
+
+// ===== the encoder chunk, the prompt, the decode =====
+
+def private nm_form(m : ParakeetModel) : FcCpuForm {
+    return FcCpuForm(d = m.n_state, ff = 4l * m.n_state, n_head = m.n_head, nk = m.n_conv_kernel, biased = false, conv_ln = true,
+        causal = true, prof = FcCpuProf(ffn1 = FcFfnProf()))
+}
+
+//! the first `n` waiting feature rows through the pre-projection and the blocks (each over its window and this chunk), the
+//! language prompt and the joint's encoder projection, then the greedy decode from where the last chunk left it
+def private nm_chunk(m : ParakeetModel; var ns : NemotronStream; n : int64) {
+    let d = m.n_state
+    let pd = m.n_pred_dim
+    let pi = m.prompt_inter
+    let feat = pk_front_width(m) * m.n_sub_ch
+    var st & = unsafe(ns.st)
+    ensure_length(st.xf, n * feat)
+    for (i in range64(n * feat)) {
+        st.xf[i] = ns.feat[i]
+    }
+    ns.feat |> erase(0l, n * feat)
+    ns.feat_n -= n
+    ensure_length(st.x, n * d)
+    tower_mm_rq(m, st.x, m.pre_w, st.xf, st.xqi, st.xsi, st.xbsi, feat, d, n)
+    add_bias_rows(st.x, m.blob, m.pre_b, d, n)
+    let nl = ns.n_cached + n
+    parakeet_pos_table(m, st, nl)
+    let form = nm_form(m)
+    for (l in range64(m.n_layer)) {
+        fc_block_cpu(m, st, form, FcStreamPos(layer = l, n_cached = ns.n_cached, cap = m.attn_left), pk_fc_layer(pk_layer_offsets(m, l)), l, n)
+    }
+    ns.n_cached = min(m.attn_left, nl)
+    // the prompt projector: relu(W1 [x; onehot] + b1), then W2 . + b2 - the one-hot's column rides `pbias`
+    ensure_length(ns.h1, n * pi)
+    ensure_length(ns.proj, n * d)
+    unsafe {
+        let xp = addr<float const?>(st.x[0])
+        var hp = addr(ns.h1[0])
+        var pp = addr(ns.proj[0])
+        let w1 = plane_at(m.blob, m.prompt_w1)
+        let w2 = plane_at(m.blob, m.prompt_w2)
+        let b2 = plane_at(m.blob, m.prompt_b2)
+        let pb = addr<float const?>(ns.pbias[0])
+        let stride1 = d + m.n_prompts
+        for (r in range64(n)) {
+            maybe_parallel_for(0, int(pi), lanes_for_work(pi * d, 0)) $(ib, ie) {
+                unsafe {
+                    for (i in range64(int64(ib), int64(ie))) {
+                        hp[r * pi + i] = max(dot(w1 + i * stride1, xp + r * d, d) + pb[i], 0.0)
+                    }
+                }
+            }
+            maybe_parallel_for(0, int(d), lanes_for_work(d * pi, 0)) $(kb, ke) {
+                unsafe {
+                    for (k in range64(int64(kb), int64(ke))) {
+                        pp[r * d + k] = dot(w2 + k * pi, hp + r * pi, pi) + b2[k]
+                    }
+                }
+            }
+        }
+    }
+    ensure_length(st.encp, n * pd)
+    tower_mm_rq(m, st.encp, m.joint_enc_w, ns.proj, st.xqi, st.xsi, st.xbsi, d, pd, n)
+    add_bias_rows(st.encp, m.blob, m.joint_enc_b, pd, n)
+    rnnt_greedy(pk_rnnt_net(m), ns.dec, st.encp, n, ns.toks, ns.fresh)
+    ns.fresh = false
+    ns.out |> reserve(length(ns.out) + length(ns.toks))
+    for (tk in ns.toks) {
+        var t = tk
+        t.frame += ns.frames
+        ns.out |> push(t)
+    }
+    ns.frames += n
+}
+
+//! Feed `pcm` (mono, 16 kHz) to the stream: every chunk it completes is decoded onto ``ns.out``; `flush` ends the stream
+[arch(at = "../ARCHITECTURE_MEDIA_ASR_STREAM.md#nemotron-stream")]
+def nemotron_stream_feed(m : ParakeetModel; var ns : NemotronStream; pcm : array<float> | #; flush : bool) {
+    nm_audio(m, ns, pcm, flush)
+    nm_front(m, ns, flush)
+    while (ns.feat_n >= ns.chunk) {
+        nm_chunk(m, ns, ns.chunk)
+    }
+    if (flush && ns.feat_n > 0l) {
+        nm_chunk(m, ns, ns.feat_n)
+    }
+}
+
+//! The text of `toks`: the pieces' word marks as single spaces, the language tags the "auto" prompt adds left out. A
+//! leading space stays: it says the text starts a new word.
+def nemotron_text(m : ParakeetModel; toks : array<RnntToken>) : string {
+    var space = false
+    return build_string() $(var w) {
+        for (t in toks) {
+            continue if (t.id < 0 || int64(t.id) >= long_length(m.vocab))
+            let piece = m.vocab[t.id]
+            continue if (starts_with(piece, "<") && ends_with(piece, ">"))
+            for (word, i in split(piece, "\xE2\x96\x81"), count()) {
+                space = space || i > 0
+                continue if (empty(word))
+                if (space) {
+                    w |> write(" ")
+                    space = false
+                }
+                w |> write(word)
+            }
+        }
+    }
+}
+
+//! Load NVIDIA's Nemotron streaming carrier (its `.gguf`, or the `.dlim` a load prepared): the q8 lane, or the f32 lane where
+//! `q8` is false
+[arch(at = "../ARCHITECTURE_MEDIA_ASR_STREAM.md#nemotron-carrier")]
+def load_nemotron_model(path : string; q8 : bool = true) : ParakeetModel {
+    var m <- load_staged_image(path, parakeet_lane_tag(q8, false), "parakeet", "source model", type<ParakeetModel>) {
+        return <- stage_parakeet_model(path, q8, false)
+    }
+    if (!m.nemotron) {
+        panic("{PK_WHO}: '{path}' is not a streaming carrier - load_parakeet_model serves it")
+    }
+    return <- m
 }

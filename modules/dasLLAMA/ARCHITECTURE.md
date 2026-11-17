@@ -234,12 +234,12 @@ Each companion's sections are anchored by topic; a citation spells `<doc>.md#<an
 - `ARCHITECTURE_MEDIA.md` - the family GPU hooks, the tower weight lane.
 - `ARCHITECTURE_MEDIA_TOWER.md` - the padded tower GEMM widths
   (`ARCHITECTURE_MEDIA_TOWER.md#tower-padded-widths`).
-- `ARCHITECTURE_MEDIA_ASR.md` - the ASR families' mechanisms - the facade's carrier sniff order, the
-  oracle a family is specified by, its tokens, language and long-form policy, Parakeet's GGUF carrier and kq lane, the GigaAM
-  Conformer chain's log-mel (`ARCHITECTURE_MEDIA_ASR.md#gigaam-log-mel`), rotary input and planes, and
-  the shared transducer's decode step (`ARCHITECTURE_MEDIA_ASR.md#rnnt-decode-step`) and its device loop
-  (`ARCHITECTURE_MEDIA_ASR.md#rnnt-device-decode`), and the plain-Model ASR decoders
-  (`ARCHITECTURE_MEDIA_ASR.md#asr-decoder-session`).
+- `ARCHITECTURE_MEDIA_ASR.md` - the ASR families' mechanisms - the facade's carrier sniff order, the oracle, a family's
+  tokens, language and long form, Parakeet's GGUF carrier and kq lane, GigaAM's log-mel
+  (`ARCHITECTURE_MEDIA_ASR.md#gigaam-log-mel`), rotary input and planes, the shared transducer's decode step
+  (`ARCHITECTURE_MEDIA_ASR.md#rnnt-decode-step`) and device loop (`ARCHITECTURE_MEDIA_ASR.md#rnnt-device-decode`), and
+  the plain-Model ASR decoders (`ARCHITECTURE_MEDIA_ASR.md#asr-decoder-session`).
+- `ARCHITECTURE_MEDIA_ASR_STREAM.md` - streaming recognition: Nemotron's carrier, stream, block and decode.
 - `ARCHITECTURE_MEASUREMENT.md` - the benchmark rig, the tune gate, the sanctioned
   instrumentation rails, the `[tuned]` perm precedence, the mint wall in the sidecar's provenance,
   the audio outlier rule, the parity fixture's prefix bar, the committed records gate, and the

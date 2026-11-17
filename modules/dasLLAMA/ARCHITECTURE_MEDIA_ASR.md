@@ -1,11 +1,10 @@
 # dasLLAMA Architecture - ASR family mechanisms
 
 Companion to `ARCHITECTURE.md`; a section is cited by its anchor. This document carries how the
-ASR facade picks a family from a file, the oracle a family is specified by, the family's tokens,
-language and long-form policy, Parakeet's two containers and its kq lane (`#parakeet-gguf`,
-`#parakeet-kq-seats`), the transducer decode step parakeet and GigaAM share and its device loop
-(`#rnnt-device-decode`), and the GigaAM Conformer chain's own mechanisms - its log-mel, its
-rotary input and its planes.
+ASR facade picks a family from a file, the oracle, the family's tokens, language and long form,
+Parakeet's two containers and kq lane (`#parakeet-gguf`, `#parakeet-kq-seats`), the shared
+transducer decode step and its device loop (`#rnnt-device-decode`), and GigaAM's log-mel, rotary
+input and planes. Streaming recognition is `ARCHITECTURE_MEDIA_ASR_STREAM.md`.
 
 ### The ASR facade picks a family from the file, in one order {#asr-carrier-sniff}
 
